@@ -1,12 +1,13 @@
 {
-    "plugins": ["prettier", "import", "@typescript-eslint"],
+    "plugins": ["prettier", "import", "@typescript-eslint", "react"],
     "extends": [
         "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
         "airbnb-base",
         "airbnb-typescript/base",
         "plugin:prettier/recommended",
-        "prettier"
+        "prettier",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
     "parserOptions": {
         "ecmaVersion": 2020,
@@ -22,6 +23,7 @@
         "no-debugger": "off",
         "no-console": 0,
         "class-methods-use-this": "off",
+        "import/extensions": "off",
         "@typescript-eslint/no-explicit-any": 2
     },
   "parser": "@typescript-eslint/parser"
