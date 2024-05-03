@@ -6,7 +6,7 @@ import App from './app/app';
 // Clear the existing HTML content
 document.body.innerHTML = '<div id="app"></div>';
 
-// Render your React component instead
+// Render React component
 const root = createRoot(document.getElementById('app') as HTMLElement);
 root.render(
   <StrictMode>
