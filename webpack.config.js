@@ -57,6 +57,7 @@ const baseConfig = {
     path: path.resolve(__dirname, './dist'),
     assetModuleFilename: 'assets/[hash][ext][query]',
     clean: true,
+    publicPath: '/',
   },
   plugins: [
     // new DotenvWebpackPlugin(),
@@ -71,6 +72,9 @@ const baseConfig = {
     }),
     new EslintPlugin({ extensions: ['.ts', '.tsx'] }),
   ],
+  devServer: {
+    historyApiFallback: true,
+  },
 };
 
 module.exports = ({ mode }) => {

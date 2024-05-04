@@ -3,5 +3,5 @@
 Run application:
 
 - Run command in your terminal `npm install`
-- Run command in your terminal `npm build`
-- Run command in your terminal `npm start`
+- Run command in your terminal `npm run build`
+- Run command in your terminal `npm run start`
