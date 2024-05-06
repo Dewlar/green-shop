@@ -6,12 +6,17 @@
   "scripts": {
     "start": "webpack serve --open --config ./webpack.config.js --env mode=dev",
     "build": "webpack --config ./webpack.config.js --env mode=prod",
-    "lint": "eslint . --ext .ts --ext .tsx",
     "prepare": "husky",
     "validate-branch": "validate-branch-name",
     "pre-commit": "npm run lint",
     "pre-push": "npm run lint && npm run validate-branch",
-    "test": "jest"
+    "test": "jest",
+    "format:fix": "prettier --write .",
+    "format": "prettier --check .",
+    "lint": "eslint . --ext .ts --ext .tsx",
+    "lintAll": "eslint ./src",
+    "lintAll:fix": "eslint --fix ./src",
+    "lint:fix": "eslint . --ext .ts --ext .tsx --fix"
   },
   "repository": {
     "type": "git",
