@@ -82,7 +82,7 @@
     }
   },
   "validate-branch-name": {
-    "pattern": "develop",
+    "pattern": "readme",
     "error": "Branch name must follow the pattern RSS-ECOMM-XX"
   },
   "prepare": "husky install",
