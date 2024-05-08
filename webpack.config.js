@@ -68,7 +68,10 @@ const baseConfig = {
       title: 'Caching',
     }),
     new CopyPlugin({
-      patterns: [{ from: 'src/assets', to: 'assets' }],
+      patterns: [
+        { from: 'src/assets', to: 'assets' },
+        { from: 'netlify', to: './' }
+      ],
     }),
     new EslintPlugin({ extensions: ['.ts', '.tsx'] }),
   ],
