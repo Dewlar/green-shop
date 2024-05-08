@@ -1,9 +1,10 @@
 import React from 'react';
+import Header from '../components/header/header';
 
 const Catalog = () => {
   return (
     <div>
-      <h1>catalog - page</h1>
+      <Header></Header>
     </div>
   );
 };
