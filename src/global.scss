@@ -39,3 +39,24 @@ html {
 
 body {
 }
+
+.signUpFormWrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.signUpForm {
+  position: fixed;
+  width: 60vw;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2vw 1.5vh;
+}
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+}
