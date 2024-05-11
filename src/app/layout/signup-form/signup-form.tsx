@@ -1,62 +1,52 @@
 import React, { useEffect, useState } from 'react';
 import MyInput from '../../components/signup/input';
 import MyLabel from '../../components/signup/label';
+import { TypeOfInputs } from '../../models';
+import regulars from '../../components/signup/regExp';
 
 const SignupForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [emailDirty, setEmailDirty] = useState(false);
-  const [passDirty, setPassDirty] = useState(false);
-  const [emailError, setEmailError] = useState('Please enter your email');
-  const [passError, setPassError] = useState('Please enter your password');
+  const [storage, setStorage] = useState(['', '']);
+  const [dataDirty, setDataDirty] = useState([false, false]);
+  const [dataError, setDataError] = useState(['Please enter your email', 'Please enter your password']);
   const [formValid, setFormValid] = useState(false);
 
   useEffect(() => {
-    if (emailError || passError) {
+    const even = (element: string) => element.length !== 0;
+    if (dataError.some(even)) {
+      console.log('!!!!!');
       setFormValid(false);
     } else {
+      console.log('&&&&&&');
       setFormValid(true);
     }
-  }, [emailError, passError]);
+  }, dataError);
 
-  const emailHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    const regular =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (!regular.test(String(e.target.value).toLowerCase())) {
-      console.log('fsdfsdf');
-      setEmailError('Invalid email');
+  const handler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputType = e.target.name;
+    const typeOfRegular = regulars[inputType as keyof TypeOfInputs];
+    const indexOfProp = Object.keys(regulars).indexOf(inputType as keyof TypeOfInputs);
+
+    const storageItems = [...storage];
+    storageItems[indexOfProp] = e.target.value;
+    setStorage(storageItems);
+    const errorItems = [...dataError];
+
+    if (!typeOfRegular.test(String(e.target.value))) {
+      errorItems[indexOfProp] = `Invalid ${inputType}`;
       if (!e.target.value) {
-        setEmailError('Email is empty');
+        errorItems[indexOfProp] = `${inputType} is empty`;
       }
     } else {
-      setEmailError('');
+      errorItems[indexOfProp] = '';
     }
-  };
-
-  const passHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-    const reg = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
-    if (!reg.test(String(e.target.value))) {
-      console.log(reg.test(String(e.target.value).toLowerCase()));
-      console.log('dsfsdf');
-      setPassError('Invalid password');
-    } else {
-      setPassError('');
-    }
+    console.log(e.target.value);
+    setDataError(errorItems);
   };
 
   const blur = (e: React.FocusEvent<HTMLInputElement, Element>) => {
-    switch (e.target.name) {
-      case 'email':
-        setEmailDirty(true);
-        break;
-      case 'password':
-        setPassDirty(true);
-        break;
-      default:
-        break;
-    }
+    const dirtyItems = [...dataDirty];
+    dirtyItems[Object.keys(regulars).indexOf(e.target.name as keyof TypeOfInputs)] = true;
+    setDataDirty(dirtyItems);
   };
 
   return (
@@ -70,29 +60,29 @@ const SignupForm = () => {
         <MyInput className="address" name="address" type="text" placeholder="Enter your address" />
         <div className="inputWrapper">
           <MyLabel htmlFor="email">Email</MyLabel>
-          {emailDirty && emailError && <div style={{ color: 'red' }}>{emailError}</div>}
+          {dataDirty[0] && dataError[0] && <div style={{ color: 'red' }}>{dataError[0]}</div>}
           <MyInput
             onBlur={(e) => blur(e)}
-            onChange={(e) => emailHandler(e)}
+            onChange={(e) => handler(e)}
             className="email"
             name="email"
             type="email"
             placeholder="Enter your email"
-            value={email}
+            value={storage[0]}
             id="email"
           />
         </div>
         <div className="inputWrapper">
           <MyLabel htmlFor="password">Password</MyLabel>
-          {passDirty && passError && <div style={{ color: 'red' }}>{passError}</div>}
+          {dataDirty[1] && dataError[1] && <div style={{ color: 'red' }}>{dataError[1]}</div>}
           <MyInput
             onBlur={(e) => blur(e)}
-            onChange={(e) => passHandler(e)}
+            onChange={(e) => handler(e)}
             className="password"
             name="password"
             type="password"
             placeholder="Enter your password"
-            value={password}
+            value={storage[1]}
             id="password"
           />
         </div>
