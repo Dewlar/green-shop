@@ -7,12 +7,13 @@ export interface TypeOfInputs {
   birth: RegExp;
   country: RegExp;
   city: RegExp;
-  address: RegExp;
-  email: RegExp;
-  password: RegExp;
+  street: RegExp;
   zip: RegExp;
   number: RegExp;
+  email: RegExp;
+  password: RegExp;
 }
+
 export interface TypeItem {
   prop: string;
   type: string;
@@ -20,8 +21,32 @@ export interface TypeItem {
   dataD: Array<boolean>;
   dataE: Array<string>;
   stor: Array<string>;
-  onB: (e: React.FocusEvent<HTMLInputElement, Element>) => void;
-  onC: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setData: React.Dispatch<React.SetStateAction<boolean[]>>;
+  setStor: React.Dispatch<React.SetStateAction<string[]>>;
+  setDataE: React.Dispatch<React.SetStateAction<string[]>>;
+  onB: (
+    e: React.FocusEvent<HTMLInputElement, Element>,
+    reg: TypeOfInputs,
+    dataD: Array<boolean>,
+    setData: React.Dispatch<React.SetStateAction<boolean[]>>
+  ) => void;
+  onC: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    stor: Array<string>,
+    setStor: React.Dispatch<React.SetStateAction<string[]>>,
+    dataE: Array<string>,
+    setDataE: React.Dispatch<React.SetStateAction<string[]>>
+  ) => void;
+}
+export interface BlurType {
+  e: React.FocusEvent<HTMLInputElement, Element>;
+  reg: TypeOfInputs;
+  dataD: Array<boolean>;
+  setData: React.Dispatch<React.SetStateAction<boolean[]>>;
+}
+
+export interface StringObject {
+  [key: string]: string;
 }
 
 export default { sample, sample2 };

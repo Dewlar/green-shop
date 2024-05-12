@@ -54,9 +54,11 @@ body {
   transform: translate(-50%, -50%);
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2vw 1.5vh;
+  gap: 2.5vh 1.5vw;
 }
 .inputWrapper {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  min-height: 90px;
 }
