@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import MyInput from '../../components/signup/input';
-import MyLabel from '../../components/signup/label';
 import { TypeOfInputs } from '../../models';
 import regulars from '../../components/signup/regExp';
+import MyItem from '../../components/signup/formItem';
 
 const SignupForm = () => {
-  const [storage, setStorage] = useState(['', '']);
-  const [dataDirty, setDataDirty] = useState([false, false]);
-  const [dataError, setDataError] = useState(['Please enter your email', 'Please enter your password']);
+  const [storage, setStorage] = useState(['', '', '', '', '', '', '', '']);
+  const [dataDirty, setDataDirty] = useState([false, false, false, false, false, false, false, false]);
+  const [dataError, setDataError] = useState([
+    'Enter your name',
+    'Enter your surname',
+    'Enter your country',
+    'Enter your town/city',
+    'Enter your address',
+    'Please enter your email',
+    'Please enter your password',
+    'Enter your zip',
+    'Enter your phone number',
+  ]);
   const [formValid, setFormValid] = useState(false);
 
   useEffect(() => {
@@ -34,7 +43,7 @@ const SignupForm = () => {
     if (!typeOfRegular.test(String(e.target.value))) {
       errorItems[indexOfProp] = `Invalid ${inputType}`;
       if (!e.target.value) {
-        errorItems[indexOfProp] = `${inputType} is empty`;
+        errorItems[indexOfProp] = `${inputType[0].toUpperCase() + inputType.slice(1)} is empty`;
       }
     } else {
       errorItems[indexOfProp] = '';
@@ -53,41 +62,113 @@ const SignupForm = () => {
     <div className="signUpFormWrapper">
       <h1>its signup-form layout</h1>
       <form className="signUpForm">
-        <MyInput className="firstNameInput" name="firstName" type="text" placeholder="Enter your name" />
-        <MyInput className="lastNameInput" name="lastName" type="text" placeholder="Enter your surname" />
-        <MyInput className="country" name="country" type="text" placeholder="Enter your country" />
-        <MyInput className="town" name="town" type="text" placeholder="Enter your town/city" />
-        <MyInput className="address" name="address" type="text" placeholder="Enter your address" />
-        <div className="inputWrapper">
-          <MyLabel htmlFor="email">Email</MyLabel>
-          {dataDirty[0] && dataError[0] && <div style={{ color: 'red' }}>{dataError[0]}</div>}
-          <MyInput
-            onBlur={(e) => blur(e)}
-            onChange={(e) => handler(e)}
-            className="email"
-            name="email"
-            type="email"
-            placeholder="Enter your email"
-            value={storage[0]}
-            id="email"
-          />
-        </div>
-        <div className="inputWrapper">
-          <MyLabel htmlFor="password">Password</MyLabel>
-          {dataDirty[1] && dataError[1] && <div style={{ color: 'red' }}>{dataError[1]}</div>}
-          <MyInput
-            onBlur={(e) => blur(e)}
-            onChange={(e) => handler(e)}
-            className="password"
-            name="password"
-            type="password"
-            placeholder="Enter your password"
-            value={storage[1]}
-            id="password"
-          />
-        </div>
-        <MyInput className="zip" name="zip" type="number" placeholder="Enter your zip" />
-        <MyInput className="phone" name="phone" type="tel" placeholder="Enter your phone number" />
+        {/* <MyInput className="firstNameInput" name="firstName" type="text" placeholder="Enter your name" /> */}
+        <MyItem
+          prop={'name'}
+          type={'text'}
+          index={0}
+          dataD={dataDirty}
+          dataE={dataError}
+          stor={storage}
+          onB={blur}
+          onC={handler}
+        ></MyItem>
+        {/* <MyInput className="lastNameInput" name="lastName" type="text" placeholder="Enter your surname" /> */}
+        <MyItem
+          prop={'surname'}
+          type={'text'}
+          index={1}
+          dataD={dataDirty}
+          dataE={dataError}
+          stor={storage}
+          onB={blur}
+          onC={handler}
+        ></MyItem>
+        <MyItem
+          prop={'birth'}
+          type={'date'}
+          index={2}
+          dataD={dataDirty}
+          dataE={dataError}
+          stor={storage}
+          onB={blur}
+          onC={handler}
+        ></MyItem>
+        {/* <MyInput className="country" name="country" type="text" placeholder="Enter your country" /> */}
+        <MyItem
+          prop={'country'}
+          type={'text'}
+          index={3}
+          dataD={dataDirty}
+          dataE={dataError}
+          stor={storage}
+          onB={blur}
+          onC={handler}
+        ></MyItem>
+        {/* <MyInput className="town" name="town" type="text" placeholder="Enter your town/city" /> */}
+        <MyItem
+          prop={'city'}
+          type={'text'}
+          index={4}
+          dataD={dataDirty}
+          dataE={dataError}
+          stor={storage}
+          onB={blur}
+          onC={handler}
+        ></MyItem>
+        {/* <MyInput className="address" name="address" type="text" placeholder="Enter your address" /> */}
+        <MyItem
+          prop={'address'}
+          type={'text'}
+          index={5}
+          dataD={dataDirty}
+          dataE={dataError}
+          stor={storage}
+          onB={blur}
+          onC={handler}
+        ></MyItem>
+        <MyItem
+          prop={'email'}
+          type={'email'}
+          index={6}
+          dataD={dataDirty}
+          dataE={dataError}
+          stor={storage}
+          onB={blur}
+          onC={handler}
+        ></MyItem>
+        <MyItem
+          prop={'password'}
+          type={'password'}
+          index={7}
+          dataD={dataDirty}
+          dataE={dataError}
+          stor={storage}
+          onB={blur}
+          onC={handler}
+        ></MyItem>
+        {/* <MyInput className="zip" name="zip" type="number" placeholder="Enter your zip" /> */}
+        <MyItem
+          prop={'zip'}
+          type={'number'}
+          index={8}
+          dataD={dataDirty}
+          dataE={dataError}
+          stor={storage}
+          onB={blur}
+          onC={handler}
+        ></MyItem>
+        {/* <MyInput className="phone" name="phone" type="tel" placeholder="Enter your phone number" /> */}
+        <MyItem
+          prop={'number'}
+          type={'tel'}
+          index={9}
+          dataD={dataDirty}
+          dataE={dataError}
+          stor={storage}
+          onB={blur}
+          onC={handler}
+        ></MyItem>
         <button disabled={!formValid} type="submit">
           Registration
         </button>
