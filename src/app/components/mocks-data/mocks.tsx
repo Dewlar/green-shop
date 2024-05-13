@@ -89,19 +89,24 @@ const collections = [
 
 const footerNavigation = {
   products: [
-    { name: 'test Plants 1', href: '#' },
-    { name: 'test Plants 2', href: '#' },
-    { name: 'test Plants 3', href: '#' },
+    { name: 'Plants 1', href: '/catalog' },
+    { name: 'Plants 2', href: '/catalog' },
+    { name: 'Plants 3', href: '/catalog' },
   ],
-  exclusive: [
-    { name: 'test', href: '#' },
-    { name: 'test2', href: '#' },
+  categories: [
+    { name: 'Indor plants', href: '/catalog' },
+    { name: 'Outdor plants', href: '/catalog' },
   ],
   pages: [
     { name: 'Catalog', href: '/catalog' },
     { name: 'About us', href: '/about' },
     { name: 'Registration', href: '/signup' },
     { name: 'Your account', href: '/login' },
+  ],
+  follow: [
+    { name: 'Dewlar', href: 'https://github.com/Dewlar' },
+    { name: 'Annsinkevich47', href: 'https://github.com/annsinkevich47' },
+    { name: 'Letanatol', href: 'https://github.com/letanatol' },
   ],
 };
 
