@@ -1,4 +1,5 @@
 const currencies = ['CAD', 'USD', 'AUD', 'EUR', 'GBP'];
+const isLoggedIn = false;
 const navigation = {
   categories: [
     {
@@ -62,8 +63,8 @@ const navigation = {
     },
   ],
   pages: [
-    { name: 'Company', href: '#' },
-    { name: 'Stores', href: '#' },
+    { name: 'Catalog', href: '/catalog' },
+    { name: 'About', href: '/about' },
   ],
 };
 const collections = [
@@ -181,4 +182,4 @@ const perks = [
   },
 ];
 
-export default { footerNavigation, trendingProducts, currencies, collections, navigation, perks };
+export default { footerNavigation, trendingProducts, currencies, collections, navigation, perks, isLoggedIn };

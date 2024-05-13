@@ -1,9 +1,12 @@
 import React from 'react';
+import HeaderWidthMobile from '../components/header/header-width-mobile';
+import Footer from '../components/footer/footer';
 
 const About = () => {
   return (
     <div>
-      <h1>About</h1>
+      <HeaderWidthMobile></HeaderWidthMobile>
+      <Footer></Footer>
     </div>
   );
 };
