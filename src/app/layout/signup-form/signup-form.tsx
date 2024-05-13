@@ -3,6 +3,7 @@ import MyItem from '../../components/signup/formItem';
 import inputTypes from '../../components/signup/inputTypes';
 import blurHandler from '../../components/signup/blur';
 import handler from '../../components/signup/handler';
+import pressSubmit from '../../components/signup/submitBtn';
 
 const SignupForm = () => {
   const [storage, setStorage] = useState(['', '', '', '', '', '', '', '', '', '']);
@@ -20,8 +21,11 @@ const SignupForm = () => {
     'Please enter your password',
   ]);
   const [formValid, setFormValid] = useState(false);
+  // const t = document.querySelector('.submitRegistration') as HTMLButtonElement;
+  // t.addEventListener('click', pressSubmit);
 
   useEffect(() => {
+    // document.querySelector('.submitRegistration')?.addEventListener('click', pressSubmit);
     const even = (element: string) => element.length !== 0;
     if (dataError.some(even)) {
       console.log('!!!!!');
@@ -52,7 +56,12 @@ const SignupForm = () => {
             key={index}
           ></MyItem>
         ))}
-        <button disabled={!formValid} type="submit">
+        <button
+          disabled={!formValid}
+          onClick={(e) => pressSubmit(e, storage)}
+          type="submit"
+          className="submitRegistration"
+        >
           Registration
         </button>
       </form>
