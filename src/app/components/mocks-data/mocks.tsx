@@ -69,22 +69,22 @@ const navigation = {
 };
 const collections = [
   {
-    name: 'Women',
-    href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-04-collection-01.jpg',
-    imageAlt: 'Woman wearing a comfortable cotton t-shirt.',
+    name: 'Indoor plants',
+    href: '/catalog',
+    imageSrc: './assets/products/indoor.jpg',
+    imageAlt: 'Indoor plants',
   },
   {
-    name: 'Men',
-    href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-04-collection-02.jpg',
-    imageAlt: 'Man wearing a comfortable and casual cotton t-shirt.',
+    name: 'Outdoor plants',
+    href: '/catalog',
+    imageSrc: './assets/products/outdoor.jpg',
+    imageAlt: 'Outdoor plants',
   },
   {
-    name: 'Desk Accessories',
-    href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-04-collection-03.jpg',
-    imageAlt: 'Person sitting at a wooden desk with paper note organizer, pencil and tablet.',
+    name: 'Fantasy plants',
+    href: '/catalog',
+    imageSrc: './assets/products/fantasy.jpg',
+    imageAlt: 'Fantasy plants',
   },
 ];
 
@@ -114,72 +114,67 @@ const footerNavigation = {
 const trendingProducts = [
   {
     id: 1,
-    name: 'Leather Long Wallet',
+    name: 'plant 1',
     color: 'Natural',
     price: '$75',
-    href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-04-trending-product-02.jpg',
+    href: '/catalog',
+    imageSrc: './assets/products/preview-plant.jpg',
     imageAlt: 'Hand stitched, orange leather long wallet.',
   },
   {
     id: 2,
-    name: 'Leather 222 Wallet',
+    name: 'Plant 2',
     color: 'Natural',
     price: '$75',
-    href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-04-trending-product-02.jpg',
+    href: '/catalog',
+    imageSrc: './assets/products/preview-plant.jpg',
     imageAlt: 'Hand stitched, orange leather long wallet.',
   },
   {
     id: 3,
-    name: 'Leather 333 Wallet',
+    name: 'Plant 3',
     color: 'Natural',
     price: '$75',
-    href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-04-trending-product-02.jpg',
+    href: '/catalog',
+    imageSrc: './assets/products/preview-plant.jpg',
     imageAlt: 'Hand stitched, orange leather long wallet.',
   },
   {
     id: 4,
-    name: 'Leather 444 Wallet',
+    name: 'Plant 4',
     color: 'Natural',
     price: '$75',
-    href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-04-trending-product-02.jpg',
+    href: '/catalog',
+    imageSrc: './assets/products/preview-plant.jpg',
     imageAlt: 'Hand stitched, orange leather long wallet.',
   },
   {
     id: 5,
-    name: 'Leather 555 Wallet',
+    name: 'Plant 5',
     color: 'Natural',
     price: '$75',
-    href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/home-page-04-trending-product-02.jpg',
+    href: '/catalog',
+    imageSrc: './assets/products/preview-plant.jpg',
     imageAlt: 'Hand stitched, orange leather long wallet.',
   },
 ];
-const perks = [
+const policies = [
   {
-    name: 'Free returns',
-    imageUrl: 'https://tailwindui.com/img/ecommerce/icons/icon-returns-light.svg',
-    description: 'Not what you expected? Place it back in the parcel and attach the pre-paid postage stamp.',
-  },
-  {
-    name: 'Same day delivery',
-    imageUrl: 'https://tailwindui.com/img/ecommerce/icons/icon-calendar-light.svg',
+    name: '30-Day guarantee',
+    imageUrl: './assets/policies/guarantee.png',
     description:
-      'We offer a delivery service that has never been done before. Checkout today and receive your products within hours.',
+      'All plants are guaranteed for 30 days after arrival, if they are still in their original nursery pot.',
   },
   {
-    name: 'All year discount',
-    imageUrl: 'https://tailwindui.com/img/ecommerce/icons/icon-gift-card-light.svg',
-    description: 'Looking for a deal? You can use the code "ALLYEAR" at checkout and get money off all year round.',
+    name: 'Fast shipping',
+    imageUrl: './assets/policies/shipping.png',
+    description: 'Fast shipping on all orders.',
   },
   {
-    name: 'For the planet',
-    imageUrl: 'https://tailwindui.com/img/ecommerce/icons/icon-planet-light.svg',
-    description: 'We’ve pledged 1% of sales to the preservation and restoration of the natural environment.',
+    name: 'Care guide',
+    imageUrl: './assets/policies/guide.png',
+    description: 'Care guide included with each order.',
   },
 ];
 
-export default { footerNavigation, trendingProducts, currencies, collections, navigation, perks, isLoggedIn };
+export default { footerNavigation, trendingProducts, currencies, collections, navigation, policies, isLoggedIn };
