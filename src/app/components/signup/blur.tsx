@@ -1,7 +1,7 @@
 import { TypeOfInputs } from '../../models/interfaces';
 
 const blurHandler = (
-  e: React.FocusEvent<HTMLInputElement, Element>,
+  e: React.FocusEvent<HTMLInputElement, Element> | React.FocusEvent<HTMLSelectElement, Element>,
   reg: TypeOfInputs,
   dataD: Array<boolean>,
   setData: React.Dispatch<React.SetStateAction<boolean[]>>

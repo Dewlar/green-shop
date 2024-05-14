@@ -4,9 +4,10 @@ import inputTypes from '../../components/signup/inputTypes';
 import blurHandler from '../../components/signup/blur';
 import handler from '../../components/signup/handler';
 import pressSubmit from '../../components/signup/submitBtn';
+import MyBtn from '../../components/signup/btn';
 
 const SignupForm = () => {
-  const [storage, setStorage] = useState(['', '', '', '', '', '', '', '', '', '']);
+  const [storage, setStorage] = useState(['', '', '', '', '', '', '', '', '']);
   const [dataDirty, setDataDirty] = useState([false, false, false, false, false, false, false, false, false, false]);
   const [dataError, setDataError] = useState([
     'Please enter your name',
@@ -21,11 +22,8 @@ const SignupForm = () => {
     'Please enter your password',
   ]);
   const [formValid, setFormValid] = useState(false);
-  // const t = document.querySelector('.submitRegistration') as HTMLButtonElement;
-  // t.addEventListener('click', pressSubmit);
 
   useEffect(() => {
-    // document.querySelector('.submitRegistration')?.addEventListener('click', pressSubmit);
     const even = (element: string) => element.length !== 0;
     if (dataError.some(even)) {
       console.log('!!!!!');
@@ -56,14 +54,14 @@ const SignupForm = () => {
             key={index}
           ></MyItem>
         ))}
-        <button
+        <MyBtn
           disabled={!formValid}
-          onClick={(e) => pressSubmit(e, storage)}
+          onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => pressSubmit(e, storage)}
           type="submit"
           className="submitRegistration"
         >
           Registration
-        </button>
+        </MyBtn>
       </form>
     </div>
   );

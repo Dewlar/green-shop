@@ -1,4 +1,3 @@
-import states from '../states';
 import createApiRoot from './client';
 
 const getEndpoints = (allInputValues: Array<string>) => {
@@ -17,7 +16,7 @@ const getEndpoints = (allInputValues: Array<string>) => {
             streetName: allInputValues[5],
             postalCode: allInputValues[6],
             city: allInputValues[4],
-            country: states[allInputValues[3]],
+            country: allInputValues[3],
             phone: allInputValues[7],
             email: allInputValues[8],
           },
