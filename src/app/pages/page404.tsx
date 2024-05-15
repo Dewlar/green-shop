@@ -10,7 +10,7 @@ const Page404 = () => {
         </h1>
         <div className="flex flex-col self-center justify-center relative max-w-xl">
           <img src="./assets/404/404small.png" alt="page not found" className="max-w-xl w-full" />
-          <div className="flex w-full px-4 justify-between -mt-16 sm:-mt-32">
+          <div className="flex w-full px-4 justify-between -mt-16 sm:-mt-32 hidden">
             <h2 className="mt-4 text-5xl text-center font-bold tracking-tight text-gray-900 sm:text-5xl">Page</h2>
             <h2 className="mt-4 text-5xl text-center font-bold tracking-tight text-gray-900 sm:text-5xl">
               not <br /> found

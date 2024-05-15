@@ -1,67 +1,5 @@
-const currencies = ['CAD', 'USD', 'AUD', 'EUR', 'GBP'];
 const isLoggedIn = false;
 const navigation = {
-  categories: [
-    {
-      name: 'Women',
-      featured: [
-        {
-          name: 'New Arrivals',
-          href: '#',
-          imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-01.jpg',
-          imageAlt: 'Models sitting back to back, wearing Basic Tee in black and bone.',
-        },
-        {
-          name: 'Basic Tees',
-          href: '#',
-          imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-02.jpg',
-          imageAlt: 'Close up of Basic Tee fall bundle with off-white, ochre, olive, and black tees.',
-        },
-        {
-          name: 'Accessories',
-          href: '#',
-          imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-03.jpg',
-          imageAlt: 'Model wearing minimalist watch with black wristband and white watch face.',
-        },
-        {
-          name: 'Carry',
-          href: '#',
-          imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-04.jpg',
-          imageAlt: 'Model opening tan leather long wallet with credit card pockets and cash pouch.',
-        },
-      ],
-    },
-    {
-      name: 'Men',
-      featured: [
-        {
-          name: 'New Arrivals',
-          href: '#',
-          imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-01.jpg',
-          imageAlt: 'Hats and sweaters on wood shelves next to various colors of t-shirts on hangers.',
-        },
-        {
-          name: 'Basic Tees',
-          href: '#',
-          imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-02.jpg',
-          imageAlt: 'Model wearing light heather gray t-shirt.',
-        },
-        {
-          name: 'Accessories',
-          href: '#',
-          imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-03.jpg',
-          imageAlt:
-            'Grey 6-panel baseball hat with black brim, black mountain graphic on front, and light heather gray body.',
-        },
-        {
-          name: 'Carry',
-          href: '#',
-          imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-01-men-category-04.jpg',
-          imageAlt: 'Model putting folded cash into slim card holder olive leather wallet with hand stitching.',
-        },
-      ],
-    },
-  ],
   pages: [
     { name: 'Catalog', href: '/catalog' },
     { name: 'About', href: '/about' },
@@ -114,9 +52,9 @@ const footerNavigation = {
 const trendingProducts = [
   {
     id: 1,
-    name: 'plant 1',
-    color: 'Natural',
-    price: '$75',
+    name: 'Plant 1',
+    color: 'Plant',
+    price: '$12',
     href: '/catalog',
     imageSrc: './assets/products/preview-plant.jpg',
     imageAlt: 'Hand stitched, orange leather long wallet.',
@@ -124,8 +62,8 @@ const trendingProducts = [
   {
     id: 2,
     name: 'Plant 2',
-    color: 'Natural',
-    price: '$75',
+    color: 'Plant',
+    price: '$36',
     href: '/catalog',
     imageSrc: './assets/products/preview-plant.jpg',
     imageAlt: 'Hand stitched, orange leather long wallet.',
@@ -133,8 +71,8 @@ const trendingProducts = [
   {
     id: 3,
     name: 'Plant 3',
-    color: 'Natural',
-    price: '$75',
+    color: 'Plant',
+    price: '$54',
     href: '/catalog',
     imageSrc: './assets/products/preview-plant.jpg',
     imageAlt: 'Hand stitched, orange leather long wallet.',
@@ -142,8 +80,8 @@ const trendingProducts = [
   {
     id: 4,
     name: 'Plant 4',
-    color: 'Natural',
-    price: '$75',
+    color: 'Plant',
+    price: '$22',
     href: '/catalog',
     imageSrc: './assets/products/preview-plant.jpg',
     imageAlt: 'Hand stitched, orange leather long wallet.',
@@ -151,8 +89,8 @@ const trendingProducts = [
   {
     id: 5,
     name: 'Plant 5',
-    color: 'Natural',
-    price: '$75',
+    color: 'Plant',
+    price: '$16',
     href: '/catalog',
     imageSrc: './assets/products/preview-plant.jpg',
     imageAlt: 'Hand stitched, orange leather long wallet.',
@@ -177,4 +115,4 @@ const policies = [
   },
 ];
 
-export default { footerNavigation, trendingProducts, currencies, collections, navigation, policies, isLoggedIn };
+export default { footerNavigation, trendingProducts, collections, navigation, policies, isLoggedIn };
