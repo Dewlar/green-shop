@@ -15,7 +15,7 @@ const HeroSection = () => {
           </div>
           <div className="absolute inset-0 bg-gray-900 opacity-50" />
         </div>
-        <div className="h-48 w-full bg-white md:h-56 lg:h-56" />
+        <div className="h-48 w-full bg-green-50 md:h-56 lg:h-56" />
       </div>
 
       <div className="relative mx-auto max-w-2xl px-4 pb-96 text-center sm:px-6 sm:pb-0 lg:px-8">
@@ -27,7 +27,7 @@ const HeroSection = () => {
             </div>
             <div className="absolute inset-0 bg-gray-900 opacity-50" />
           </div>
-          <div className="h-56 w-full bg-white" />
+          <div className="h-56 w-full bg-green-50" />
         </div>
         <div className="relative pt-60 pb-20">
           <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl md:text-4xl">

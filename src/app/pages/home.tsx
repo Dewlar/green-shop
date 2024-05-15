@@ -5,6 +5,7 @@ import Policies from '../components/main-page/policies';
 import Trending from '../components/main-page/trending';
 import Collections from '../components/main-page/collections';
 import HeroSection from '../components/main-page/hero-section';
+import StorySection from '../components/main-page/story-section';
 
 const Home = () => {
   return (
@@ -18,6 +19,8 @@ const Home = () => {
           <HeroSection></HeroSection>
           <Collections></Collections>
         </div>
+        {/* Story */}
+        <StorySection></StorySection>
         {/* Trending */}
         <Trending></Trending>
         {/* Policies */}
