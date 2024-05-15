@@ -27,7 +27,6 @@ const handler = (
     }
   } else if (e.target.name === 'country') {
     if (e.target.value.length === 0) {
-      console.log('fsfs');
       errorItems[3] = `Country is empty`;
     } else {
       errorItems[3] = '';

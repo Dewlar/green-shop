@@ -8,7 +8,13 @@ import MySelect from './select';
 function MyItem({ prop, type, index, dataD, dataE, stor, setData, setStor, setDataE, onB, onC }: TypeItem) {
   return (
     <div className="inputWrapper">
-      <MyLabel htmlFor={prop}>{prop[0].toUpperCase() + prop.slice(1)}</MyLabel>
+      <MyLabel htmlFor={prop}>
+        {prop[0].toUpperCase() +
+          prop
+            .split(/(?=[A-Z])/)
+            .join(' ')
+            .slice(1)}
+      </MyLabel>
       {index === 3 ? (
         <MySelect
           className={prop}
@@ -24,7 +30,9 @@ function MyItem({ prop, type, index, dataD, dataE, stor, setData, setStor, setDa
           className={prop}
           name={prop}
           type={type}
-          placeholder={`Enter your ${prop}`}
+          placeholder={`Enter your ${prop.replace(/([A-Z])/g, function replace(match) {
+            return ` ${match.toLowerCase()}`;
+          })}`}
           value={stor[index]}
           id={prop}
         />

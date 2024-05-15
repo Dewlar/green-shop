@@ -23,6 +23,7 @@ const getEndpoints = (allInputValues: Array<string>) => {
         ],
         email: allInputValues[8],
         password: allInputValues[9],
+        defaultBillingAddress: Number(allInputValues[10]),
       },
     })
     .execute()

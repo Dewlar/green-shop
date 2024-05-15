@@ -5,9 +5,13 @@ import blurHandler from '../../components/signup/blur';
 import handler from '../../components/signup/handler';
 import pressSubmit from '../../components/signup/submitBtn';
 import MyBtn from '../../components/signup/btn';
+import MyInput from '../../components/signup/input';
+import MyLabel from '../../components/signup/label';
+import setDefaultAddress from '../../components/signup/defaultAddress';
+import setShippingAddress from '../../components/signup/shippingAddress';
 
 const SignupForm = () => {
-  const [storage, setStorage] = useState(['', '', '', '', '', '', '', '', '']);
+  const [storage, setStorage] = useState(['', '', '', '', '', '', '', '', '', '', '', '']);
   const [dataDirty, setDataDirty] = useState([false, false, false, false, false, false, false, false, false, false]);
   const [dataError, setDataError] = useState([
     'Please enter your name',
@@ -17,12 +21,13 @@ const SignupForm = () => {
     'Please enter your town/city',
     'Please enter your street',
     'Please enter your zip',
-    'Please enter your phone number',
+    'Please enter your shipping address',
     'Please enter your email',
     'Please enter your password',
   ]);
   const [formValid, setFormValid] = useState(false);
 
+  console.log(storage);
   useEffect(() => {
     const even = (element: string) => element.length !== 0;
     if (dataError.some(even)) {
@@ -36,7 +41,6 @@ const SignupForm = () => {
 
   return (
     <div className="signUpFormWrapper">
-      <h1>its signup-form layout</h1>
       <form className="signUpForm">
         {Object.entries(inputTypes).map((type, index) => (
           <MyItem
@@ -54,6 +58,20 @@ const SignupForm = () => {
             key={index}
           ></MyItem>
         ))}
+        <div className="flex justify-between  w-fit">
+          <MyLabel className="text-xs w-fit mr-5">Set Address as default</MyLabel>
+          <MyInput
+            type={'checkbox'}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDefaultAddress(e, storage, setStorage)}
+          ></MyInput>
+        </div>
+        <div className="flex justify-between  w-fit justify-self-end">
+          <MyLabel className="text-xs w-fit mr-5">Add Shipping address</MyLabel>
+          <MyInput
+            type={'checkbox'}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShippingAddress(e, storage, setStorage)}
+          ></MyInput>
+        </div>
         <MyBtn
           disabled={!formValid}
           onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => pressSubmit(e, storage)}
