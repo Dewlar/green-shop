@@ -1,6 +1,10 @@
 import createApiRoot from './client';
 
-const getEndpoints = (allInputValues: Array<string>) => {
+const getEndpoints = (allInputs: Array<string>) => {
+  const allInputValues = allInputs;
+  if (allInputValues[7] === '') {
+    allInputValues[7] = `${allInputValues[3]}, ${allInputValues[4]}, ${allInputValues[5]}, ${allInputValues[6]}`;
+  }
   return createApiRoot()
     .customers()
     .post({
@@ -10,7 +14,7 @@ const getEndpoints = (allInputValues: Array<string>) => {
         dateOfBirth: allInputValues[2],
         addresses: [
           {
-            id: 'address1',
+            key: 'address1',
             firstName: allInputValues[0],
             lastName: allInputValues[1],
             streetName: allInputValues[5],
@@ -21,6 +25,7 @@ const getEndpoints = (allInputValues: Array<string>) => {
             email: allInputValues[8],
           },
         ],
+        shippingAddresses: [0],
         email: allInputValues[8],
         password: allInputValues[9],
         defaultBillingAddress: Number(allInputValues[10]),

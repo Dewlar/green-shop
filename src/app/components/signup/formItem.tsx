@@ -27,7 +27,7 @@ function MyItem({ prop, type, index, dataD, dataE, stor, setData, setStor, setDa
         <MyInput
           onBlur={(e) => onB(e, regulars, dataD, setData)}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onC(e, stor, setStor, dataE, setDataE)}
-          className={prop}
+          className={`${prop} ${prop}${index}`}
           name={prop}
           type={type}
           placeholder={`Enter your ${prop.replace(/([A-Z])/g, function replace(match) {
@@ -35,6 +35,7 @@ function MyItem({ prop, type, index, dataD, dataE, stor, setData, setStor, setDa
           })}`}
           value={stor[index]}
           id={prop}
+          disabled={index === 7}
         />
       )}
       {dataD[index] && dataE[index] && <div style={{ color: 'red' }}>{dataE[index]}</div>}

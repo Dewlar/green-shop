@@ -9,7 +9,7 @@ export interface TypeOfInputs {
   city: RegExp;
   street: RegExp;
   zip: RegExp;
-  number: RegExp;
+  shippingAddress: RegExp;
   email: RegExp;
   password: RegExp;
 }

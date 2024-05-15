@@ -69,7 +69,9 @@ const SignupForm = () => {
           <MyLabel className="text-xs w-fit mr-5">Add Shipping address</MyLabel>
           <MyInput
             type={'checkbox'}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShippingAddress(e, storage, setStorage)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setShippingAddress(e, storage, setStorage, dataError, setDataError)
+            }
           ></MyInput>
         </div>
         <MyBtn
