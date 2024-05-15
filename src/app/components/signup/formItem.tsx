@@ -35,7 +35,7 @@ function MyItem({ prop, type, index, dataD, dataE, stor, setData, setStor, setDa
           })}`}
           value={stor[index]}
           id={prop}
-          disabled={index === 7}
+          disabled={index === 7 || index === 8 || index === 9 || index === 10}
         />
       )}
       {dataD[index] && dataE[index] && <div style={{ color: 'red' }}>{dataE[index]}</div>}

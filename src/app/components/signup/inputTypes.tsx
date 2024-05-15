@@ -8,7 +8,10 @@ const inputTypes: StringObject = {
   city: 'text',
   street: 'text',
   zip: 'number',
-  shippingAddress: 'text',
+  shippingCountry: 'text',
+  shippingCity: 'text',
+  shippingStreet: 'text',
+  shippingZip: 'number',
   email: 'email',
   password: 'password',
 };

@@ -54,7 +54,7 @@ body {
   transform: translate(-50%, -50%);
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2.5vh 1.5vw;
+  gap: 0.5vh 1.5vw;
 }
 .inputWrapper {
   display: flex;
@@ -70,7 +70,7 @@ body {
   font-size: 18px;
   font-style: italic;
 }
-.shippingAddress {
+.shippingCountry, .shippingCity, .shippingStreet, .shippingZip {
   background-color: #9e9d9d;
   opacity: 80%;
 }

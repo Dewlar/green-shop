@@ -11,8 +11,22 @@ import setDefaultAddress from '../../components/signup/defaultAddress';
 import setShippingAddress from '../../components/signup/shippingAddress';
 
 const SignupForm = () => {
-  const [storage, setStorage] = useState(['', '', '', '', '', '', '', '', '', '', '', '']);
-  const [dataDirty, setDataDirty] = useState([false, false, false, false, false, false, false, false, false, false]);
+  const [storage, setStorage] = useState(['', '', '', '', '', '', '', '', '', '', '', '', '', '']);
+  const [dataDirty, setDataDirty] = useState([
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ]);
   const [dataError, setDataError] = useState([
     'Please enter your name',
     'Please enter your surname',
@@ -21,7 +35,10 @@ const SignupForm = () => {
     'Please enter your town/city',
     'Please enter your street',
     'Please enter your zip',
-    'Please enter your shipping address',
+    'Please enter your shipping country',
+    'Please enter your shipping town/city',
+    'Please enter your shipping street',
+    'Please enter your shipping zip',
     'Please enter your email',
     'Please enter your password',
   ]);
@@ -58,15 +75,15 @@ const SignupForm = () => {
             key={index}
           ></MyItem>
         ))}
-        <div className="flex justify-between  w-fit">
-          <MyLabel className="text-xs w-fit mr-5">Set Address as default</MyLabel>
+        <div className="flex absolute justify-between h-fit w-fit left-1/2 bottom-10">
+          <MyLabel className="text-xs w-fit mr-5 h-fit">Set Address as default</MyLabel>
           <MyInput
             type={'checkbox'}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDefaultAddress(e, storage, setStorage)}
           ></MyInput>
         </div>
-        <div className="flex justify-between  w-fit justify-self-end">
-          <MyLabel className="text-xs w-fit mr-5">Add Shipping address</MyLabel>
+        <div className="flex absolute justify-between w-fit h-fit right-0 bottom-10">
+          <MyLabel className="text-xs w-fit mr-5 h-fit">Add Shipping address</MyLabel>
           <MyInput
             type={'checkbox'}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
