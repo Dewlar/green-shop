@@ -58,7 +58,7 @@ const Header: FC<HeaderProps> = ({ setOpen }) => {
               <div className="flex flex-1 items-center justify-end">
                 {mocks.isLoggedIn ? (
                   <div className="flex items-center lg:ml-8">
-                    {/* Help */}
+                    {/* Account */}
                     <div className="flex">
                       <Link to="/profile" className="-m-2 p-2 text-gray-400 hover:text-gray-500">
                         <span className="sr-only">Account</span>
