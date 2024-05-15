@@ -26,7 +26,6 @@ const Header: FC<HeaderProps> = ({ setOpen }) => {
               <div className="hidden h-full lg:flex">
                 <div className="flex h-full justify-center items-center space-x-8">
                   {mocks.navigation.pages.map((item) => {
-                    console.log(item);
                     return (
                       <Link key={item.name} to={item.href} className="text-gray-500 hover:text-gray-600">
                         {item.name}
@@ -34,7 +33,6 @@ const Header: FC<HeaderProps> = ({ setOpen }) => {
                     );
                   })}
                 </div>
-                {/* Flyout menus */}
               </div>
 
               {/* Mobile menu and search (lg-) */}
