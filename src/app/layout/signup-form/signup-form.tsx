@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MyItem from '../../components/signup/formItem';
 import inputTypes from '../../components/signup/inputTypes';
 import blurHandler from '../../components/signup/blur';
@@ -11,6 +12,7 @@ import setDefaultAddress from '../../components/signup/defaultAddress';
 import setShippingAddress from '../../components/signup/shippingAddress';
 
 const SignupForm = () => {
+  const navigate = useNavigate();
   const [storage, setStorage] = useState(['', '', '', '', '', '', '', '', '', '', '', '', '', '']);
   const [dataDirty, setDataDirty] = useState([
     false,
@@ -58,7 +60,7 @@ const SignupForm = () => {
 
   return (
     <div className="signUpFormWrapper">
-      <form className="signUpForm">
+      <form className="signUpForm" action="/">
         {Object.entries(inputTypes).map((type, index) => (
           <MyItem
             prop={type[0]}
@@ -93,7 +95,7 @@ const SignupForm = () => {
         </div>
         <MyBtn
           disabled={!formValid}
-          onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => pressSubmit(e, storage)}
+          onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => pressSubmit(e, storage, navigate)}
           type="submit"
           className="submitRegistration"
         >

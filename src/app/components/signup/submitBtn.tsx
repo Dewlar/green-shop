@@ -1,14 +1,15 @@
 import React from 'react';
-
-// import { useNavigate } from 'react-router-dom';
+import { NavigateFunction } from 'react-router-dom';
 import getEndpoints from './connect/getInfo';
 
-const pressSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, storage: Array<string>) => {
-  // e.preventDefault();
-  // const navigate = useNavigate();
+const pressSubmit = (
+  e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  storage: Array<string>,
+  navigate: NavigateFunction
+) => {
   e.preventDefault();
   getEndpoints(storage);
-  // navigate('/');
+  navigate('/');
 };
 
 export default pressSubmit;
