@@ -15,13 +15,14 @@ function MyItem({ prop, type, index, dataD, dataE, stor, setData, setStor, setDa
             .join(' ')
             .slice(1)}
       </MyLabel>
-      {index === 3 ? (
+      {index === 3 || index === 7 ? (
         <MySelect
-          className={prop}
+          className={`${prop} ${prop}${index}`}
           id={prop}
           name={prop}
           onBlur={(e) => onB(e, regulars, dataD, setData)}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onC(e, stor, setStor, dataE, setDataE)}
+          disabled={index === 7}
         ></MySelect>
       ) : (
         <MyInput
@@ -35,7 +36,7 @@ function MyItem({ prop, type, index, dataD, dataE, stor, setData, setStor, setDa
           })}`}
           value={stor[index]}
           id={prop}
-          disabled={index === 7 || index === 8 || index === 9 || index === 10}
+          disabled={index === 8 || index === 9 || index === 10}
         />
       )}
       {dataD[index] && dataE[index] && <div style={{ color: 'red' }}>{dataE[index]}</div>}

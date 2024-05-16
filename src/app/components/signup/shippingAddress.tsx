@@ -9,30 +9,38 @@ const setShippingAddress = (
 ) => {
   const storageItems = [...storage];
   const errorItems = [...dataE];
-  const shippingCountry = document.querySelector<HTMLInputElement>('.shippingCountry7');
-  const shippingCity = document.querySelector<HTMLInputElement>('.shippingCity8');
-  const shippingStreet = document.querySelector<HTMLInputElement>('.shippingStreet9');
-  const shippingZip = document.querySelector<HTMLInputElement>('.shippingZip10');
+
+  const shippingCountry = document.querySelector<HTMLSelectElement>('.shippingCountry');
+  const shippingCity = document.querySelector<HTMLInputElement>('.shippingCity');
+  const shippingStreet = document.querySelector<HTMLInputElement>('.shippingStreet');
+  const shippingZip = document.querySelector<HTMLInputElement>('.shippingZip');
+
   const shippingElement = [shippingCountry, shippingCity, shippingStreet, shippingZip];
-  const shippingArray = ['shippingCountry', 'shippingCity', 'shippingStreet', 'shippingZip'];
-  const shippingString = 'shippingCountry, shippingCity, shippingStreet, shippingZip';
+  const shippingArray = ['shippingCountry7', 'shippingCity8', 'shippingStreet9', 'shippingZip10'];
+  // const shippingString = 'shippingCountry7, shippingCity8, shippingStreet9, shippingZip10';
   const indexesOfInputs = [7, 8, 9, 10];
+  console.log(shippingElement);
   shippingElement.forEach((item, index) => {
+    console.log(errorItems);
+    console.log(setDataE);
     item!.toggleAttribute('disabled');
-    item!.classList.toggle(`${shippingArray[index]}`);
-    if (item!.matches(shippingString)) {
+    item!.classList.toggle(shippingArray[index]);
+    if (item?.hasAttribute('disabled')) {
       storageItems[indexesOfInputs[index]] = '';
-      console.log(storageItems);
+      if (indexesOfInputs[index] === 7) {
+        shippingCountry!.value = '';
+      }
       setStr(storageItems);
       e.target.value = '';
-      errorItems[indexesOfInputs[index]] = '';
-    } else {
-      errorItems[indexesOfInputs[index]] = `Invalid shipping address`;
-      if (!e.target.value) {
-        errorItems[indexesOfInputs[index]] = `Shipping address is empty`;
-      }
+      //   errorItems[indexesOfInputs[index]] = '';
+      // } else {
+      //   errorItems[indexesOfInputs[index]] = `Invalid shipping address`;
+      //   if (!e.target.value) {
+      //     errorItems[indexesOfInputs[index]] = `Shipping address is empty`;
+      //   }
+      // }
+      // setDataE(errorItems);
     }
-    setDataE(errorItems);
   });
 };
 

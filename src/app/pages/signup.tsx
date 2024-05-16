@@ -7,7 +7,7 @@ const Signup = () => {
     <div>
       <h1 className="mt-8">Registration</h1>
       <SignupForm></SignupForm>
-      <Link to="/" className="absolute top-10 right-10 h-16 w-16 cursor-pointer">
+      <Link to="/login" className="absolute top-10 right-10 h-16 w-16 cursor-pointer">
         Log In
       </Link>
     </div>

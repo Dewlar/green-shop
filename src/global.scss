@@ -70,7 +70,13 @@ body {
   font-size: 18px;
   font-style: italic;
 }
-.shippingCountry, .shippingCity, .shippingStreet, .shippingZip {
+.shippingCountry7, .shippingCity8, .shippingStreet9, .shippingZip10 {
   background-color: #9e9d9d;
   opacity: 80%;
+}
+
+@media screen and (max-width: 800px) {
+  .signup-form {
+    width: 80vw;
+  }
 }

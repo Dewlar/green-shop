@@ -37,7 +37,7 @@ const getEndpoints = (allInputs: Array<string>) => {
             streetName: allInputValues[9],
             postalCode: allInputValues[10],
             city: allInputValues[8],
-            country: allInputValues[3],
+            country: allInputValues[7],
             email: allInputValues[11],
           },
         ],

@@ -77,14 +77,14 @@ const SignupForm = () => {
             key={index}
           ></MyItem>
         ))}
-        <div className="flex absolute justify-between h-fit w-fit left-1/2 bottom-10">
+        <div className="flex absolute justify-between h-fit w-fit right-0 bottom-10">
           <MyLabel className="text-xs w-fit mr-5 h-fit">Set Address as default</MyLabel>
           <MyInput
             type={'checkbox'}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDefaultAddress(e, storage, setStorage)}
           ></MyInput>
         </div>
-        <div className="flex absolute justify-between w-fit h-fit right-0 bottom-10">
+        <div className="flex absolute justify-between w-fit h-fit right-0 bottom-0">
           <MyLabel className="text-xs w-fit mr-5 h-fit">Add Shipping address</MyLabel>
           <MyInput
             type={'checkbox'}

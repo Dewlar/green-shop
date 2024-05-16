@@ -25,16 +25,22 @@ const handler = (
     } else {
       errorItems[indexOfProp] = '';
     }
-  } else if (e.target.name === 'country') {
+  } else if (e.target.name === 'country' || e.target.name === 'shippingCountry') {
     if (e.target.value.length === 0) {
-      errorItems[3] = `Country is empty`;
+      errorItems[indexOfProp] = `Country is empty`;
     } else {
-      errorItems[3] = '';
+      errorItems[indexOfProp] = '';
     }
   } else if (!typeOfRegular.test(String(e.target.value))) {
-    errorItems[indexOfProp] = `Invalid ${inputType}`;
+    errorItems[indexOfProp] = `Invalid ${inputType.replace(/([A-Z])/g, function replace(match) {
+      return ` ${match.toLowerCase()}`;
+    })}`;
     if (!e.target.value) {
-      errorItems[indexOfProp] = `${inputType[0].toUpperCase() + inputType.slice(1)} is empty`;
+      errorItems[indexOfProp] = `${inputType[0].toUpperCase()}${inputType
+        .replace(/([A-Z])/g, function replace(match) {
+          return ` ${match.toLowerCase()}`;
+        })
+        .slice(1)} is empty`;
     }
   } else {
     errorItems[indexOfProp] = '';
