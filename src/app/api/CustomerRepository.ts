@@ -28,6 +28,7 @@ class CustomerRepository {
     try {
       const { email, password } = userData;
       const refreshTokenClient = new RefreshTokenClient();
+      console.log(refreshTokenClient, 'refreshTokenClient');
       const refreshApiRoot = refreshTokenClient.getApiRoot();
 
       const tokenApiResult = await refreshApiRoot

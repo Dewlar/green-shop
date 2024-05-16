@@ -2,12 +2,15 @@ import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { Bars3Icon, ShoppingBagIcon, UserIcon } from '@heroicons/react/24/outline';
 import mocks from '../mocks-data/mocks';
+import { useStateContext } from '../../state/state-context';
 
 interface HeaderProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const Header: FC<HeaderProps> = ({ setOpen }) => {
+  const { auth } = useStateContext();
+
   return (
     <header className="relative">
       <nav aria-label="Top">
@@ -54,7 +57,7 @@ const Header: FC<HeaderProps> = ({ setOpen }) => {
               </Link>
 
               <div className="flex flex-1 items-center justify-end">
-                {mocks.isLoggedIn ? (
+                {auth.get.isAuth ? (
                   <div className="flex items-center lg:ml-8">
                     {/* Account */}
                     <div className="flex">

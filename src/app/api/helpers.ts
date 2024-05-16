@@ -111,3 +111,19 @@ export function getAuthMiddlewareOptions(userData: UserCredentialData): Password
     fetch,
   };
 }
+
+export const storageKey = 'greenshop';
+
+export enum LocalStorageKeysEnum {
+  'IS_AUTH' = 'IS_AUTH',
+}
+
+export function storageGet<T>(key: string): T | null {
+  const item = localStorage.getItem(`${storageKey}_${key}`);
+  return item ? (JSON.parse(item) as T) : null;
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
+export const storageSet = (key: string, data: any): void => {
+  localStorage.setItem(`${storageKey}_${key}`, JSON.stringify(data));
+};
