@@ -1,9 +1,14 @@
 import {
   AnonymousAuthMiddlewareOptions,
+  ClientResponse,
+  ClientResult,
+  HttpErrorType,
   HttpMiddlewareOptions,
   PasswordAuthMiddlewareOptions,
   RefreshAuthMiddlewareOptions,
+  TokenStore,
 } from '@commercetools/sdk-client-v2';
+import { CustomerSignInResult } from '@commercetools/platform-sdk';
 import TokenService from './TokenService';
 
 export interface ExistingTokenFlowOptions {
@@ -16,6 +21,11 @@ export interface ExistingTokenFlowOptions {
 export interface UserCredentialData {
   email: string;
   password: string;
+}
+
+export interface ApiLoginResult {
+  apiResult: ClientResponse<CustomerSignInResult> | ClientResponse<ClientResult> | HttpErrorType;
+  token: TokenStore | null;
 }
 
 export const getProjectKey = (): string => {
