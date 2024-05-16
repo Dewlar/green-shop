@@ -1,6 +1,7 @@
 import {
   AnonymousAuthMiddlewareOptions,
   HttpMiddlewareOptions,
+  PasswordAuthMiddlewareOptions,
   RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
 import TokenService from './TokenService';
@@ -10,6 +11,11 @@ export interface ExistingTokenFlowOptions {
   options: {
     force: boolean;
   };
+}
+
+export interface UserCredentialData {
+  email: string;
+  password: string;
 }
 
 export const getProjectKey = (): string => {
@@ -70,6 +76,25 @@ export function getAnonymousAuthMiddlewareOptions(): AnonymousAuthMiddlewareOpti
     credentials: {
       clientId: getClientId(),
       clientSecret: getClientSecret(),
+    },
+    scopes: getScopes(),
+    tokenCache: new TokenService(),
+    fetch,
+  };
+}
+
+export function getAuthMiddlewareOptions(userData: UserCredentialData): PasswordAuthMiddlewareOptions {
+  const { email, password } = userData;
+  return {
+    host: getAuthURL(),
+    projectKey: getProjectKey(),
+    credentials: {
+      clientId: getClientId(),
+      clientSecret: getClientSecret(),
+      user: {
+        username: email,
+        password,
+      },
     },
     scopes: getScopes(),
     tokenCache: new TokenService(),
