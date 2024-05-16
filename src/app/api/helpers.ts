@@ -1,4 +1,8 @@
-import { HttpMiddlewareOptions, RefreshAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
+import {
+  AnonymousAuthMiddlewareOptions,
+  HttpMiddlewareOptions,
+  RefreshAuthMiddlewareOptions,
+} from '@commercetools/sdk-client-v2';
 import TokenService from './TokenService';
 
 export interface ExistingTokenFlowOptions {
@@ -54,6 +58,20 @@ export function getRefreshAuthMiddlewareOptions(refreshToken: string): RefreshAu
     projectKey: getProjectKey(),
     credentials: { clientId: getClientId(), clientSecret: getClientSecret() },
     refreshToken,
+    tokenCache: new TokenService(),
+    fetch,
+  };
+}
+
+export function getAnonymousAuthMiddlewareOptions(): AnonymousAuthMiddlewareOptions {
+  return {
+    host: getAuthURL(),
+    projectKey: getProjectKey(),
+    credentials: {
+      clientId: getClientId(),
+      clientSecret: getClientSecret(),
+    },
+    scopes: getScopes(),
     tokenCache: new TokenService(),
     fetch,
   };
