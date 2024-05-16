@@ -31,7 +31,8 @@ export interface TypeItem {
     e: React.FocusEvent<HTMLInputElement, Element> | React.FocusEvent<HTMLSelectElement, Element>,
     reg: TypeOfInputs,
     dataD: Array<boolean>,
-    setData: React.Dispatch<React.SetStateAction<boolean[]>>
+    setData: React.Dispatch<React.SetStateAction<boolean[]>>,
+    dataE: Array<string>
   ) => void;
   onC: (
     e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>,
@@ -46,6 +47,7 @@ export interface BlurType {
   reg: TypeOfInputs;
   dataD: Array<boolean>;
   setData: React.Dispatch<React.SetStateAction<boolean[]>>;
+  dataE: Array<string>;
 }
 
 export interface StringObject {

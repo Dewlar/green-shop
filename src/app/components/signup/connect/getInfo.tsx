@@ -1,16 +1,17 @@
 import createApiRoot from './client';
 
 const getEndpoints = (allInputs: Array<string>) => {
+  console.log(allInputs);
   const allInputValues = allInputs;
   if (allInputValues[7] === '') {
-    // eslint-disable-next-line prefer-destructuring
-    allInputValues[7] = allInputValues[3];
-    // eslint-disable-next-line prefer-destructuring
-    allInputValues[8] = allInputValues[4];
-    // eslint-disable-next-line prefer-destructuring
-    allInputValues[9] = allInputValues[5];
-    // eslint-disable-next-line prefer-destructuring
-    allInputValues[10] = allInputValues[6];
+    const value3 = allInputValues[3];
+    allInputValues[7] = value3;
+    const value4 = allInputValues[4];
+    allInputValues[8] = value4;
+    const value5 = allInputValues[5];
+    allInputValues[9] = value5;
+    const value6 = allInputValues[6];
+    allInputValues[10] = value6;
   }
   return createApiRoot()
     .customers()

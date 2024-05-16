@@ -1,6 +1,7 @@
 import { TypeOfInputs } from '../../models/interfaces';
 import isOlderThan13 from './checkDate';
 import regulars from './regExp';
+import { setErrorStyle, removeErrorStyle } from './setErrorStyle';
 
 const handler = (
   e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>,
@@ -21,14 +22,18 @@ const handler = (
 
   if (e.target.name === 'birth') {
     if (!isOlderThan13(e.target.value)) {
+      setErrorStyle(e);
       errorItems[indexOfProp] = `Invalid birth date`;
     } else {
+      removeErrorStyle(e);
       errorItems[indexOfProp] = '';
     }
   } else if (e.target.name === 'country' || e.target.name === 'shippingCountry') {
     if (e.target.value.length === 0) {
+      setErrorStyle(e);
       errorItems[indexOfProp] = `Country is empty`;
     } else {
+      removeErrorStyle(e);
       errorItems[indexOfProp] = '';
     }
   } else if (!typeOfRegular.test(String(e.target.value))) {
@@ -42,7 +47,9 @@ const handler = (
         })
         .slice(1)} is empty`;
     }
+    setErrorStyle(e);
   } else {
+    removeErrorStyle(e);
     errorItems[indexOfProp] = '';
   }
   console.log(errorItems);

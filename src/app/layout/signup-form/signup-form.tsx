@@ -37,10 +37,10 @@ const SignupForm = () => {
     'Please enter your town/city',
     'Please enter your street',
     'Please enter your zip',
-    'Please enter your shipping country',
-    'Please enter your shipping town/city',
-    'Please enter your shipping street',
-    'Please enter your shipping zip',
+    '',
+    '',
+    '',
+    '',
     'Please enter your email',
     'Please enter your password',
   ]);
@@ -48,7 +48,9 @@ const SignupForm = () => {
 
   console.log(storage);
   useEffect(() => {
+    console.log(dataError);
     const even = (element: string) => element.length !== 0;
+    // if (!document.querySelector<HTMLInputElement>('.setShipping')!.checked) {}
     if (dataError.some(even)) {
       console.log('!!!!!');
       setFormValid(false);
@@ -77,16 +79,17 @@ const SignupForm = () => {
             key={index}
           ></MyItem>
         ))}
-        <div className="flex absolute justify-between h-fit w-fit right-0 bottom-10">
+        <div className="flex absolute justify-between h-fit w-fit right-0 bottom-14">
           <MyLabel className="text-xs w-fit mr-5 h-fit">Set Address as default</MyLabel>
           <MyInput
             type={'checkbox'}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDefaultAddress(e, storage, setStorage)}
           ></MyInput>
         </div>
-        <div className="flex absolute justify-between w-fit h-fit right-0 bottom-0">
+        <div className="flex absolute justify-between w-fit h-fit right-0 bottom-8">
           <MyLabel className="text-xs w-fit mr-5 h-fit">Add Shipping address</MyLabel>
           <MyInput
+            className="setShipping"
             type={'checkbox'}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setShippingAddress(e, storage, setStorage, dataError, setDataError)

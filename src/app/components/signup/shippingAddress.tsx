@@ -17,7 +17,6 @@ const setShippingAddress = (
 
   const shippingElement = [shippingCountry, shippingCity, shippingStreet, shippingZip];
   const shippingArray = ['shippingCountry7', 'shippingCity8', 'shippingStreet9', 'shippingZip10'];
-  // const shippingString = 'shippingCountry7, shippingCity8, shippingStreet9, shippingZip10';
   const indexesOfInputs = [7, 8, 9, 10];
   console.log(shippingElement);
   shippingElement.forEach((item, index) => {

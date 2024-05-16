@@ -20,13 +20,13 @@ function MyItem({ prop, type, index, dataD, dataE, stor, setData, setStor, setDa
           className={`${prop} ${prop}${index}`}
           id={prop}
           name={prop}
-          onBlur={(e) => onB(e, regulars, dataD, setData)}
+          onBlur={(e) => onB(e, regulars, dataD, setData, dataE)}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onC(e, stor, setStor, dataE, setDataE)}
           disabled={index === 7}
         ></MySelect>
       ) : (
         <MyInput
-          onBlur={(e) => onB(e, regulars, dataD, setData)}
+          onBlur={(e) => onB(e, regulars, dataD, setData, dataE)}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => onC(e, stor, setStor, dataE, setDataE)}
           className={`${prop} ${prop}${index}`}
           name={prop}

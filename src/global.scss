@@ -76,7 +76,29 @@ body {
 }
 
 @media screen and (max-width: 800px) {
-  .signup-form {
+  .signUpForm {
     width: 80vw;
+  }
+}
+@media screen and (max-width: 650px) {
+  .signUpForm {
+    width: 90vw;
+    label {
+      font-size: 15px;
+    }
+    input, select {
+      font-size: 12px;
+    }
+  }
+}
+@media screen and (max-width: 450px) {
+  .signUpForm {
+    width: 95vw;
+    label {
+      font-size: 12px;
+    }
+    input, select {
+      font-size: 10px;
+    }
   }
 }
