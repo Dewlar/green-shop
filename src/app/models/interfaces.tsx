@@ -56,5 +56,9 @@ export interface StringObject {
 export interface SelectHtml {
   e: React.ChangeEvent<HTMLInputElement> | React.SelectHTMLAttributes<HTMLSelectElement>;
 }
+export interface ModalError {
+  className: string;
+  errorText: string;
+}
 
 export default { sample, sample2 };

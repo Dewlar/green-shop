@@ -74,6 +74,21 @@ body {
   background-color: #9e9d9d;
   opacity: 80%;
 }
+.modal {
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 15px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #87ce95;
+  height: 20vh;
+  width: 25vw;
+}
 
 @media screen and (max-width: 800px) {
   .signUpForm {

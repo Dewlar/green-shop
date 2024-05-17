@@ -17,28 +17,28 @@ const setShippingAddress = (
 
   const shippingElement = [shippingCountry, shippingCity, shippingStreet, shippingZip];
   const shippingArray = ['shippingCountry7', 'shippingCity8', 'shippingStreet9', 'shippingZip10'];
+  const errorPlease = [
+    'Please enter your shipping country',
+    'Please enter your shipping city',
+    'Please enter your shipping street',
+    'Please enter your shipping zip',
+  ];
   const indexesOfInputs = [7, 8, 9, 10];
-  console.log(shippingElement);
   shippingElement.forEach((item, index) => {
-    console.log(errorItems);
-    console.log(setDataE);
     item!.toggleAttribute('disabled');
     item!.classList.toggle(shippingArray[index]);
     if (item?.hasAttribute('disabled')) {
+      errorItems[indexesOfInputs[index]] = '';
+      setDataE(errorItems);
       storageItems[indexesOfInputs[index]] = '';
       if (indexesOfInputs[index] === 7) {
         shippingCountry!.value = '';
       }
       setStr(storageItems);
       e.target.value = '';
-      //   errorItems[indexesOfInputs[index]] = '';
-      // } else {
-      //   errorItems[indexesOfInputs[index]] = `Invalid shipping address`;
-      //   if (!e.target.value) {
-      //     errorItems[indexesOfInputs[index]] = `Shipping address is empty`;
-      //   }
-      // }
-      // setDataE(errorItems);
+    } else {
+      errorItems[indexesOfInputs[index]] = errorPlease[index];
+      setDataE(errorItems);
     }
   });
 };

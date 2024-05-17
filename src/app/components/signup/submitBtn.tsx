@@ -8,8 +8,10 @@ const pressSubmit = (
   navigate: NavigateFunction
 ) => {
   e.preventDefault();
-  getEndpoints(storage);
-  navigate('/');
+  getEndpoints(storage).then((k) => console.log(k));
+  if (storage[13] === '0') {
+    navigate('/');
+  }
 };
 
 export default pressSubmit;

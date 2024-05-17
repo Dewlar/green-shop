@@ -1,4 +1,5 @@
 import createApiRoot from './client';
+import showErrorModal from '../showModal';
 
 const getEndpoints = (allInputs: Array<string>) => {
   console.log(allInputs);
@@ -49,7 +50,7 @@ const getEndpoints = (allInputs: Array<string>) => {
       },
     })
     .execute()
-    .catch(console.error);
+    .catch((err) => showErrorModal(err));
 };
 
 export default getEndpoints;

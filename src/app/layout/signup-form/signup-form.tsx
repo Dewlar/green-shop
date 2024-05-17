@@ -10,6 +10,8 @@ import MyInput from '../../components/signup/input';
 import MyLabel from '../../components/signup/label';
 import setDefaultAddress from '../../components/signup/defaultAddress';
 import setShippingAddress from '../../components/signup/shippingAddress';
+import MyModal from '../../components/signup/modal';
+// import MyModal from '../../components/signup/modal';
 
 const SignupForm = () => {
   const navigate = useNavigate();
@@ -44,13 +46,13 @@ const SignupForm = () => {
     'Please enter your email',
     'Please enter your password',
   ]);
+  // const [errModal, showModal] = useState(false);
   const [formValid, setFormValid] = useState(false);
 
   console.log(storage);
   useEffect(() => {
-    console.log(dataError);
+    // console.log(errModal);
     const even = (element: string) => element.length !== 0;
-    // if (!document.querySelector<HTMLInputElement>('.setShipping')!.checked) {}
     if (dataError.some(even)) {
       console.log('!!!!!');
       setFormValid(false);
@@ -104,6 +106,7 @@ const SignupForm = () => {
         >
           Registration
         </MyBtn>
+        <MyModal className="modal" errorText=""></MyModal>
       </form>
     </div>
   );
