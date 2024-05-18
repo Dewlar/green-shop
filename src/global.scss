@@ -39,3 +39,99 @@ html {
 
 body {
 }
+
+.signUpFormWrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.signUpForm {
+  position: fixed;
+  width: 60vw;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5vh 1.5vw;
+}
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 90px;
+}
+.submitRegistration {
+  position: absolute;
+  bottom: -50px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  font-style: italic;
+}
+.shippingCountry7, .shippingCity8, .shippingStreet9, .shippingZip10 {
+  background-color: #9e9d9d;
+  opacity: 80%;
+}
+#modal, #modalSuccess {
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 15px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  height: 20vh;
+  width: 25vw;
+}
+
+@media screen and (max-width: 1200px) {
+  #modal {
+    height: 25vh;
+    width: 40vw;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .signUpForm {
+    width: 80vw;
+  }
+  #modal {
+    height: 20vh;
+    width: 55vw;
+  }
+}
+@media screen and (max-width: 650px) {
+  .signUpForm {
+    width: 90vw;
+    label {
+      font-size: 15px;
+    }
+    input, select {
+      font-size: 12px;
+    }
+  }
+  #modal {
+    height: 20vh;
+    width: 70vw;
+  }
+}
+@media screen and (max-width: 450px) {
+  .signUpForm {
+    width: 95vw;
+    label {
+      font-size: 12px;
+    }
+    input, select {
+      font-size: 10px;
+    }
+  }
+  #modal {
+    height: 30vh;
+    width: 90vw;
+  }
+}
