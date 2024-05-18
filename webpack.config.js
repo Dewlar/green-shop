@@ -2,7 +2,7 @@ const path = require('path');
 const { merge } = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 // const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-// const DotenvWebpackPlugin = require('dotenv-webpack');
+const DotenvWebpackPlugin = require('dotenv-webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const EslintPlugin = require('eslint-webpack-plugin');
 
@@ -22,7 +22,7 @@ const baseConfig = {
         }
       },
       {
-        test: /\.(jsx|tsx)$/,
+        test: /\.(jsx|tsx|ts)$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
@@ -60,7 +60,7 @@ const baseConfig = {
     publicPath: '/',
   },
   plugins: [
-    // new DotenvWebpackPlugin(),
+    new DotenvWebpackPlugin(),
     // new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './src/index.html'),
