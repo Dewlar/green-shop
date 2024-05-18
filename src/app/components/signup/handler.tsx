@@ -15,11 +15,9 @@ const handler = (
   const typeOfRegular = regulars[inputType as keyof TypeOfInputs];
   const indexOfProp = Object.keys(regulars).indexOf(inputType as keyof TypeOfInputs);
 
-  console.log(storageItems);
   storageItems[indexOfProp] = e.target.value;
   setStorage(storageItems);
   const errorItems = [...dataE];
-
   if (e.target.name === 'birth') {
     if (!isOlderThan13(e.target.value)) {
       setErrorStyle(e);
@@ -52,7 +50,6 @@ const handler = (
     removeErrorStyle(e);
     errorItems[indexOfProp] = '';
   }
-  console.log(errorItems);
   setDataE(errorItems);
 };
 

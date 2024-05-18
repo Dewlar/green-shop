@@ -1,3 +1,5 @@
+import { NavigateFunction } from 'react-router-dom';
+
 const sample = () => 1;
 const sample2 = () => 1;
 
@@ -58,7 +60,10 @@ export interface SelectHtml {
 }
 export interface ModalError {
   className: string;
+  classText: string;
   errorText: string;
+  type: string;
+  redirect?: NavigateFunction;
 }
 
 export default { sample, sample2 };

@@ -10,7 +10,6 @@ const blurHandler = (
 ) => {
   const dirtyItems = [...dataD];
   const index = Object.keys(reg).indexOf(e.target.name as keyof TypeOfInputs);
-  console.log(dirtyItems);
   if (!dirtyItems[index] && dataE !== undefined && dataE[index] !== '') {
     setErrorStyle(e);
   }

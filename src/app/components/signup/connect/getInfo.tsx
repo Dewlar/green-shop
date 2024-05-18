@@ -1,8 +1,7 @@
+import { showErrorModal } from '../showModal';
 import createApiRoot from './client';
-import showErrorModal from '../showModal';
 
 const getEndpoints = (allInputs: Array<string>) => {
-  console.log(allInputs);
   const allInputValues = allInputs;
   if (allInputValues[7] === '') {
     const value3 = allInputValues[3];

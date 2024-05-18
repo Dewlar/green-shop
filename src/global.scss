@@ -74,7 +74,7 @@ body {
   background-color: #9e9d9d;
   opacity: 80%;
 }
-#modal {
+#modal, #modalSuccess {
   position: absolute;
   display: none;
   flex-direction: column;
@@ -87,9 +87,6 @@ body {
   transform: translate(-50%, -50%);
   height: 20vh;
   width: 25vw;
-}
-.modal-active {
-  display: flex;
 }
 
 @media screen and (max-width: 1200px) {

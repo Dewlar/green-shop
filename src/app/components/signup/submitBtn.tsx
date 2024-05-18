@@ -1,18 +1,14 @@
 import React from 'react';
-import { NavigateFunction } from 'react-router-dom';
 import getEndpoints from './connect/getInfo';
+import { showSuccessModal } from './showModal';
 
-const pressSubmit = (
-  e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  storage: Array<string>,
-  navigate: NavigateFunction
-) => {
+const pressSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, storage: Array<string>) => {
   e.preventDefault();
-  getEndpoints(storage).then((item) => {
-    console.log(item);
-    const modalText = document.querySelector('.modalText');
-    if (modalText?.innerHTML === '') {
-      navigate('/');
+  getEndpoints(storage).then(() => {
+    const modalText = document.getElementById('modalTextError');
+    console.log(modalText);
+    if (modalText === null) {
+      showSuccessModal('Great! You are registered');
     }
   });
 };

@@ -46,18 +46,13 @@ const SignupForm = () => {
     'Please enter your email',
     'Please enter your password',
   ]);
-  // const [errModal, showModal] = useState(false);
   const [formValid, setFormValid] = useState(false);
 
-  console.log(storage);
   useEffect(() => {
-    // console.log(errModal);
     const even = (element: string) => element.length !== 0;
     if (dataError.some(even)) {
-      console.log('!!!!!');
       setFormValid(false);
     } else {
-      console.log('&&&&&&');
       setFormValid(true);
     }
   }, dataError);
@@ -100,13 +95,20 @@ const SignupForm = () => {
         </div>
         <MyBtn
           disabled={!formValid}
-          onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => pressSubmit(e, storage, navigate)}
+          onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => pressSubmit(e, storage)}
           type="submit"
           className="submitRegistration"
         >
           Registration
         </MyBtn>
-        <MyModal className="modal" errorText=""></MyModal>
+        <MyModal className="modal" classText="modalTextError" errorText="" type="Error"></MyModal>
+        <MyModal
+          className="modalSuccess"
+          classText="modalTextSuccess"
+          errorText=""
+          type="Success"
+          redirect={navigate}
+        ></MyModal>
       </form>
     </div>
   );
