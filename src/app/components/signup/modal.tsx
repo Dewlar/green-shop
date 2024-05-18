@@ -13,7 +13,7 @@ const MyModal = ({ className, classText, errorText, type, redirect }: ModalError
 
   return (
     <div className={className}>
-      <div className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert" id={className}>
+      <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert" id={className}>
         <p className="font-bold">{type}</p>
         <p id={classText}>{errorText}</p>
         <button className="ok" onClick={(e) => handleClose(e)}>
