@@ -15,7 +15,7 @@ import MyModal from '../../components/signup/modal';
 
 const SignupForm = () => {
   const navigate = useNavigate();
-  const [storage, setStorage] = useState(['', '', '', '', '', '', '', '', '', '', '', '', '', '']);
+  const [storage, setStorage] = useState(['', '', '', '', '', '', '', '', '', '', '', '', '', '', '']);
   const [dataDirty, setDataDirty] = useState([
     false,
     false,

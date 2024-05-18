@@ -8,10 +8,13 @@ const pressSubmit = (
   navigate: NavigateFunction
 ) => {
   e.preventDefault();
-  getEndpoints(storage).then((k) => console.log(k));
-  if (storage[13] === '0') {
-    navigate('/');
-  }
+  getEndpoints(storage).then((item) => {
+    console.log(item);
+    const modalText = document.querySelector('.modalText');
+    if (modalText?.innerHTML === '') {
+      navigate('/');
+    }
+  });
 };
 
 export default pressSubmit;

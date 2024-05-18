@@ -8,8 +8,10 @@ const setDefaultAddress = (
   const storageItems = [...storage];
   if (e.target.checked === true) {
     storageItems[13] = '0';
+    storageItems[14] = '1';
   } else {
     storageItems[13] = '';
+    storageItems[14] = '';
   }
   setStr(storageItems);
 };

@@ -4,18 +4,20 @@ import { ModalError } from '../../models';
 const MyModal = ({ className, errorText }: ModalError) => {
   const handleClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    const modal = document.querySelector<HTMLElement>(`.${className}`);
+    const modal = document.getElementById(`${className}`);
     modal!.style.display = 'none';
   };
   console.log('$$$$$$$');
 
   return (
     <div className={className}>
-      <div className="modalError">Error</div>
-      <div className="modalText">{errorText}</div>
-      <button className="ok" onClick={(e) => handleClose(e)}>
-        OK
-      </button>
+      <div className="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert" id={className}>
+        <p className="font-bold">Error</p>
+        <p id="modalText">{errorText}</p>
+        <button className="ok" onClick={(e) => handleClose(e)}>
+          OK
+        </button>
+      </div>
     </div>
   );
 };
