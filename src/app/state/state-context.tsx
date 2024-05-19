@@ -32,19 +32,6 @@ const initialContext: StateContextType = {
   },
 };
 
-// const initialContext: StateContextType = {
-//   auth: {
-//     isAuth: false,
-//     authData: {
-//       token: '',
-//       expirationTime: 0,
-//       refreshToken: '',
-//     },
-//     setisAuth: (isAuth) => {},
-//     setauthData: (authData) => {},
-//   },
-// };
-
 type Props = { children: ReactNode };
 // create context
 const StateContext = createContext<StateContextType>(initialContext);

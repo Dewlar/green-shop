@@ -20,7 +20,6 @@ const LoginForm = () => {
     const errors: string[] = [];
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const latinCharsRegex = /^[a-zA-Z0-9._%+-@]+$/;
-    console.log(email);
 
     if (!email) {
       errors.push('Email is required.');
@@ -36,6 +35,10 @@ const LoginForm = () => {
 
     if (!email.includes('@')) {
       errors.push('Email address must contain the "@" symbol.');
+    }
+
+    if (email.trim() !== email) {
+      errors.push('Email address should not contain leading or trailing spaces.');
     }
 
     const [, domainPart] = email.split('@');
@@ -67,6 +70,9 @@ const LoginForm = () => {
     if (!/[@$!%*?&]/.test(pw)) {
       errors.push('Password must contain at least one special character.');
     }
+    if (pw.trim() !== pw) {
+      errors.push('Email address should not contain leading or trailing spaces.');
+    }
     return errors;
   };
 
@@ -85,14 +91,9 @@ const LoginForm = () => {
 
     const customerController = new CustomerController();
 
-    customerController.createAnonymousCustomer().then((response) => {
-      console.log(response);
-    });
-
     customerController
       .loginCustomer({ email: username, password })
       .then((response) => {
-        console.log(response);
         if (response.apiResult.statusCode === 200 && response.token) {
           storageSet(LocalStorageKeysEnum.IS_AUTH, true);
 
@@ -149,7 +150,7 @@ const LoginForm = () => {
                 onChange={handleEmailChange}
                 id="email"
                 name="email"
-                type="email"
+                type="text"
                 autoComplete="email"
                 required
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"

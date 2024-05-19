@@ -28,7 +28,6 @@ class CustomerRepository {
     try {
       const { email, password } = userData;
       const refreshTokenClient = new RefreshTokenClient();
-      console.log(refreshTokenClient, 'refreshTokenClient');
       const refreshApiRoot = refreshTokenClient.getApiRoot();
 
       const tokenApiResult = await refreshApiRoot
@@ -44,10 +43,7 @@ class CustomerRepository {
         })
         .execute();
 
-      console.log('Token API Result:', tokenApiResult);
-
       const token = this.tokenService.get();
-      console.log('Retrieved Token:', token);
 
       return {
         apiResult: tokenApiResult as ClientResponse<CustomerSignInResult>,
