@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import MyItem from '../../components/signup/formItem';
 import inputTypes from '../../components/signup/inputTypes';
 import blurHandler from '../../components/signup/blur';
@@ -14,7 +14,7 @@ import MyModal from '../../components/signup/modal';
 // import MyModal from '../../components/signup/modal';
 
 const SignupForm = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [storage, setStorage] = useState(['', '', '', '', '', '', '', '', '', '', '', '', '', '', '']);
   const [dataDirty, setDataDirty] = useState([
     false,
@@ -55,7 +55,7 @@ const SignupForm = () => {
     } else {
       setFormValid(true);
     }
-  }, dataError);
+  }, [dataError]); // change dataError to [dataError]. So you need to specify an array of dependencies instead of passing values
 
   return (
     <div className="signUpFormWrapper">
@@ -102,13 +102,22 @@ const SignupForm = () => {
         >
           Registration
         </MyBtn>
-        <MyModal className="modal" classText="modalTextError" errorText="" type="Error"></MyModal>
+        <MyModal
+          className="modal"
+          classText="modalTextError"
+          errorText=""
+          type="Error"
+          login={storage[11]}
+          password={storage[12]}
+        ></MyModal>
         <MyModal
           className="modalSuccess"
           classText="modalTextSuccess"
           errorText=""
           type="Success"
-          redirect={navigate}
+          login={storage[11]}
+          password={storage[12]}
+          // redirect={navigate}
         ></MyModal>
       </form>
     </div>

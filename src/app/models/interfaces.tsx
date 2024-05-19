@@ -63,6 +63,8 @@ export interface ModalError {
   classText: string;
   errorText: string;
   type: string;
+  login: string;
+  password: string;
   redirect?: NavigateFunction;
 }
 
