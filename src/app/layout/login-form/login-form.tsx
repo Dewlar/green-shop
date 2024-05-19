@@ -20,7 +20,6 @@ const LoginForm = () => {
     const errors: string[] = [];
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const latinCharsRegex = /^[a-zA-Z0-9._%+-@]+$/;
-    console.log(email);
 
     if (!email) {
       errors.push('Email is required.');
@@ -92,14 +91,9 @@ const LoginForm = () => {
 
     const customerController = new CustomerController();
 
-    customerController.createAnonymousCustomer().then((response) => {
-      console.log(response);
-    });
-
     customerController
       .loginCustomer({ email: username, password })
       .then((response) => {
-        console.log(response);
         if (response.apiResult.statusCode === 200 && response.token) {
           storageSet(LocalStorageKeysEnum.IS_AUTH, true);
 
