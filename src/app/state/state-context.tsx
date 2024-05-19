@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, ReactNode, FC, useEffect } from 'react';
+// import { useLocation, useNavigate } from 'react-router-dom';
 import CustomerController from '../api/CustomerController';
 import TokenService from '../api/TokenService';
 import { LocalStorageKeysEnum, storageGet, storageSet } from '../api/helpers';
@@ -52,6 +53,8 @@ export const StateProvider: FC<Props> = ({ children }) => {
 
   const savedToken = new TokenService();
   const customerController = new CustomerController();
+  // const navigate = useNavigate();
+  // const location = useLocation();
 
   useEffect(() => {
     if (savedToken.get().token !== '') {
@@ -67,6 +70,7 @@ export const StateProvider: FC<Props> = ({ children }) => {
       storageSet(LocalStorageKeysEnum.IS_AUTH, false);
       customerController.createAnonymousCustomer();
       setAuth({ isAuth: false, authData: savedToken.get() });
+      // navigate(location.pathname, { replace: true });
     },
   };
 

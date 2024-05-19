@@ -3,12 +3,15 @@ import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 import mocks from '../mocks-data/mocks';
+import { useStateContext } from '../../state/state-context';
+import CartIcon from './cart-icon';
 
 interface HeaderProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const MobileMenu: FC<HeaderProps> = ({ open, setOpen }) => {
+  const { auth } = useStateContext();
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog className="relative z-40 lg:hidden" onClose={setOpen}>
@@ -58,18 +61,41 @@ const MobileMenu: FC<HeaderProps> = ({ open, setOpen }) => {
                 ))}
               </div>
 
-              <div className="space-y-6 border-t border-gray-200 px-4 py-6">
-                <div className="flow-root">
-                  <Link to="/signup" className="-m-2 block p-2 font-medium text-gray-900">
-                    Create an account
-                  </Link>
+              {auth.get.isAuth ? (
+                <>
+                  <div className="border-t border-gray-200 px-4 py-6 flex flex-col gap-2.5">
+                    <div className="flow-root">
+                      <Link to="/profile" className="block p-2 font-medium text-gray-900">
+                        Profile
+                      </Link>
+                    </div>
+                    <Link to="/cart" className="flex gap-3.5 p-2 font-medium text-gray-900">
+                      <span>Cart</span>
+                      <CartIcon></CartIcon>
+                    </Link>
+                  </div>
+                  <div className="border-t border-gray-200 px-4 py-6 flex flex-col gap-2.5">
+                    <div className="flow-root">
+                      <button onClick={auth.logout} className="block p-2 font-medium text-gray-900">
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="border-t border-gray-200 px-4 py-6 flex flex-col gap-2.5">
+                  <div className="flow-root">
+                    <Link to="/signup" className="block p-2 font-medium text-gray-900">
+                      Create an account
+                    </Link>
+                  </div>
+                  <div className="flow-root">
+                    <Link to="/login" className="block p-2 font-medium text-gray-900">
+                      Login
+                    </Link>
+                  </div>
                 </div>
-                <div className="flow-root">
-                  <Link to="/login" className="-m-2 block p-2 font-medium text-gray-900">
-                    Login
-                  </Link>
-                </div>
-              </div>
+              )}
             </Dialog.Panel>
           </Transition.Child>
         </div>
