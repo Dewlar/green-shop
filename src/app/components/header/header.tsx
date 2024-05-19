@@ -59,6 +59,9 @@ const Header: FC<HeaderProps> = ({ setOpen }) => {
               <div className="flex flex-1 items-center justify-end">
                 {auth.get.isAuth ? (
                   <div className="flex items-center lg:ml-8">
+                    <button onClick={auth.logout} className="text-sm font-medium text-gray-500 hover:text-gray-700">
+                      Logout
+                    </button>
                     {/* Account */}
                     <div className="flex">
                       <Link to="/profile" className="-m-2 p-2 text-gray-400 hover:text-gray-500">
