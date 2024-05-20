@@ -1,22 +1,27 @@
 import React, { createContext, useState, useContext, ReactNode, FC, useEffect } from 'react';
+// import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import CustomerController from '../api/CustomerController';
 import TokenService from '../api/TokenService';
-import { LocalStorageKeysEnum, storageGet } from '../api/helpers';
+import { LocalStorageKeysEnum, storageGet, storageSet } from '../api/helpers';
 
 export interface IAuth {
   isAuth: boolean;
   authData: IAuthData;
 }
-interface IAuthData {
+export interface IAuthData {
   token?: string;
   expirationTime?: number;
   refreshToken?: string;
 }
-interface StateContextType {
-  auth: {
-    get: IAuth;
-    set: React.Dispatch<React.SetStateAction<IAuth>>;
-  };
+
+export interface IAuthContext {
+  get: IAuth;
+  set: React.Dispatch<React.SetStateAction<IAuth>>;
+  logout: () => void;
+}
+export interface StateContextType {
+  auth: IAuthContext;
 }
 const initialContext: StateContextType = {
   auth: {
@@ -29,21 +34,9 @@ const initialContext: StateContextType = {
       },
     },
     set: () => {},
+    logout: () => {},
   },
 };
-
-// const initialContext: StateContextType = {
-//   auth: {
-//     isAuth: false,
-//     authData: {
-//       token: '',
-//       expirationTime: 0,
-//       refreshToken: '',
-//     },
-//     setisAuth: (isAuth) => {},
-//     setauthData: (authData) => {},
-//   },
-// };
 
 type Props = { children: ReactNode };
 // create context
@@ -59,28 +52,28 @@ export const useStateContext = (): StateContextType => {
 export const StateProvider: FC<Props> = ({ children }) => {
   const [getAuth, setAuth] = useState(initialContext.auth.get);
 
-  const auth = {
-    get: getAuth,
-    set: setAuth,
-  };
-
   const savedToken = new TokenService();
-
-  const value = {
-    auth,
-  };
+  const customerController = new CustomerController();
+  const navigate = useNavigate();
+  // const location = useLocation();
 
   useEffect(() => {
     if (savedToken.get().token !== '') {
       setAuth({ isAuth: storageGet(LocalStorageKeysEnum.IS_AUTH) ?? false, authData: savedToken.get() });
-    } else {
-      const customerController = new CustomerController();
-
-      customerController.createAnonymousCustomer().then((response) => {
-        console.log(response);
-      });
-    }
+    } else customerController.createAnonymousCustomer();
   }, []);
 
-  return <StateContext.Provider value={value}>{children}</StateContext.Provider>;
+  const auth = {
+    get: getAuth,
+    set: setAuth,
+    logout: () => {
+      savedToken.removeToken();
+      storageSet(LocalStorageKeysEnum.IS_AUTH, false);
+      customerController.createAnonymousCustomer();
+      setAuth({ isAuth: false, authData: savedToken.get() });
+      navigate('/', { replace: true });
+    },
+  };
+
+  return <StateContext.Provider value={{ auth }}>{children}</StateContext.Provider>;
 };
