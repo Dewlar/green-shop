@@ -1,6 +1,7 @@
 import './global.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import React, { StrictMode } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
 import { ToastContainer } from 'react-toastify';
 import App from './app/app';
@@ -13,9 +14,11 @@ document.body.innerHTML = '<div id="app"></div>';
 const root = createRoot(document.getElementById('app') as HTMLElement);
 root.render(
   <StrictMode>
-    <StateProvider>
-      <App />
-      <ToastContainer />
-    </StateProvider>
+    <BrowserRouter>
+      <StateProvider>
+        <App />
+        <ToastContainer />
+      </StateProvider>
+    </BrowserRouter>
   </StrictMode>
 );

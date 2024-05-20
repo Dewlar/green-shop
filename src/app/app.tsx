@@ -1,6 +1,6 @@
 import React from 'react';
 import './app.scss';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import About from './pages/about';
 import Login from './pages/login';
 import Page404 from './pages/page404';
@@ -13,19 +13,17 @@ import UserProfile from './pages/user-profile';
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<Product />} path="product" />
-        <Route element={<Cart />} path="cart" />
-        <Route element={<Catalog />} path="catalog" />
-        <Route element={<Home />} path="/" />
-        <Route element={<Login />} path="login" />
-        <Route element={<Signup />} path="signup" />
-        <Route element={<About />} path="about" />
-        <Route element={<UserProfile />} path="profile" />
-        <Route element={<Page404 />} path="*" />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route element={<Product />} path="product" />
+      <Route element={<Cart />} path="cart" />
+      <Route element={<Catalog />} path="catalog" />
+      <Route element={<Home />} path="/" />
+      <Route element={<Login />} path="login" />
+      <Route element={<Signup />} path="signup" />
+      <Route element={<About />} path="about" />
+      <Route element={<UserProfile />} path="profile" />
+      <Route element={<Page404 />} path="*" />
+    </Routes>
   );
 };
 
