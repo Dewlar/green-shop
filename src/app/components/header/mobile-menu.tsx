@@ -10,6 +10,7 @@ interface HeaderProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
 const MobileMenu: FC<HeaderProps> = ({ open, setOpen }) => {
   const { auth } = useStateContext();
   return (
