@@ -1,8 +1,10 @@
 import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { Bars3Icon, ShoppingBagIcon, UserIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon } from '@heroicons/react/24/outline';
 import mocks from '../mocks-data/mocks';
 import { useStateContext } from '../../state/state-context';
+import CartIcon from './cart-icon';
+import UserIconDropdown from './user-icon-dropdown';
 
 interface HeaderProps {
   open: boolean;
@@ -38,7 +40,7 @@ const Header: FC<HeaderProps> = ({ setOpen }) => {
                 </div>
               </div>
 
-              {/* Mobile menu and search (lg-) */}
+              {/* Mobile menu (lg-) */}
               <div className="flex flex-1 items-center lg:hidden">
                 <button
                   type="button"
@@ -59,23 +61,13 @@ const Header: FC<HeaderProps> = ({ setOpen }) => {
               <div className="flex flex-1 items-center justify-end">
                 {auth.get.isAuth ? (
                   <div className="flex items-center lg:ml-8">
-                    {/* Account */}
-                    <div className="flex">
-                      <Link to="/profile" className="-m-2 p-2 text-gray-400 hover:text-gray-500">
-                        <span className="sr-only">Account</span>
-                        <UserIcon className="h-6 w-6" aria-hidden="true" />
-                      </Link>
-                    </div>
+                    {/* User icon dropdown menu */}
+                    <UserIconDropdown></UserIconDropdown>
 
                     {/* Cart */}
                     <div className="ml-4 flow-root lg:ml-8">
-                      <Link to="/cart" className="group -m-2 flex items-center p-2">
-                        <ShoppingBagIcon
-                          className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                          aria-hidden="true"
-                        />
-                        <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">0</span>
-                        <span className="sr-only">items in cart, view bag</span>
+                      <Link to="/cart">
+                        <CartIcon></CartIcon>
                       </Link>
                     </div>
                   </div>
