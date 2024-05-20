@@ -1,7 +1,8 @@
 import { TypeOfInputs } from '../../models/interfaces';
 import isOlderThan13 from './checkDate';
-import regulars from './regExp';
+import { regulars, regularsZip } from './regExp';
 import { setErrorStyle, removeErrorStyle } from './setErrorStyle';
+import states from './states';
 
 const handler = (
   e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>,
@@ -14,7 +15,7 @@ const handler = (
   const inputType = e.target.name;
   const typeOfRegular = regulars[inputType as keyof TypeOfInputs];
   const indexOfProp = Object.keys(regulars).indexOf(inputType as keyof TypeOfInputs);
-
+  console.log(storage);
   storageItems[indexOfProp] = e.target.value;
   setStorage(storageItems);
   const errorItems = [...dataE];
@@ -26,11 +27,25 @@ const handler = (
       removeErrorStyle(e);
       errorItems[indexOfProp] = '';
     }
+  } else if ((e.target.name === 'zip' && storage[3] === '') || (e.target.name === 'shippingZip' && storage[7] === '')) {
+    if (e.target.name === 'zip' && storage[3] === '') {
+      errorItems[indexOfProp] = 'Please choose country';
+    } else if (e.target.name === 'shippingZip' && storage[7] === '') {
+      errorItems[indexOfProp] = 'Please choose shipping country';
+    }
   } else if (e.target.name === 'country' || e.target.name === 'shippingCountry') {
     if (e.target.value.length === 0) {
       setErrorStyle(e);
       errorItems[indexOfProp] = `Country is empty`;
     } else {
+      const country = Object.keys(states).find((key) => states[key] === e.target.value);
+      const countryWithFormat = country![0].toLowerCase() + country!.slice(1);
+      const regularOfCountryZip = regularsZip[countryWithFormat];
+      if (e.target.name === 'country') {
+        regulars.zip = regularOfCountryZip;
+      } else {
+        regulars.shippingZip = regularOfCountryZip;
+      }
       removeErrorStyle(e);
       errorItems[indexOfProp] = '';
     }

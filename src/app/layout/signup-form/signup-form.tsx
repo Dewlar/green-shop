@@ -59,6 +59,7 @@ const SignupForm = () => {
 
   return (
     <div className="signUpFormWrapper">
+      <h1 className="absolute left-1/2 top-8 -translate-x-2/4 text-lg">Registration</h1>
       <form className="signUpForm" action="/">
         {Object.entries(inputTypes).map((type, index) => (
           <MyItem

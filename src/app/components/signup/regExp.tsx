@@ -1,6 +1,6 @@
-import { TypeOfInputs } from '../../models/interfaces';
+import { TypeOfInputs, TypeOfZip } from '../../models/interfaces';
 
-const regulars: TypeOfInputs = {
+export const regulars: TypeOfInputs = {
   name: /^[a-zA-Z]+$/,
   surname: /^[a-zA-Z]+$/,
   birth: /^\d{4}-\d{2}-\d{2}$/,
@@ -17,4 +17,4 @@ const regulars: TypeOfInputs = {
   password: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/,
 };
 
-export default regulars;
+export const regularsZip: TypeOfZip = { netherlands: /^\d{4}[ ]?[A-Z]{2}$/, germany: /^\d{5}$/, austria: /^\d{4}$/ };

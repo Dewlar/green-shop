@@ -13,8 +13,7 @@ const scopes = ['manage_project:greenshop'];
 function buildClient() {
   const authMiddlewareOptions: AuthMiddlewareOptions = {
     host: 'https://auth.europe-west1.gcp.commercetools.com',
-    // eslint-disable-next-line object-shorthand
-    projectKey: projectKey,
+    projectKey,
     credentials: {
       clientId: 'z7wOaxnQxzxn43JHrM-0VY3g',
       clientSecret: 'T1YLMv_Ze4asmp713AHKIDfTMBee5YUH',

@@ -2,8 +2,8 @@ import React from 'react';
 import MyLabel from './label';
 import MyInput from './input';
 import { TypeItem } from '../../models';
-import regulars from './regExp';
 import MySelect from './select';
+import { regulars } from './regExp';
 
 function MyItem({ prop, type, index, dataD, dataE, stor, setData, setStor, setDataE, onB, onC }: TypeItem) {
   return (
