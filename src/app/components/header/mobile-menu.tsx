@@ -77,7 +77,13 @@ const MobileMenu: FC<HeaderProps> = ({ open, setOpen }) => {
                   </div>
                   <div className="border-t border-gray-200 px-4 py-6 flex flex-col gap-2.5">
                     <div className="flow-root">
-                      <button onClick={auth.logout} className="block p-2 font-medium text-gray-900">
+                      <button
+                        onClick={() => {
+                          setOpen(false);
+                          auth.logout();
+                        }}
+                        className="block p-2 font-medium text-gray-900"
+                      >
                         Logout
                       </button>
                     </div>
