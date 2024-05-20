@@ -66,4 +66,8 @@ export interface ModalError {
   redirect?: NavigateFunction;
 }
 
+export interface TypeOfZip {
+  [key: string]: RegExp;
+}
+
 export default { sample, sample2 };
