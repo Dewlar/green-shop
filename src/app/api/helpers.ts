@@ -29,27 +29,27 @@ export interface ApiLoginResult {
 }
 
 export const getProjectKey = (): string => {
-  return process.env.CTP_PROJECT_KEY || '';
+  return process.env.CTP_PROJECT_KEY || 'greenshop';
 };
 
 export const getApiURL = (): string => {
-  return process.env.CTP_API_URL || '';
+  return process.env.CTP_API_URL || 'https://api.europe-west1.gcp.commercetools.com';
 };
 
 export const getAuthURL = (): string => {
-  return process.env.CTP_AUTH_URL || '';
+  return process.env.CTP_AUTH_URL || 'https://auth.europe-west1.gcp.commercetools.com';
 };
 
 export const getClientSecret = (): string => {
-  return process.env.CTP_CLIENT_SECRET || '';
+  return process.env.CTP_CLIENT_SECRET || 'T1YLMv_Ze4asmp713AHKIDfTMBee5YUH';
 };
 
 export const getClientId = (): string => {
-  return process.env.CTP_CLIENT_ID || '';
+  return process.env.CTP_CLIENT_ID || 'z7wOaxnQxzxn43JHrM-0VY3g';
 };
 
 export const getScopes = (): string[] => {
-  return process.env.CTP_SCOPES?.split(' ') || [];
+  return process.env.CTP_SCOPES?.split(' ') || ['manage_project:greenshop'];
 };
 
 export function getExistingTokenFlowOptions(token: string): ExistingTokenFlowOptions {
