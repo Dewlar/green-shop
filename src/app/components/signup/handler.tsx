@@ -15,7 +15,7 @@ const handler = (
   const inputType = e.target.name;
   const typeOfRegular = regulars[inputType as keyof TypeOfInputs];
   const indexOfProp = Object.keys(regulars).indexOf(inputType as keyof TypeOfInputs);
-
+  console.log(storage);
   storageItems[indexOfProp] = e.target.value;
   setStorage(storageItems);
   const errorItems = [...dataE];
@@ -26,6 +26,12 @@ const handler = (
     } else {
       removeErrorStyle(e);
       errorItems[indexOfProp] = '';
+    }
+  } else if ((e.target.name === 'zip' && storage[3] === '') || (e.target.name === 'shippingZip' && storage[7] === '')) {
+    if (e.target.name === 'zip' && storage[3] === '') {
+      errorItems[indexOfProp] = 'Please choose country';
+    } else if (e.target.name === 'shippingZip' && storage[7] === '') {
+      errorItems[indexOfProp] = 'Please choose shipping country';
     }
   } else if (e.target.name === 'country' || e.target.name === 'shippingCountry') {
     if (e.target.value.length === 0) {
