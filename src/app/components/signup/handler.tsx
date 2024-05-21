@@ -1,4 +1,4 @@
-import { TypeOfInputs } from '../../models/interfaces';
+import { TypeOfInputs } from '../../models';
 import isOlderThan13 from './checkDate';
 import { regulars, regularsZip } from './regExp';
 import { setErrorStyle, removeErrorStyle } from './setErrorStyle';
@@ -15,7 +15,6 @@ const handler = (
   const inputType = e.target.name;
   const typeOfRegular = regulars[inputType as keyof TypeOfInputs];
   const indexOfProp = Object.keys(regulars).indexOf(inputType as keyof TypeOfInputs);
-  console.log(storage);
   storageItems[indexOfProp] = e.target.value;
   setStorage(storageItems);
   const errorItems = [...dataE];

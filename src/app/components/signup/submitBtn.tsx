@@ -6,7 +6,6 @@ const pressSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, storage
   e.preventDefault();
   getEndpoints(storage).then(() => {
     const modalText = document.getElementById('modalTextError');
-    console.log(modalText);
     if (modalText?.innerHTML === '') {
       showSuccessModal('Great! You are registered');
     }

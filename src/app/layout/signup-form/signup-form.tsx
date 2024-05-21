@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import MyItem from '../../components/signup/formItem';
 import inputTypes from '../../components/signup/inputTypes';
 import blurHandler from '../../components/signup/blur';
@@ -14,7 +15,7 @@ import MyModal from '../../components/signup/modal';
 // import MyModal from '../../components/signup/modal';
 
 const SignupForm = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [storage, setStorage] = useState(['', '', '', '', '', '', '', '', '', '', '', '', '', '', '']);
   const [dataDirty, setDataDirty] = useState([
     false,
@@ -55,12 +56,22 @@ const SignupForm = () => {
     } else {
       setFormValid(true);
     }
-  }, dataError);
+  }, [dataError]); // change dataError to [dataError]. So you need to specify an array of dependencies instead of passing values
 
   return (
-    <div className="signUpFormWrapper">
-      <h1 className="absolute left-1/2 top-8 -translate-x-2/4 text-lg">Registration</h1>
-      <form className="signUpForm" action="/">
+    <div className="signUpFormWrapper items-center overflow-auto h-dvh min-h-full px-2">
+      <form className="signUpForm my-8" action="/">
+        <div className="col-span-2 flex justify-between">
+          <div className="w-20"></div>
+          <h1 className="text-lg">Registration</h1>
+          <Link
+            to="/login"
+            className="rounded-md select-none bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-700"
+          >
+            Log In
+          </Link>
+        </div>
+
         {Object.entries(inputTypes).map((type, index) => (
           <MyItem
             prop={type[0]}
@@ -77,38 +88,51 @@ const SignupForm = () => {
             key={index}
           ></MyItem>
         ))}
-        <div className="flex absolute justify-between h-fit w-fit right-0 bottom-14">
-          <MyLabel className="text-xs w-fit mr-5 h-fit">Set Address as default</MyLabel>
-          <MyInput
-            type={'checkbox'}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDefaultAddress(e, storage, setStorage)}
-          ></MyInput>
+        <div className="flex flex-col items-end justify-center gap-2">
+          <div className="flex justify-between h-fit w-fit right-0 bottom-36">
+            <MyLabel className="text-xs w-fit mr-5 h-fit">Set Address as default</MyLabel>
+            <MyInput
+              type={'checkbox'}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDefaultAddress(e, storage, setStorage)}
+            ></MyInput>
+          </div>
+          <div className="flex  justify-between w-fit h-fit right-0 bottom-28">
+            <MyLabel className="text-xs w-fit mr-5 h-fit">Add Shipping address</MyLabel>
+            <MyInput
+              className="setShipping"
+              type={'checkbox'}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setShippingAddress(e, storage, setStorage, dataError, setDataError)
+              }
+            ></MyInput>
+          </div>
         </div>
-        <div className="flex absolute justify-between w-fit h-fit right-0 bottom-8">
-          <MyLabel className="text-xs w-fit mr-5 h-fit">Add Shipping address</MyLabel>
-          <MyInput
-            className="setShipping"
-            type={'checkbox'}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setShippingAddress(e, storage, setStorage, dataError, setDataError)
-            }
-          ></MyInput>
+        <div className="flex justify-center col-span-2">
+          <MyBtn
+            disabled={!formValid}
+            onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => pressSubmit(e, storage)}
+            type="submit"
+            className="submitRegistrationselect-none disabled:bg-green-200 rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-700"
+          >
+            Registration
+          </MyBtn>
         </div>
-        <MyBtn
-          disabled={!formValid}
-          onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => pressSubmit(e, storage)}
-          type="submit"
-          className="submitRegistration"
-        >
-          Registration
-        </MyBtn>
-        <MyModal className="modal" classText="modalTextError" errorText="" type="Error"></MyModal>
+        <MyModal
+          className="modal"
+          classText="modalTextError"
+          errorText=""
+          type="Error"
+          login={storage[11]}
+          password={storage[12]}
+        ></MyModal>
         <MyModal
           className="modalSuccess"
           classText="modalTextSuccess"
           errorText=""
           type="Success"
-          redirect={navigate}
+          login={storage[11]}
+          password={storage[12]}
+          // redirect={navigate}
         ></MyModal>
       </form>
     </div>

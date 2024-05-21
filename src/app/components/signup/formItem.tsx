@@ -39,7 +39,11 @@ function MyItem({ prop, type, index, dataD, dataE, stor, setData, setStor, setDa
           disabled={index === 8 || index === 9 || index === 10}
         />
       )}
-      {dataD[index] && dataE[index] && <div style={{ color: 'red' }}>{dataE[index]}</div>}
+      {dataD[index] && dataE[index] && (
+        <div className="text-xs sm:text-sm" style={{ color: 'red' }}>
+          {dataE[index]}
+        </div>
+      )}
     </div>
   );
 }
