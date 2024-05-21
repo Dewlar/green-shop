@@ -59,7 +59,7 @@ const SignupForm = () => {
   }, [dataError]); // change dataError to [dataError]. So you need to specify an array of dependencies instead of passing values
 
   return (
-    <div className="signUpFormWrapper items-center overflow-auto h-dvh min-h-full">
+    <div className="signUpFormWrapper items-center overflow-auto h-dvh min-h-full pt-10 pr-10 pb-10 pl-10">
       <form className="signUpForm" action="/">
         <div className="col-span-2 flex justify-between">
           <div className="w-20"></div>

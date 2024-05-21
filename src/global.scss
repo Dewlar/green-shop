@@ -58,7 +58,7 @@ body {
   //transform: translate(-50%, -50%);
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0 1.5rem;
+  gap: 0 1.5vw;
 }
 
 .inputWrapper {
@@ -151,5 +151,11 @@ body {
   #modalSuccess {
     height: 30vh;
     width: 90vw;
+  }
+}
+
+@media screen and (max-height: 700px) {
+  .signUpForm {
+    max-height: 100%;
   }
 }
