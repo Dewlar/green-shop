@@ -10,6 +10,7 @@ const MyModal = ({ className, classText, errorText, type, login, password /* , r
   const navigate = useNavigate();
   const handleClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
+    auth.logout();
     const modal = document.getElementById(`${className}`);
     modal!.style.display = 'none';
     if (type === 'Success') {
