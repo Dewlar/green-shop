@@ -155,7 +155,7 @@ body {
 }
 
 @media screen and (max-height: 700px) {
-  .signUpForm {
-    max-height: 100%;
+  .signUpFormWrapper {
+    align-items: start;
   }
 }
