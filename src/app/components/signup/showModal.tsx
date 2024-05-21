@@ -6,8 +6,10 @@ export const showErrorModal = (errorText: string) => {
 };
 
 export const showSuccessModal = (text: string) => {
-  const modal = document.getElementById('modalSuccess');
+  const modal = document.getElementById('modal');
+  const modalSuccess = document.getElementById('modalSuccess');
   const modalText = document.getElementById('modalTextSuccess');
-  modal!.style.display = 'flex';
+  modalSuccess!.style.display = 'flex';
   modalText!.innerHTML = text;
+  modal!.style.display = 'none';
 };

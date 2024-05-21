@@ -33,7 +33,9 @@ const getEndpoints = (allInputs: Array<string>) => {
     email: allInputValues[11],
     password: allInputValues[12],
   };
+
   showErrorModal(''); // clean previous error message
+
   return createApiRoot()
     .customers()
     .post({

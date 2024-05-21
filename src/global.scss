@@ -46,6 +46,7 @@ body {
   justify-content: center;
   flex-direction: column;
 }
+
 .signUpForm {
   position: fixed;
   width: 60vw;
@@ -56,12 +57,14 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 0.5vh 1.5vw;
 }
+
 .inputWrapper {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   min-height: 90px;
 }
+
 .submitRegistration {
   position: absolute;
   bottom: -50px;
@@ -70,10 +73,12 @@ body {
   font-size: 18px;
   font-style: italic;
 }
+
 .shippingCountry7, .shippingCity8, .shippingStreet9, .shippingZip10 {
   background-color: #9e9d9d;
   opacity: 80%;
 }
+
 #modal, #modalSuccess {
   position: absolute;
   display: none;
@@ -90,7 +95,8 @@ body {
 }
 
 @media screen and (max-width: 1200px) {
-  #modal {
+  #modal,
+  #modalSuccess {
     height: 25vh;
     width: 40vw;
   }
@@ -100,37 +106,46 @@ body {
   .signUpForm {
     width: 80vw;
   }
-  #modal {
+  #modal,
+  #modalSuccess {
     height: 20vh;
     width: 55vw;
   }
 }
+
 @media screen and (max-width: 650px) {
   .signUpForm {
     width: 90vw;
+
     label {
       font-size: 15px;
     }
+
     input, select {
       font-size: 12px;
     }
   }
-  #modal {
+  #modal,
+  #modalSuccess {
     height: 20vh;
     width: 70vw;
   }
 }
+
 @media screen and (max-width: 450px) {
   .signUpForm {
     width: 95vw;
+
     label {
       font-size: 12px;
     }
+
     input, select {
       font-size: 10px;
     }
   }
-  #modal {
+  #modal,
+  #modalSuccess {
     height: 30vh;
     width: 90vw;
   }
