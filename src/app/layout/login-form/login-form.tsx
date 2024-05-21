@@ -111,7 +111,7 @@ const LoginForm = () => {
 
         toast((response.apiResult as HttpErrorType).message);
       })
-      .catch((error) => console.log(error));
+      .catch(); // todo: need to add toastify notification
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -13,7 +13,6 @@ const MyModal = ({ className, classText, errorText, type, login, password /* , r
     const modal = document.getElementById(`${className}`);
     modal!.style.display = 'none';
     if (type === 'Success') {
-      // console.log(login, password);
       // redirect!('/');
 
       const customerController = new CustomerController();
@@ -32,7 +31,7 @@ const MyModal = ({ className, classText, errorText, type, login, password /* , r
             navigate('/');
           }
         })
-        .catch((error) => console.log(error)); // todo: you need to add a toast modal window with error text
+        .catch(); // todo: you need to add a toast modal window with error text
     }
   };
 

@@ -50,7 +50,7 @@ class CustomerRepository {
         token,
       };
     } catch (error) {
-      console.error('Login Error:', error);
+      // console.error('Login Error:', error);
       return {
         apiResult: error as ClientResponse<ClientResult>,
         token: null,
