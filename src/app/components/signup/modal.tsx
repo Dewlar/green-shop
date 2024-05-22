@@ -15,7 +15,9 @@ const MyModal = ({ className, classText, errorText, type, login, password /* , r
   const handleClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     const modal = document.getElementById(`${className}`);
+    const modalText = document.getElementById('modalTextError');
     modal!.style.display = 'none';
+    modalText!.innerHTML = '';
     if (type === 'Success') {
       // redirect!('/');
 
