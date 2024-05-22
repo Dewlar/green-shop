@@ -4,6 +4,7 @@ import TokenService from './TokenService';
 import { ApiLoginResult, UserCredentialData, getProjectKey } from './helpers';
 import RefreshTokenClient from './RefreshTokenClient';
 import AnonymousClient from './AnonymousClient';
+import AuthClient from './AuthClient';
 
 class CustomerRepository {
   private readonly projectKey: string;
@@ -41,6 +42,16 @@ class CustomerRepository {
             activeCartSignInMode: 'MergeWithExistingCustomerCart',
           },
         })
+        .execute();
+
+      const authClient = new AuthClient(userData);
+      const authApiRoot = authClient.getApiRoot();
+      await authApiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .get()
         .execute();
 
       const token = this.tokenService.get();
