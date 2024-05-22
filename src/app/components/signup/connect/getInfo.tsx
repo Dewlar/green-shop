@@ -34,7 +34,7 @@ const getEndpoints = (allInputs: Array<string>) => {
     password: allInputValues[12],
   };
 
-  showErrorModal(''); // clean previous error message
+  // showErrorModal(''); // clean previous error message
 
   return createApiRoot()
     .customers()
