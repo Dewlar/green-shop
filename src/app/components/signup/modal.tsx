@@ -1,37 +1,50 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { HttpErrorType } from '@commercetools/sdk-client-v2';
+import { toast } from 'react-toastify';
 import { ModalError } from '../../models';
 import { LocalStorageKeysEnum, storageSet } from '../../api/helpers';
 import { IAuth, useStateContext } from '../../state/state-context';
 import CustomerController from '../../api/CustomerController';
+import TokenService from '../../api/TokenService';
 
 const MyModal = ({ className, classText, errorText, type, login, password /* , redirect */ }: ModalError) => {
   const { auth } = useStateContext();
   const navigate = useNavigate();
+  const tokenService = new TokenService();
   const handleClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     const modal = document.getElementById(`${className}`);
+    const modalText = document.getElementById('modalTextError');
     modal!.style.display = 'none';
+    modalText!.innerHTML = '';
     if (type === 'Success') {
       // redirect!('/');
 
+      tokenService.removeToken();
+      storageSet(LocalStorageKeysEnum.IS_AUTH, false);
       const customerController = new CustomerController();
-      customerController
-        .loginCustomer({ email: login, password })
-        .then((response) => {
-          if (response.apiResult.statusCode === 200 && response.token) {
-            storageSet(LocalStorageKeysEnum.IS_AUTH, true);
+      customerController.createAnonymousCustomer().then(() => {
+        customerController
+          .loginCustomer({ email: login, password })
+          .then((response) => {
+            if (response.apiResult.statusCode === 200 && response.token) {
+              storageSet(LocalStorageKeysEnum.IS_AUTH, true);
 
-            const authData: IAuth = {
-              isAuth: true,
-              authData: response.token,
-            };
+              const authData: IAuth = {
+                isAuth: true,
+                authData: response.token,
+              };
 
-            auth.set(authData);
-            navigate('/');
-          }
-        })
-        .catch(); // todo: you need to add a toast modal window with error text
+              auth.set(authData);
+              toast((response.apiResult as HttpErrorType).message);
+              navigate('/');
+            }
+
+            toast((response.apiResult as HttpErrorType).message);
+          })
+          .catch(); // todo: you need to add a toast modal window with error text
+      });
     }
   };
 

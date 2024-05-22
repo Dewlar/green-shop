@@ -25,11 +25,11 @@ const LoginForm = () => {
       errors.push('Email is required.');
     }
 
-    if (!latinCharsRegex.test(email)) {
-      errors.push('Email address should only contain Latin characters.');
-    }
+    // if (!latinCharsRegex.test(email)) {
+    //   errors.push('Email address should only contain Latin characters.');
+    // }
 
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(email) || !latinCharsRegex.test(email)) {
       errors.push('Invalid email address format.');
     }
 
@@ -91,27 +91,29 @@ const LoginForm = () => {
 
     const customerController = new CustomerController();
 
-    customerController
-      .loginCustomer({ email: username, password })
-      .then((response) => {
-        if (response.apiResult.statusCode === 200 && response.token) {
-          storageSet(LocalStorageKeysEnum.IS_AUTH, true);
+    customerController.createAnonymousCustomer().then(() => {
+      customerController
+        .loginCustomer({ email: username, password })
+        .then((response) => {
+          if (response.apiResult.statusCode === 200 && response.token) {
+            storageSet(LocalStorageKeysEnum.IS_AUTH, true);
 
-          const authData: IAuth = {
-            isAuth: true,
-            authData: response.token,
-          };
+            const authData: IAuth = {
+              isAuth: true,
+              authData: response.token,
+            };
 
-          auth.set(authData);
+            auth.set(authData);
+
+            toast((response.apiResult as HttpErrorType).message);
+
+            navigate('/');
+          }
 
           toast((response.apiResult as HttpErrorType).message);
-
-          navigate('/');
-        }
-
-        toast((response.apiResult as HttpErrorType).message);
-      })
-      .catch(); // todo: need to add toastify notification
+        })
+        .catch(); // todo: need to add toastify notification
+    });
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,7 +133,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 h-dvh -mt-16">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <div className="flex justify-center w-full items-center">
           <Link to="/">
