@@ -25,11 +25,11 @@ const LoginForm = () => {
       errors.push('Email is required.');
     }
 
-    if (!latinCharsRegex.test(email)) {
-      errors.push('Email address should only contain Latin characters.');
-    }
+    // if (!latinCharsRegex.test(email)) {
+    //   errors.push('Email address should only contain Latin characters.');
+    // }
 
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(email) || !latinCharsRegex.test(email)) {
       errors.push('Invalid email address format.');
     }
 
@@ -133,7 +133,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 h-dvh -mt-16">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <div className="flex justify-center w-full items-center">
           <Link to="/">
