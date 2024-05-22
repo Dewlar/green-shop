@@ -62,7 +62,12 @@ const SignupForm = () => {
     <div className="signUpFormWrapper items-center overflow-auto h-dvh min-h-full px-2">
       <form className="signUpForm my-8" action="/">
         <div className="col-span-2 flex justify-between">
-          <div className="w-20"></div>
+          <div className="flex w-20">
+            <Link to="/">
+              <span className="sr-only">Green shop</span>
+              <img className="h-8 w-auto" src="./assets/logo/logo.png" alt="logo" />
+            </Link>
+          </div>
           <h1 className="text-lg">Registration</h1>
           <Link
             to="/login"
