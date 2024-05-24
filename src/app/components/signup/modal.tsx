@@ -4,12 +4,12 @@ import { HttpErrorType } from '@commercetools/sdk-client-v2';
 import { toast } from 'react-toastify';
 import { ModalError } from '../../models';
 import { LocalStorageKeysEnum, storageSet } from '../../api/helpers';
-import { IAuth, useStateContext } from '../../state/state-context';
+import { useStateContext } from '../../state/state-context';
 import CustomerController from '../../api/CustomerController';
 import TokenService from '../../api/TokenService';
 
 const MyModal = ({ className, classText, errorText, type, login, password /* , redirect */ }: ModalError) => {
-  const { auth } = useStateContext();
+  const { setIsAuth, setAuthData } = useStateContext();
   const navigate = useNavigate();
   const tokenService = new TokenService();
   const handleClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -31,12 +31,9 @@ const MyModal = ({ className, classText, errorText, type, login, password /* , r
             if (response.apiResult.statusCode === 200 && response.token) {
               storageSet(LocalStorageKeysEnum.IS_AUTH, true);
 
-              const authData: IAuth = {
-                isAuth: true,
-                authData: response.token,
-              };
+              setIsAuth(true);
+              setAuthData(response.token);
 
-              auth.set(authData);
               toast((response.apiResult as HttpErrorType).message);
               navigate('/');
             }

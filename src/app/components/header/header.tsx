@@ -11,7 +11,7 @@ interface HeaderProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const Header: FC<HeaderProps> = ({ setOpen }) => {
-  const { auth } = useStateContext();
+  const { isAuth } = useStateContext();
 
   return (
     <header className="relative">
@@ -59,7 +59,7 @@ const Header: FC<HeaderProps> = ({ setOpen }) => {
               </Link>
 
               <div className="flex flex-1 items-center justify-end">
-                {auth.get.isAuth ? (
+                {isAuth ? (
                   <div className="flex items-center lg:ml-8">
                     {/* User icon dropdown menu */}
                     <UserIconDropdown></UserIconDropdown>

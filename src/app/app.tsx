@@ -21,8 +21,6 @@ const App = () => {
       <Route element={<Cart />} path="cart" />
       <Route element={<Catalog />} path="catalog" />
       <Route element={<Home />} path="/" />
-      {/* <Route element={auth.get.isAuth ? <Home /> : <Login />} path="login" /> */}
-      {/* <Route element={<Login />} path="login" /> */}
       <Route
         element={
           <RouteGuard redirectPath={'/'}>
