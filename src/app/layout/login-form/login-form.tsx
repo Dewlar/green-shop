@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { HttpErrorType } from '@commercetools/sdk-client-v2';
 import { Link, useNavigate } from 'react-router-dom';
 import CustomerController from '../../api/CustomerController';
-import { IAuth, useStateContext } from '../../state/state-context';
+import { useStateContext } from '../../state/state-context';
 import { LocalStorageKeysEnum, storageSet } from '../../api/helpers';
 
 const LoginForm = () => {
@@ -13,7 +13,7 @@ const LoginForm = () => {
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
   const [showPassword, setShowPassword] = useState(false);
 
-  const { auth } = useStateContext();
+  const { setIsAuth, setAuthData } = useStateContext();
   const navigate = useNavigate();
 
   const validateEmail = (email: string): string[] => {
@@ -98,12 +98,8 @@ const LoginForm = () => {
           if (response.apiResult.statusCode === 200 && response.token) {
             storageSet(LocalStorageKeysEnum.IS_AUTH, true);
 
-            const authData: IAuth = {
-              isAuth: true,
-              authData: response.token,
-            };
-
-            auth.set(authData);
+            setIsAuth(true);
+            setAuthData(response.token);
 
             toast((response.apiResult as HttpErrorType).message);
 
