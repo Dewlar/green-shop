@@ -12,7 +12,7 @@ interface HeaderProps {
 }
 
 const MobileMenu: FC<HeaderProps> = ({ open, setOpen }) => {
-  const { auth } = useStateContext();
+  const { isAuth, logout } = useStateContext();
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog className="relative z-40 lg:hidden" onClose={setOpen}>
@@ -62,7 +62,7 @@ const MobileMenu: FC<HeaderProps> = ({ open, setOpen }) => {
                 ))}
               </div>
 
-              {auth.get.isAuth ? (
+              {isAuth ? (
                 <>
                   <div className="border-t border-gray-200 px-4 py-6 flex flex-col gap-2.5">
                     <div className="flow-root">
@@ -80,7 +80,7 @@ const MobileMenu: FC<HeaderProps> = ({ open, setOpen }) => {
                       <button
                         onClick={() => {
                           setOpen(false);
-                          auth.logout();
+                          logout();
                         }}
                         className="block p-2 font-medium text-gray-900"
                       >

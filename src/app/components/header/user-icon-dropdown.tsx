@@ -9,7 +9,7 @@ function classNames(...classes: string[]) {
 }
 
 const UserIconDropdown = () => {
-  const { auth } = useStateContext();
+  const { logout } = useStateContext();
 
   return (
     <div className="flex">
@@ -46,7 +46,7 @@ const UserIconDropdown = () => {
             <Menu.Item>
               {({ active }) => (
                 <button
-                  onClick={auth.logout}
+                  onClick={logout}
                   className={classNames(active ? 'bg-gray-200' : '', 'block w-full px-4 py-2 text-sm text-gray-700')}
                 >
                   Logout
