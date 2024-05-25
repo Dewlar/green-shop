@@ -40,6 +40,15 @@ html {
 body {
 }
 
+.Toastify {
+  user-select: none;
+
+  .Toastify__toast {
+    cursor: pointer;
+
+  }
+}
+
 .signUpFormWrapper {
   position: relative;
   display: flex;
