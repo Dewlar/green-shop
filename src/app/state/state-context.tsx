@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import CustomerController from '../api/CustomerController';
 import TokenService from '../api/TokenService';
 import { LocalStorageKeysEnum, storageGet, storageSet } from '../api/helpers';
+import { CustomerData } from '../api/types';
 
 export interface IAuthData {
   token?: string;
@@ -15,7 +16,9 @@ export interface IState {
   isAuth: boolean;
   setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
   authData: IAuthData;
+  customerData: CustomerData;
   setAuthData: React.Dispatch<React.SetStateAction<IAuthData>>;
+  setCustomerData: React.Dispatch<React.SetStateAction<CustomerData>>;
   logout: () => void;
 }
 
@@ -29,8 +32,20 @@ function getInitialState(): IState {
       expirationTime: 0,
       refreshToken: '',
     },
+    customerData: {
+      id: '',
+      email: '',
+      firstName: '',
+      lastName: '',
+      dateOfBirth: '',
+      password: '',
+      addresses: [],
+      shippingAddressIds: [],
+      billingAddressIds: [],
+    },
     setIsAuth: () => {},
     setAuthData: () => {},
+    setCustomerData: () => {},
     logout: () => {},
   };
 }
@@ -49,6 +64,7 @@ export const useStateContext = (): IState => {
 export const StateProvider: FC<Props> = ({ children }) => {
   const [isAuth, setIsAuth] = useState(getInitialState().isAuth);
   const [authData, setAuthData] = useState(getInitialState().authData);
+  const [customerData, setCustomerData] = useState(getInitialState().customerData);
 
   const savedToken = new TokenService();
   const customerController = new CustomerController();
@@ -73,7 +89,7 @@ export const StateProvider: FC<Props> = ({ children }) => {
   };
 
   return (
-    <StateContext.Provider value={{ isAuth, setIsAuth, authData, setAuthData, logout }}>
+    <StateContext.Provider value={{ isAuth, setIsAuth, authData, customerData, setCustomerData, setAuthData, logout }}>
       {children}
     </StateContext.Provider>
   );

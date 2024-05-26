@@ -10,6 +10,7 @@ import {
 } from '@commercetools/sdk-client-v2';
 import { CustomerSignInResult } from '@commercetools/platform-sdk';
 import TokenService from './TokenService';
+import { ApiResponse, CustomerData } from './types';
 
 export interface ExistingTokenFlowOptions {
   authorization: string;
@@ -126,4 +127,20 @@ export function storageGet<T>(key: string): T | null {
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 export const storageSet = (key: string, data: any): void => {
   localStorage.setItem(`${storageKey}_${key}`, JSON.stringify(data));
+};
+
+export const createCustomerData = (data: ApiResponse): CustomerData => {
+  const userData: CustomerData = {
+    email: data.body.email,
+    password: data.body.password,
+    firstName: data.body.firstName,
+    lastName: data.body.lastName,
+    dateOfBirth: data.body.dateOfBirth,
+    id: data.body.id,
+    addresses: data.body.addresses,
+    shippingAddressIds: data.body.shippingAddressIds,
+    billingAddressIds: data.body.billingAddressIds,
+  };
+
+  return userData;
 };

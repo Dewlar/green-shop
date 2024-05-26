@@ -17,12 +17,19 @@ class CustomerRepository {
   }
 
   public async createAnonymousCustomer(): Promise<TokenStore> {
-    const client = new AnonymousClient();
-    const apiRoot = client.getApiRoot();
+    try {
+      const client = new AnonymousClient();
+      const apiRoot = client.getApiRoot();
 
-    await apiRoot.withProjectKey({ projectKey: this.projectKey }).get().execute();
+      const response = await apiRoot.withProjectKey({ projectKey: this.projectKey }).get().execute();
 
-    return this.tokenService.get();
+      console.log('Create Anonymous Customer Response:', response);
+
+      return this.tokenService.get();
+    } catch (error) {
+      console.error('Create Anonymous Customer Error:', error);
+      throw error;
+    }
   }
 
   public async loginCustomer(userData: UserCredentialData): Promise<ApiLoginResult> {
@@ -44,15 +51,19 @@ class CustomerRepository {
         })
         .execute();
 
+      console.log('Login Customer Response:', tokenApiResult);
+
       const authClient = new AuthClient(userData);
       const authApiRoot = authClient.getApiRoot();
-      await authApiRoot
+      const authApiResponse = await authApiRoot
         .withProjectKey({
           projectKey: this.projectKey,
         })
         .me()
         .get()
         .execute();
+
+      console.log('Auth Customer Response:', authApiResponse);
 
       const token = this.tokenService.get();
 
@@ -61,7 +72,7 @@ class CustomerRepository {
         token,
       };
     } catch (error) {
-      // console.error('Login Error:', error);
+      console.error('Login Error:', error);
       return {
         apiResult: error as ClientResponse<ClientResult>,
         token: null,
