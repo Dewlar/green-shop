@@ -1,0 +1,2501 @@
+{
+    "limit": 20,
+    "offset": 0,
+    "count": 3,
+    "total": 3,
+    "results": [
+        {
+            "id": "08bb1b50-0429-46e2-80ec-18f6d00c4d89",
+            "version": 61,
+            "versionModifiedAt": "2024-05-25T17:05:01.072Z",
+            "lastMessageSequenceNumber": 40,
+            "createdAt": "2024-05-25T13:53:19.276Z",
+            "lastModifiedAt": "2024-05-25T17:05:01.072Z",
+            "lastModifiedBy": {
+                "isPlatformClient": true,
+                "user": {
+                    "typeId": "user",
+                    "id": "aaecc0ed-9414-447f-8632-6fd5b88e2b76"
+                }
+            },
+            "createdBy": {
+                "isPlatformClient": true,
+                "user": {
+                    "typeId": "user",
+                    "id": "aaecc0ed-9414-447f-8632-6fd5b88e2b76"
+                }
+            },
+            "productType": {
+                "typeId": "product-type",
+                "id": "629e71c5-e141-4cc5-adbc-476da923ccf4"
+            },
+            "masterData": {
+                "current": {
+                    "name": {
+                        "en": "Asparagus aethiopicus"
+                    },
+                    "description": {
+                        "en": "The Asparagus aethiopicus ‘Asparagus Fern’ has bushy, elegant yet light and feathery foliage. Although it is called a fern, the Asparagus Fern belongs to the Liliaceae Family.\nDo take note to keep pets and children away as the Asparagus Fern is toxic."
+                    },
+                    "categories": [
+                        {
+                            "typeId": "category",
+                            "id": "8adc3358-2e20-41ac-80db-85d4e23ebbf9"
+                        }
+                    ],
+                    "categoryOrderHints": {},
+                    "slug": {
+                        "en": "asparagus-aethiopicus"
+                    },
+                    "metaTitle": {
+                        "en": ""
+                    },
+                    "metaDescription": {
+                        "en": ""
+                    },
+                    "masterVariant": {
+                        "id": 1,
+                        "sku": "asparagusAethiopicus__variant1",
+                        "key": "asparagusAethiopicus__variant1",
+                        "prices": [
+                            {
+                                "id": "8d402c27-64a4-496b-968c-5aec68a7fea9",
+                                "value": {
+                                    "type": "centPrecision",
+                                    "currencyCode": "EUR",
+                                    "centAmount": 500,
+                                    "fractionDigits": 2
+                                },
+                                "key": "asparagusAethiopicus__variant1-price-1",
+                                "country": "DE",
+                                "channel": {
+                                    "typeId": "channel",
+                                    "id": "adc932a9-cfa5-4bce-936f-74daec5175f0"
+                                },
+                                "discounted": {
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 450,
+                                        "fractionDigits": 2
+                                    },
+                                    "discount": {
+                                        "typeId": "product-discount",
+                                        "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                    }
+                                }
+                            },
+                            {
+                                "id": "92260530-850b-482a-a033-0e113f862d62",
+                                "value": {
+                                    "type": "centPrecision",
+                                    "currencyCode": "EUR",
+                                    "centAmount": 600,
+                                    "fractionDigits": 2
+                                },
+                                "key": "asparagusAethiopicus__variant1-price-2",
+                                "country": "AT",
+                                "channel": {
+                                    "typeId": "channel",
+                                    "id": "6d271c5e-6a33-4695-a18e-0e2357a1649e"
+                                },
+                                "discounted": {
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 540,
+                                        "fractionDigits": 2
+                                    },
+                                    "discount": {
+                                        "typeId": "product-discount",
+                                        "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                    }
+                                }
+                            },
+                            {
+                                "id": "513aed3e-2089-4f83-b2bb-6e49de918af8",
+                                "value": {
+                                    "type": "centPrecision",
+                                    "currencyCode": "EUR",
+                                    "centAmount": 550,
+                                    "fractionDigits": 2
+                                },
+                                "key": "asparagusAethiopicus__variant1-price-3",
+                                "country": "NL",
+                                "channel": {
+                                    "typeId": "channel",
+                                    "id": "d203b09a-0ae7-47b4-94b5-b0ea2036ad27"
+                                },
+                                "discounted": {
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 495,
+                                        "fractionDigits": 2
+                                    },
+                                    "discount": {
+                                        "typeId": "product-discount",
+                                        "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                    }
+                                }
+                            }
+                        ],
+                        "images": [
+                            {
+                                "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/asparagus_sprengeri_-MUj_zK_K.jpg",
+                                "dimensions": {
+                                    "w": 1500,
+                                    "h": 1500
+                                }
+                            },
+                            {
+                                "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/asparagus-fern_detai-pND16aFA.jpg",
+                                "dimensions": {
+                                    "w": 600,
+                                    "h": 600
+                                }
+                            },
+                            {
+                                "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/asparagus-sprengeri-14-KV2H_.jpg",
+                                "dimensions": {
+                                    "w": 2352,
+                                    "h": 1568
+                                }
+                            }
+                        ],
+                        "attributes": [
+                            {
+                                "name": "Moisture-loving",
+                                "value": true
+                            },
+                            {
+                                "name": "Sun-loving",
+                                "value": true
+                            },
+                            {
+                                "name": "Size",
+                                "value": [
+                                    "S"
+                                ]
+                            },
+                            {
+                                "name": "Pet-friendly",
+                                "value": false
+                            },
+                            {
+                                "name": "Easy-care",
+                                "value": true
+                            },
+                            {
+                                "name": "Air-purifier",
+                                "value": true
+                            }
+                        ],
+                        "assets": []
+                    },
+                    "variants": [
+                        {
+                            "id": 2,
+                            "sku": "asparagusAethiopicus__variant2",
+                            "key": "asparagusAethiopicus__variant2",
+                            "prices": [
+                                {
+                                    "id": "7741b2a5-0155-412e-80ff-19b69c784717",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 700,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "asparagusAethiopicus__variant2-price-1",
+                                    "country": "DE",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "adc932a9-cfa5-4bce-936f-74daec5175f0"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 630,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "84ad2316-13c2-4071-b667-74dbc2ec76fc",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 700,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "asparagusAethiopicus__variant2-price-3",
+                                    "country": "NL",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "d203b09a-0ae7-47b4-94b5-b0ea2036ad27"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 630,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                }
+                            ],
+                            "images": [
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/asparagus_sprengeri_-TAEvLK3W.jpg",
+                                    "dimensions": {
+                                        "w": 1500,
+                                        "h": 1500
+                                    }
+                                },
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/asparagus-fern_detai-nEgJ38JV.jpg",
+                                    "dimensions": {
+                                        "w": 600,
+                                        "h": 600
+                                    }
+                                },
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/asparagus-sprengeri-_5hom6im.jpg",
+                                    "dimensions": {
+                                        "w": 2352,
+                                        "h": 1568
+                                    }
+                                }
+                            ],
+                            "attributes": [
+                                {
+                                    "name": "Moisture-loving",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Sun-loving",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Size",
+                                    "value": [
+                                        "M"
+                                    ]
+                                },
+                                {
+                                    "name": "Pet-friendly",
+                                    "value": false
+                                },
+                                {
+                                    "name": "Easy-care",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Air-purifier",
+                                    "value": true
+                                }
+                            ],
+                            "assets": []
+                        },
+                        {
+                            "id": 3,
+                            "sku": "asparagusAethiopicus__variant3",
+                            "key": "asparagusAethiopicus__variant3",
+                            "prices": [
+                                {
+                                    "id": "25f3bde4-1803-4968-a57e-b04b0044e6c3",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 1000,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "asparagusAethiopicus__variant3-price-1",
+                                    "country": "DE",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "adc932a9-cfa5-4bce-936f-74daec5175f0"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 900,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "60593127-77d2-4335-9203-fb17033f8745",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 950,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "asparagusAethiopicus__variant3-price-2",
+                                    "country": "AT",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "6d271c5e-6a33-4695-a18e-0e2357a1649e"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 855,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "dfead0d2-8994-455f-be73-2f0fa9284c7a",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 1000,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "asparagusAethiopicus__variant3-price-3",
+                                    "country": "NL",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "d203b09a-0ae7-47b4-94b5-b0ea2036ad27"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 900,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                }
+                            ],
+                            "images": [
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/asparagus_sprengeri_-1Ll1UksB.jpg",
+                                    "dimensions": {
+                                        "w": 1500,
+                                        "h": 1500
+                                    }
+                                },
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/asparagus-sprengeri-kfgJRawU.jpg",
+                                    "dimensions": {
+                                        "w": 2352,
+                                        "h": 1568
+                                    }
+                                },
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/asparagus-fern_detai-JHKjTMYM.jpg",
+                                    "dimensions": {
+                                        "w": 600,
+                                        "h": 600
+                                    }
+                                }
+                            ],
+                            "attributes": [
+                                {
+                                    "name": "Moisture-loving",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Sun-loving",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Size",
+                                    "value": [
+                                        "L"
+                                    ]
+                                },
+                                {
+                                    "name": "Pet-friendly",
+                                    "value": false
+                                },
+                                {
+                                    "name": "Easy-care",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Air-purifier",
+                                    "value": true
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ],
+                    "searchKeywords": {}
+                },
+                "staged": {
+                    "name": {
+                        "en": "Asparagus aethiopicus"
+                    },
+                    "description": {
+                        "en": "The Asparagus aethiopicus ‘Asparagus Fern’ has bushy, elegant yet light and feathery foliage. Although it is called a fern, the Asparagus Fern belongs to the Liliaceae Family.\nDo take note to keep pets and children away as the Asparagus Fern is toxic."
+                    },
+                    "categories": [
+                        {
+                            "typeId": "category",
+                            "id": "8adc3358-2e20-41ac-80db-85d4e23ebbf9"
+                        }
+                    ],
+                    "categoryOrderHints": {},
+                    "slug": {
+                        "en": "asparagus-aethiopicus"
+                    },
+                    "metaTitle": {
+                        "en": ""
+                    },
+                    "metaDescription": {
+                        "en": ""
+                    },
+                    "masterVariant": {
+                        "id": 1,
+                        "sku": "asparagusAethiopicus__variant1",
+                        "key": "asparagusAethiopicus__variant1",
+                        "prices": [
+                            {
+                                "id": "8d402c27-64a4-496b-968c-5aec68a7fea9",
+                                "value": {
+                                    "type": "centPrecision",
+                                    "currencyCode": "EUR",
+                                    "centAmount": 500,
+                                    "fractionDigits": 2
+                                },
+                                "key": "asparagusAethiopicus__variant1-price-1",
+                                "country": "DE",
+                                "channel": {
+                                    "typeId": "channel",
+                                    "id": "adc932a9-cfa5-4bce-936f-74daec5175f0"
+                                },
+                                "discounted": {
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 450,
+                                        "fractionDigits": 2
+                                    },
+                                    "discount": {
+                                        "typeId": "product-discount",
+                                        "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                    }
+                                }
+                            },
+                            {
+                                "id": "92260530-850b-482a-a033-0e113f862d62",
+                                "value": {
+                                    "type": "centPrecision",
+                                    "currencyCode": "EUR",
+                                    "centAmount": 600,
+                                    "fractionDigits": 2
+                                },
+                                "key": "asparagusAethiopicus__variant1-price-2",
+                                "country": "AT",
+                                "channel": {
+                                    "typeId": "channel",
+                                    "id": "6d271c5e-6a33-4695-a18e-0e2357a1649e"
+                                },
+                                "discounted": {
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 540,
+                                        "fractionDigits": 2
+                                    },
+                                    "discount": {
+                                        "typeId": "product-discount",
+                                        "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                    }
+                                }
+                            },
+                            {
+                                "id": "513aed3e-2089-4f83-b2bb-6e49de918af8",
+                                "value": {
+                                    "type": "centPrecision",
+                                    "currencyCode": "EUR",
+                                    "centAmount": 550,
+                                    "fractionDigits": 2
+                                },
+                                "key": "asparagusAethiopicus__variant1-price-3",
+                                "country": "NL",
+                                "channel": {
+                                    "typeId": "channel",
+                                    "id": "d203b09a-0ae7-47b4-94b5-b0ea2036ad27"
+                                },
+                                "discounted": {
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 495,
+                                        "fractionDigits": 2
+                                    },
+                                    "discount": {
+                                        "typeId": "product-discount",
+                                        "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                    }
+                                }
+                            }
+                        ],
+                        "images": [
+                            {
+                                "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/asparagus_sprengeri_-MUj_zK_K.jpg",
+                                "dimensions": {
+                                    "w": 1500,
+                                    "h": 1500
+                                }
+                            },
+                            {
+                                "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/asparagus-fern_detai-pND16aFA.jpg",
+                                "dimensions": {
+                                    "w": 600,
+                                    "h": 600
+                                }
+                            },
+                            {
+                                "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/asparagus-sprengeri-14-KV2H_.jpg",
+                                "dimensions": {
+                                    "w": 2352,
+                                    "h": 1568
+                                }
+                            }
+                        ],
+                        "attributes": [
+                            {
+                                "name": "Moisture-loving",
+                                "value": true
+                            },
+                            {
+                                "name": "Sun-loving",
+                                "value": true
+                            },
+                            {
+                                "name": "Size",
+                                "value": [
+                                    "S"
+                                ]
+                            },
+                            {
+                                "name": "Pet-friendly",
+                                "value": false
+                            },
+                            {
+                                "name": "Easy-care",
+                                "value": true
+                            },
+                            {
+                                "name": "Air-purifier",
+                                "value": true
+                            }
+                        ],
+                        "assets": []
+                    },
+                    "variants": [
+                        {
+                            "id": 2,
+                            "sku": "asparagusAethiopicus__variant2",
+                            "key": "asparagusAethiopicus__variant2",
+                            "prices": [
+                                {
+                                    "id": "7741b2a5-0155-412e-80ff-19b69c784717",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 700,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "asparagusAethiopicus__variant2-price-1",
+                                    "country": "DE",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "adc932a9-cfa5-4bce-936f-74daec5175f0"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 630,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "84ad2316-13c2-4071-b667-74dbc2ec76fc",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 700,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "asparagusAethiopicus__variant2-price-3",
+                                    "country": "NL",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "d203b09a-0ae7-47b4-94b5-b0ea2036ad27"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 630,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                }
+                            ],
+                            "images": [
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/asparagus_sprengeri_-TAEvLK3W.jpg",
+                                    "dimensions": {
+                                        "w": 1500,
+                                        "h": 1500
+                                    }
+                                },
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/asparagus-fern_detai-nEgJ38JV.jpg",
+                                    "dimensions": {
+                                        "w": 600,
+                                        "h": 600
+                                    }
+                                },
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/asparagus-sprengeri-_5hom6im.jpg",
+                                    "dimensions": {
+                                        "w": 2352,
+                                        "h": 1568
+                                    }
+                                }
+                            ],
+                            "attributes": [
+                                {
+                                    "name": "Moisture-loving",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Sun-loving",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Size",
+                                    "value": [
+                                        "M"
+                                    ]
+                                },
+                                {
+                                    "name": "Pet-friendly",
+                                    "value": false
+                                },
+                                {
+                                    "name": "Easy-care",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Air-purifier",
+                                    "value": true
+                                }
+                            ],
+                            "assets": []
+                        },
+                        {
+                            "id": 3,
+                            "sku": "asparagusAethiopicus__variant3",
+                            "key": "asparagusAethiopicus__variant3",
+                            "prices": [
+                                {
+                                    "id": "25f3bde4-1803-4968-a57e-b04b0044e6c3",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 1000,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "asparagusAethiopicus__variant3-price-1",
+                                    "country": "DE",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "adc932a9-cfa5-4bce-936f-74daec5175f0"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 900,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "60593127-77d2-4335-9203-fb17033f8745",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 950,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "asparagusAethiopicus__variant3-price-2",
+                                    "country": "AT",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "6d271c5e-6a33-4695-a18e-0e2357a1649e"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 855,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "dfead0d2-8994-455f-be73-2f0fa9284c7a",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 1000,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "asparagusAethiopicus__variant3-price-3",
+                                    "country": "NL",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "d203b09a-0ae7-47b4-94b5-b0ea2036ad27"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 900,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                }
+                            ],
+                            "images": [
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/asparagus_sprengeri_-1Ll1UksB.jpg",
+                                    "dimensions": {
+                                        "w": 1500,
+                                        "h": 1500
+                                    }
+                                },
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/asparagus-sprengeri-kfgJRawU.jpg",
+                                    "dimensions": {
+                                        "w": 2352,
+                                        "h": 1568
+                                    }
+                                },
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/asparagus-fern_detai-JHKjTMYM.jpg",
+                                    "dimensions": {
+                                        "w": 600,
+                                        "h": 600
+                                    }
+                                }
+                            ],
+                            "attributes": [
+                                {
+                                    "name": "Moisture-loving",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Sun-loving",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Size",
+                                    "value": [
+                                        "L"
+                                    ]
+                                },
+                                {
+                                    "name": "Pet-friendly",
+                                    "value": false
+                                },
+                                {
+                                    "name": "Easy-care",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Air-purifier",
+                                    "value": true
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ],
+                    "searchKeywords": {}
+                },
+                "published": true,
+                "hasStagedChanges": false
+            },
+            "key": "asparagus-aethiopicus",
+            "taxCategory": {
+                "typeId": "tax-category",
+                "id": "45d88eeb-dfc0-44ff-898b-7433f452cf68"
+            },
+            "priceMode": "Embedded",
+            "lastVariantId": 3
+        },
+        {
+            "id": "b7e1546f-e7a1-4ab7-9ae7-65bc1c7240f6",
+            "version": 52,
+            "versionModifiedAt": "2024-05-25T15:38:49.684Z",
+            "lastMessageSequenceNumber": 32,
+            "createdAt": "2024-05-25T14:41:32.263Z",
+            "lastModifiedAt": "2024-05-25T15:38:49.684Z",
+            "lastModifiedBy": {
+                "isPlatformClient": true,
+                "user": {
+                    "typeId": "user",
+                    "id": "aaecc0ed-9414-447f-8632-6fd5b88e2b76"
+                }
+            },
+            "createdBy": {
+                "isPlatformClient": true,
+                "user": {
+                    "typeId": "user",
+                    "id": "aaecc0ed-9414-447f-8632-6fd5b88e2b76"
+                }
+            },
+            "productType": {
+                "typeId": "product-type",
+                "id": "629e71c5-e141-4cc5-adbc-476da923ccf4"
+            },
+            "masterData": {
+                "current": {
+                    "name": {
+                        "en": "Pink Dogwood"
+                    },
+                    "description": {
+                        "en": "Signaling the start of spring with a wave of bright blooms, the Pink Dogwood Tree is an iconic flowering variety. But unlike other springtime bloomers, you get unbelievable color variation. This Dogwood’s flowers begin as a light pink and then get slightly deeper as your tree ages...never giving you the same color twice! These blooms are especially remarkable against the Dogwood’s vibrant greenery and broad, upright growth habit. And in autumn, you still get color with red leaves that set your landscape ablaze."
+                    },
+                    "categories": [
+                        {
+                            "typeId": "category",
+                            "id": "c2175cba-15d8-4a65-a3d8-16b0b28e89b1"
+                        }
+                    ],
+                    "categoryOrderHints": {},
+                    "slug": {
+                        "en": "pink-dogwood"
+                    },
+                    "metaTitle": {
+                        "en": ""
+                    },
+                    "metaDescription": {
+                        "en": ""
+                    },
+                    "masterVariant": {
+                        "id": 1,
+                        "sku": "pinkDogwood_variant1",
+                        "key": "pinkDogwood_variant1",
+                        "prices": [
+                            {
+                                "id": "cb7379a1-e2f4-4815-a587-fc0a44d15045",
+                                "value": {
+                                    "type": "centPrecision",
+                                    "currencyCode": "EUR",
+                                    "centAmount": 7000,
+                                    "fractionDigits": 2
+                                },
+                                "key": "pinkDogwood_variant1-price1",
+                                "country": "DE",
+                                "channel": {
+                                    "typeId": "channel",
+                                    "id": "adc932a9-cfa5-4bce-936f-74daec5175f0"
+                                },
+                                "discounted": {
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 6300,
+                                        "fractionDigits": 2
+                                    },
+                                    "discount": {
+                                        "typeId": "product-discount",
+                                        "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                    }
+                                }
+                            },
+                            {
+                                "id": "45aa8c46-913d-41eb-a048-1ca698210aff",
+                                "value": {
+                                    "type": "centPrecision",
+                                    "currencyCode": "EUR",
+                                    "centAmount": 7100,
+                                    "fractionDigits": 2
+                                },
+                                "key": "pinkDogwood_variant1-price2",
+                                "country": "AT",
+                                "channel": {
+                                    "typeId": "channel",
+                                    "id": "6d271c5e-6a33-4695-a18e-0e2357a1649e"
+                                },
+                                "discounted": {
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 6390,
+                                        "fractionDigits": 2
+                                    },
+                                    "discount": {
+                                        "typeId": "product-discount",
+                                        "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                    }
+                                }
+                            },
+                            {
+                                "id": "07ac40d5-70db-405e-8070-90a91467361c",
+                                "value": {
+                                    "type": "centPrecision",
+                                    "currencyCode": "EUR",
+                                    "centAmount": 7300,
+                                    "fractionDigits": 2
+                                },
+                                "key": "pinkDogwood_variant1-price3",
+                                "country": "NL",
+                                "channel": {
+                                    "typeId": "channel",
+                                    "id": "d203b09a-0ae7-47b4-94b5-b0ea2036ad27"
+                                },
+                                "discounted": {
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 6570,
+                                        "fractionDigits": 2
+                                    },
+                                    "discount": {
+                                        "typeId": "product-discount",
+                                        "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                    }
+                                }
+                            }
+                        ],
+                        "images": [
+                            {
+                                "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/dogwood_flowering_re-sm1xtLbY.jpg",
+                                "dimensions": {
+                                    "w": 600,
+                                    "h": 600
+                                }
+                            },
+                            {
+                                "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/pink-dogwood-sUM6DQge.jpg",
+                                "dimensions": {
+                                    "w": 422,
+                                    "h": 422
+                                }
+                            },
+                            {
+                                "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/Pink_Dogwood_1_FGT_1-ALV_gdFj.jpg",
+                                "dimensions": {
+                                    "w": 1056,
+                                    "h": 1056
+                                }
+                            }
+                        ],
+                        "attributes": [
+                            {
+                                "name": "Moisture-loving",
+                                "value": false
+                            },
+                            {
+                                "name": "Sun-loving",
+                                "value": true
+                            },
+                            {
+                                "name": "Size",
+                                "value": [
+                                    "S"
+                                ]
+                            },
+                            {
+                                "name": "Pet-friendly",
+                                "value": true
+                            },
+                            {
+                                "name": "Easy-care",
+                                "value": true
+                            },
+                            {
+                                "name": "Air-purifier",
+                                "value": false
+                            }
+                        ],
+                        "assets": []
+                    },
+                    "variants": [
+                        {
+                            "id": 2,
+                            "sku": "pinkDogwood_variant2",
+                            "key": "pinkDogwood_variant2",
+                            "prices": [
+                                {
+                                    "id": "dd7ccea9-91c0-4d13-8413-7b43a5fee3aa",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 7900,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "pinkDogwood_variant2-price1",
+                                    "country": "DE",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "adc932a9-cfa5-4bce-936f-74daec5175f0"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 7110,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "57c74096-32a9-4432-b589-b19cfd0bdc72",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 7600,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "pinkDogwood_variant2-price2",
+                                    "country": "AT",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "6d271c5e-6a33-4695-a18e-0e2357a1649e"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 6840,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "f2207da2-283b-4ef5-9c34-6d69b83bde19",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 8000,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "pinkDogwood_variant2-price3",
+                                    "country": "NL",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "d203b09a-0ae7-47b4-94b5-b0ea2036ad27"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 7200,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                }
+                            ],
+                            "images": [
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/dogwood_flowering_re-IsXdd2-b.jpg",
+                                    "dimensions": {
+                                        "w": 600,
+                                        "h": 600
+                                    }
+                                },
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/pink-dogwood-zPw1MKzn.jpg",
+                                    "dimensions": {
+                                        "w": 422,
+                                        "h": 422
+                                    }
+                                },
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/Pink_Dogwood_1_FGT_1-7SJHOiVP.jpg",
+                                    "dimensions": {
+                                        "w": 1056,
+                                        "h": 1056
+                                    }
+                                }
+                            ],
+                            "attributes": [
+                                {
+                                    "name": "Moisture-loving",
+                                    "value": false
+                                },
+                                {
+                                    "name": "Sun-loving",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Size",
+                                    "value": [
+                                        "M"
+                                    ]
+                                },
+                                {
+                                    "name": "Pet-friendly",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Easy-care",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Air-purifier",
+                                    "value": false
+                                }
+                            ],
+                            "assets": []
+                        },
+                        {
+                            "id": 3,
+                            "sku": "pinkDogwood_variant3",
+                            "key": "pinkDogwood_variant3",
+                            "prices": [
+                                {
+                                    "id": "1037eee6-54d2-46c4-a080-9fc4d0504b8b",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 8300,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "pinkDogwood_variant3-price1",
+                                    "country": "DE",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "adc932a9-cfa5-4bce-936f-74daec5175f0"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 7470,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "7b1cef75-17bb-40af-934b-09b5417927ca",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 8400,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "pinkDogwood_variant3-price2",
+                                    "country": "AT",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "6d271c5e-6a33-4695-a18e-0e2357a1649e"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 7560,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "99b934d3-3bda-4a9c-ad8b-ba78e87d95bb",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 8300,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "pinkDogwood_variant3-price3",
+                                    "country": "NL",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "d203b09a-0ae7-47b4-94b5-b0ea2036ad27"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 7470,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                }
+                            ],
+                            "images": [
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/dogwood_flowering_re-I0ICpbEY.jpg",
+                                    "dimensions": {
+                                        "w": 600,
+                                        "h": 600
+                                    }
+                                },
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/pink-dogwood-RMO1YVmZ.jpg",
+                                    "dimensions": {
+                                        "w": 422,
+                                        "h": 422
+                                    }
+                                },
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/Pink_Dogwood_1_FGT_1-yt3x73zb.jpg",
+                                    "dimensions": {
+                                        "w": 1056,
+                                        "h": 1056
+                                    }
+                                }
+                            ],
+                            "attributes": [
+                                {
+                                    "name": "Moisture-loving",
+                                    "value": false
+                                },
+                                {
+                                    "name": "Sun-loving",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Size",
+                                    "value": [
+                                        "L"
+                                    ]
+                                },
+                                {
+                                    "name": "Pet-friendly",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Easy-care",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Air-purifier",
+                                    "value": false
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ],
+                    "searchKeywords": {}
+                },
+                "staged": {
+                    "name": {
+                        "en": "Pink Dogwood"
+                    },
+                    "description": {
+                        "en": "Signaling the start of spring with a wave of bright blooms, the Pink Dogwood Tree is an iconic flowering variety. But unlike other springtime bloomers, you get unbelievable color variation. This Dogwood’s flowers begin as a light pink and then get slightly deeper as your tree ages...never giving you the same color twice! These blooms are especially remarkable against the Dogwood’s vibrant greenery and broad, upright growth habit. And in autumn, you still get color with red leaves that set your landscape ablaze."
+                    },
+                    "categories": [
+                        {
+                            "typeId": "category",
+                            "id": "c2175cba-15d8-4a65-a3d8-16b0b28e89b1"
+                        }
+                    ],
+                    "categoryOrderHints": {},
+                    "slug": {
+                        "en": "pink-dogwood"
+                    },
+                    "metaTitle": {
+                        "en": ""
+                    },
+                    "metaDescription": {
+                        "en": ""
+                    },
+                    "masterVariant": {
+                        "id": 1,
+                        "sku": "pinkDogwood_variant1",
+                        "key": "pinkDogwood_variant1",
+                        "prices": [
+                            {
+                                "id": "cb7379a1-e2f4-4815-a587-fc0a44d15045",
+                                "value": {
+                                    "type": "centPrecision",
+                                    "currencyCode": "EUR",
+                                    "centAmount": 7000,
+                                    "fractionDigits": 2
+                                },
+                                "key": "pinkDogwood_variant1-price1",
+                                "country": "DE",
+                                "channel": {
+                                    "typeId": "channel",
+                                    "id": "adc932a9-cfa5-4bce-936f-74daec5175f0"
+                                },
+                                "discounted": {
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 6300,
+                                        "fractionDigits": 2
+                                    },
+                                    "discount": {
+                                        "typeId": "product-discount",
+                                        "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                    }
+                                }
+                            },
+                            {
+                                "id": "45aa8c46-913d-41eb-a048-1ca698210aff",
+                                "value": {
+                                    "type": "centPrecision",
+                                    "currencyCode": "EUR",
+                                    "centAmount": 7100,
+                                    "fractionDigits": 2
+                                },
+                                "key": "pinkDogwood_variant1-price2",
+                                "country": "AT",
+                                "channel": {
+                                    "typeId": "channel",
+                                    "id": "6d271c5e-6a33-4695-a18e-0e2357a1649e"
+                                },
+                                "discounted": {
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 6390,
+                                        "fractionDigits": 2
+                                    },
+                                    "discount": {
+                                        "typeId": "product-discount",
+                                        "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                    }
+                                }
+                            },
+                            {
+                                "id": "07ac40d5-70db-405e-8070-90a91467361c",
+                                "value": {
+                                    "type": "centPrecision",
+                                    "currencyCode": "EUR",
+                                    "centAmount": 7300,
+                                    "fractionDigits": 2
+                                },
+                                "key": "pinkDogwood_variant1-price3",
+                                "country": "NL",
+                                "channel": {
+                                    "typeId": "channel",
+                                    "id": "d203b09a-0ae7-47b4-94b5-b0ea2036ad27"
+                                },
+                                "discounted": {
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 6570,
+                                        "fractionDigits": 2
+                                    },
+                                    "discount": {
+                                        "typeId": "product-discount",
+                                        "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                    }
+                                }
+                            }
+                        ],
+                        "images": [
+                            {
+                                "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/dogwood_flowering_re-sm1xtLbY.jpg",
+                                "dimensions": {
+                                    "w": 600,
+                                    "h": 600
+                                }
+                            },
+                            {
+                                "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/pink-dogwood-sUM6DQge.jpg",
+                                "dimensions": {
+                                    "w": 422,
+                                    "h": 422
+                                }
+                            },
+                            {
+                                "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/Pink_Dogwood_1_FGT_1-ALV_gdFj.jpg",
+                                "dimensions": {
+                                    "w": 1056,
+                                    "h": 1056
+                                }
+                            }
+                        ],
+                        "attributes": [
+                            {
+                                "name": "Moisture-loving",
+                                "value": false
+                            },
+                            {
+                                "name": "Sun-loving",
+                                "value": true
+                            },
+                            {
+                                "name": "Size",
+                                "value": [
+                                    "S"
+                                ]
+                            },
+                            {
+                                "name": "Pet-friendly",
+                                "value": true
+                            },
+                            {
+                                "name": "Easy-care",
+                                "value": true
+                            },
+                            {
+                                "name": "Air-purifier",
+                                "value": false
+                            }
+                        ],
+                        "assets": []
+                    },
+                    "variants": [
+                        {
+                            "id": 2,
+                            "sku": "pinkDogwood_variant2",
+                            "key": "pinkDogwood_variant2",
+                            "prices": [
+                                {
+                                    "id": "dd7ccea9-91c0-4d13-8413-7b43a5fee3aa",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 7900,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "pinkDogwood_variant2-price1",
+                                    "country": "DE",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "adc932a9-cfa5-4bce-936f-74daec5175f0"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 7110,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "57c74096-32a9-4432-b589-b19cfd0bdc72",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 7600,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "pinkDogwood_variant2-price2",
+                                    "country": "AT",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "6d271c5e-6a33-4695-a18e-0e2357a1649e"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 6840,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "f2207da2-283b-4ef5-9c34-6d69b83bde19",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 8000,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "pinkDogwood_variant2-price3",
+                                    "country": "NL",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "d203b09a-0ae7-47b4-94b5-b0ea2036ad27"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 7200,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                }
+                            ],
+                            "images": [
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/dogwood_flowering_re-IsXdd2-b.jpg",
+                                    "dimensions": {
+                                        "w": 600,
+                                        "h": 600
+                                    }
+                                },
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/pink-dogwood-zPw1MKzn.jpg",
+                                    "dimensions": {
+                                        "w": 422,
+                                        "h": 422
+                                    }
+                                },
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/Pink_Dogwood_1_FGT_1-7SJHOiVP.jpg",
+                                    "dimensions": {
+                                        "w": 1056,
+                                        "h": 1056
+                                    }
+                                }
+                            ],
+                            "attributes": [
+                                {
+                                    "name": "Moisture-loving",
+                                    "value": false
+                                },
+                                {
+                                    "name": "Sun-loving",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Size",
+                                    "value": [
+                                        "M"
+                                    ]
+                                },
+                                {
+                                    "name": "Pet-friendly",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Easy-care",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Air-purifier",
+                                    "value": false
+                                }
+                            ],
+                            "assets": []
+                        },
+                        {
+                            "id": 3,
+                            "sku": "pinkDogwood_variant3",
+                            "key": "pinkDogwood_variant3",
+                            "prices": [
+                                {
+                                    "id": "1037eee6-54d2-46c4-a080-9fc4d0504b8b",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 8300,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "pinkDogwood_variant3-price1",
+                                    "country": "DE",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "adc932a9-cfa5-4bce-936f-74daec5175f0"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 7470,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "7b1cef75-17bb-40af-934b-09b5417927ca",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 8400,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "pinkDogwood_variant3-price2",
+                                    "country": "AT",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "6d271c5e-6a33-4695-a18e-0e2357a1649e"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 7560,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "99b934d3-3bda-4a9c-ad8b-ba78e87d95bb",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 8300,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "pinkDogwood_variant3-price3",
+                                    "country": "NL",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "d203b09a-0ae7-47b4-94b5-b0ea2036ad27"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 7470,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                }
+                            ],
+                            "images": [
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/dogwood_flowering_re-I0ICpbEY.jpg",
+                                    "dimensions": {
+                                        "w": 600,
+                                        "h": 600
+                                    }
+                                },
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/pink-dogwood-RMO1YVmZ.jpg",
+                                    "dimensions": {
+                                        "w": 422,
+                                        "h": 422
+                                    }
+                                },
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/Pink_Dogwood_1_FGT_1-yt3x73zb.jpg",
+                                    "dimensions": {
+                                        "w": 1056,
+                                        "h": 1056
+                                    }
+                                }
+                            ],
+                            "attributes": [
+                                {
+                                    "name": "Moisture-loving",
+                                    "value": false
+                                },
+                                {
+                                    "name": "Sun-loving",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Size",
+                                    "value": [
+                                        "L"
+                                    ]
+                                },
+                                {
+                                    "name": "Pet-friendly",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Easy-care",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Air-purifier",
+                                    "value": false
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ],
+                    "searchKeywords": {}
+                },
+                "published": true,
+                "hasStagedChanges": false
+            },
+            "key": "pink-dogwood",
+            "taxCategory": {
+                "typeId": "tax-category",
+                "id": "45d88eeb-dfc0-44ff-898b-7433f452cf68"
+            },
+            "priceMode": "Embedded",
+            "lastVariantId": 3
+        },
+        {
+            "id": "da8dd07e-0ad1-4d72-b1bf-4cbaa742a9d1",
+            "version": 20,
+            "versionModifiedAt": "2024-05-25T15:38:54.419Z",
+            "lastMessageSequenceNumber": 19,
+            "createdAt": "2024-05-25T15:22:05.632Z",
+            "lastModifiedAt": "2024-05-25T15:38:54.419Z",
+            "lastModifiedBy": {
+                "isPlatformClient": true,
+                "user": {
+                    "typeId": "user",
+                    "id": "aaecc0ed-9414-447f-8632-6fd5b88e2b76"
+                }
+            },
+            "createdBy": {
+                "isPlatformClient": true,
+                "user": {
+                    "typeId": "user",
+                    "id": "aaecc0ed-9414-447f-8632-6fd5b88e2b76"
+                }
+            },
+            "productType": {
+                "typeId": "product-type",
+                "id": "629e71c5-e141-4cc5-adbc-476da923ccf4"
+            },
+            "masterData": {
+                "current": {
+                    "name": {
+                        "en": "Elf daisy"
+                    },
+                    "description": {
+                        "en": "A beautiful ever-blooming plant grown in the elven meadows. Has a refined mint aroma. Brings good luck to the house."
+                    },
+                    "categories": [
+                        {
+                            "typeId": "category",
+                            "id": "20129382-a6a2-459f-85de-6b41b18ef120"
+                        }
+                    ],
+                    "categoryOrderHints": {},
+                    "slug": {
+                        "en": "elf-daisy"
+                    },
+                    "metaTitle": {
+                        "en": ""
+                    },
+                    "metaDescription": {
+                        "en": ""
+                    },
+                    "masterVariant": {
+                        "id": 1,
+                        "sku": "elfDaisy_variant1",
+                        "key": "elfDaisy_variant1",
+                        "prices": [
+                            {
+                                "id": "6664580c-37f4-469a-896d-d82ae7b371d1",
+                                "value": {
+                                    "type": "centPrecision",
+                                    "currencyCode": "EUR",
+                                    "centAmount": 10000,
+                                    "fractionDigits": 2
+                                },
+                                "key": "elfDaisy_variant1-price-1",
+                                "country": "DE",
+                                "channel": {
+                                    "typeId": "channel",
+                                    "id": "adc932a9-cfa5-4bce-936f-74daec5175f0"
+                                },
+                                "discounted": {
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 9000,
+                                        "fractionDigits": 2
+                                    },
+                                    "discount": {
+                                        "typeId": "product-discount",
+                                        "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                    }
+                                }
+                            },
+                            {
+                                "id": "038ead77-f837-4797-81cc-9fd10e81d964",
+                                "value": {
+                                    "type": "centPrecision",
+                                    "currencyCode": "EUR",
+                                    "centAmount": 10500,
+                                    "fractionDigits": 2
+                                },
+                                "key": "elfDaisy_variant1-price-3",
+                                "country": "NL",
+                                "channel": {
+                                    "typeId": "channel",
+                                    "id": "d203b09a-0ae7-47b4-94b5-b0ea2036ad27"
+                                },
+                                "discounted": {
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 9450,
+                                        "fractionDigits": 2
+                                    },
+                                    "discount": {
+                                        "typeId": "product-discount",
+                                        "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                    }
+                                }
+                            }
+                        ],
+                        "images": [
+                            {
+                                "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/pngtree-floral-fanta-3j1KlBKc.png",
+                                "dimensions": {
+                                    "w": 840,
+                                    "h": 691
+                                }
+                            }
+                        ],
+                        "attributes": [
+                            {
+                                "name": "Moisture-loving",
+                                "value": false
+                            },
+                            {
+                                "name": "Sun-loving",
+                                "value": true
+                            },
+                            {
+                                "name": "Pet-friendly",
+                                "value": true
+                            },
+                            {
+                                "name": "Easy-care",
+                                "value": false
+                            },
+                            {
+                                "name": "Air-purifier",
+                                "value": true
+                            },
+                            {
+                                "name": "Size",
+                                "value": [
+                                    "S"
+                                ]
+                            }
+                        ],
+                        "assets": []
+                    },
+                    "variants": [
+                        {
+                            "id": 2,
+                            "sku": "elfDaisy_variant2",
+                            "key": "elfDaisy_variant2",
+                            "prices": [
+                                {
+                                    "id": "f7b40947-78f3-40fa-a2d6-94d6b0a3957f",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 12000,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "elfDaisy_variant2-price-2",
+                                    "country": "AT",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "6d271c5e-6a33-4695-a18e-0e2357a1649e"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 10800,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "9a5eb586-125e-4dbc-876b-94c0f1db8371",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 12200,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "elfDaisy_variant2-price-3",
+                                    "country": "NL",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "d203b09a-0ae7-47b4-94b5-b0ea2036ad27"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 10980,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                }
+                            ],
+                            "images": [
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/pngtree-floral-fanta-M4CIkpmI.png",
+                                    "dimensions": {
+                                        "w": 840,
+                                        "h": 691
+                                    }
+                                }
+                            ],
+                            "attributes": [
+                                {
+                                    "name": "Moisture-loving",
+                                    "value": false
+                                },
+                                {
+                                    "name": "Sun-loving",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Pet-friendly",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Easy-care",
+                                    "value": false
+                                },
+                                {
+                                    "name": "Air-purifier",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Size",
+                                    "value": [
+                                        "M"
+                                    ]
+                                }
+                            ],
+                            "assets": []
+                        },
+                        {
+                            "id": 3,
+                            "sku": "elfDaisy_variant3",
+                            "key": "elfDaisy_variant3",
+                            "prices": [
+                                {
+                                    "id": "7fd0dcde-b7cc-45cd-98fd-0a6462592a18",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 15000,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "elfDaisy_variant3-price-1",
+                                    "country": "DE",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "adc932a9-cfa5-4bce-936f-74daec5175f0"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 13500,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "08acd224-1b5c-4c02-9028-b19227943a54",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 15100,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "elfDaisy_variant3-price-2",
+                                    "country": "AT",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "6d271c5e-6a33-4695-a18e-0e2357a1649e"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 13590,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                }
+                            ],
+                            "images": [
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/pngtree-floral-fanta-NwD9Wq-H.png",
+                                    "dimensions": {
+                                        "w": 840,
+                                        "h": 691
+                                    }
+                                }
+                            ],
+                            "attributes": [
+                                {
+                                    "name": "Moisture-loving",
+                                    "value": false
+                                },
+                                {
+                                    "name": "Sun-loving",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Pet-friendly",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Easy-care",
+                                    "value": false
+                                },
+                                {
+                                    "name": "Air-purifier",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Size",
+                                    "value": [
+                                        "L"
+                                    ]
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ],
+                    "searchKeywords": {}
+                },
+                "staged": {
+                    "name": {
+                        "en": "Elf daisy"
+                    },
+                    "description": {
+                        "en": "A beautiful ever-blooming plant grown in the elven meadows. Has a refined mint aroma. Brings good luck to the house."
+                    },
+                    "categories": [
+                        {
+                            "typeId": "category",
+                            "id": "20129382-a6a2-459f-85de-6b41b18ef120"
+                        }
+                    ],
+                    "categoryOrderHints": {},
+                    "slug": {
+                        "en": "elf-daisy"
+                    },
+                    "metaTitle": {
+                        "en": ""
+                    },
+                    "metaDescription": {
+                        "en": ""
+                    },
+                    "masterVariant": {
+                        "id": 1,
+                        "sku": "elfDaisy_variant1",
+                        "key": "elfDaisy_variant1",
+                        "prices": [
+                            {
+                                "id": "6664580c-37f4-469a-896d-d82ae7b371d1",
+                                "value": {
+                                    "type": "centPrecision",
+                                    "currencyCode": "EUR",
+                                    "centAmount": 10000,
+                                    "fractionDigits": 2
+                                },
+                                "key": "elfDaisy_variant1-price-1",
+                                "country": "DE",
+                                "channel": {
+                                    "typeId": "channel",
+                                    "id": "adc932a9-cfa5-4bce-936f-74daec5175f0"
+                                },
+                                "discounted": {
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 9000,
+                                        "fractionDigits": 2
+                                    },
+                                    "discount": {
+                                        "typeId": "product-discount",
+                                        "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                    }
+                                }
+                            },
+                            {
+                                "id": "038ead77-f837-4797-81cc-9fd10e81d964",
+                                "value": {
+                                    "type": "centPrecision",
+                                    "currencyCode": "EUR",
+                                    "centAmount": 10500,
+                                    "fractionDigits": 2
+                                },
+                                "key": "elfDaisy_variant1-price-3",
+                                "country": "NL",
+                                "channel": {
+                                    "typeId": "channel",
+                                    "id": "d203b09a-0ae7-47b4-94b5-b0ea2036ad27"
+                                },
+                                "discounted": {
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 9450,
+                                        "fractionDigits": 2
+                                    },
+                                    "discount": {
+                                        "typeId": "product-discount",
+                                        "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                    }
+                                }
+                            }
+                        ],
+                        "images": [
+                            {
+                                "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/pngtree-floral-fanta-3j1KlBKc.png",
+                                "dimensions": {
+                                    "w": 840,
+                                    "h": 691
+                                }
+                            }
+                        ],
+                        "attributes": [
+                            {
+                                "name": "Moisture-loving",
+                                "value": false
+                            },
+                            {
+                                "name": "Sun-loving",
+                                "value": true
+                            },
+                            {
+                                "name": "Pet-friendly",
+                                "value": true
+                            },
+                            {
+                                "name": "Easy-care",
+                                "value": false
+                            },
+                            {
+                                "name": "Air-purifier",
+                                "value": true
+                            },
+                            {
+                                "name": "Size",
+                                "value": [
+                                    "S"
+                                ]
+                            }
+                        ],
+                        "assets": []
+                    },
+                    "variants": [
+                        {
+                            "id": 2,
+                            "sku": "elfDaisy_variant2",
+                            "key": "elfDaisy_variant2",
+                            "prices": [
+                                {
+                                    "id": "f7b40947-78f3-40fa-a2d6-94d6b0a3957f",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 12000,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "elfDaisy_variant2-price-2",
+                                    "country": "AT",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "6d271c5e-6a33-4695-a18e-0e2357a1649e"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 10800,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "9a5eb586-125e-4dbc-876b-94c0f1db8371",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 12200,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "elfDaisy_variant2-price-3",
+                                    "country": "NL",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "d203b09a-0ae7-47b4-94b5-b0ea2036ad27"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 10980,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                }
+                            ],
+                            "images": [
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/pngtree-floral-fanta-M4CIkpmI.png",
+                                    "dimensions": {
+                                        "w": 840,
+                                        "h": 691
+                                    }
+                                }
+                            ],
+                            "attributes": [
+                                {
+                                    "name": "Moisture-loving",
+                                    "value": false
+                                },
+                                {
+                                    "name": "Sun-loving",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Pet-friendly",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Easy-care",
+                                    "value": false
+                                },
+                                {
+                                    "name": "Air-purifier",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Size",
+                                    "value": [
+                                        "M"
+                                    ]
+                                }
+                            ],
+                            "assets": []
+                        },
+                        {
+                            "id": 3,
+                            "sku": "elfDaisy_variant3",
+                            "key": "elfDaisy_variant3",
+                            "prices": [
+                                {
+                                    "id": "7fd0dcde-b7cc-45cd-98fd-0a6462592a18",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 15000,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "elfDaisy_variant3-price-1",
+                                    "country": "DE",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "adc932a9-cfa5-4bce-936f-74daec5175f0"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 13500,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "08acd224-1b5c-4c02-9028-b19227943a54",
+                                    "value": {
+                                        "type": "centPrecision",
+                                        "currencyCode": "EUR",
+                                        "centAmount": 15100,
+                                        "fractionDigits": 2
+                                    },
+                                    "key": "elfDaisy_variant3-price-2",
+                                    "country": "AT",
+                                    "channel": {
+                                        "typeId": "channel",
+                                        "id": "6d271c5e-6a33-4695-a18e-0e2357a1649e"
+                                    },
+                                    "discounted": {
+                                        "value": {
+                                            "type": "centPrecision",
+                                            "currencyCode": "EUR",
+                                            "centAmount": 13590,
+                                            "fractionDigits": 2
+                                        },
+                                        "discount": {
+                                            "typeId": "product-discount",
+                                            "id": "9aba9402-ce44-49f5-b637-a942ffe11414"
+                                        }
+                                    }
+                                }
+                            ],
+                            "images": [
+                                {
+                                    "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/pngtree-floral-fanta-NwD9Wq-H.png",
+                                    "dimensions": {
+                                        "w": 840,
+                                        "h": 691
+                                    }
+                                }
+                            ],
+                            "attributes": [
+                                {
+                                    "name": "Moisture-loving",
+                                    "value": false
+                                },
+                                {
+                                    "name": "Sun-loving",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Pet-friendly",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Easy-care",
+                                    "value": false
+                                },
+                                {
+                                    "name": "Air-purifier",
+                                    "value": true
+                                },
+                                {
+                                    "name": "Size",
+                                    "value": [
+                                        "L"
+                                    ]
+                                }
+                            ],
+                            "assets": []
+                        }
+                    ],
+                    "searchKeywords": {}
+                },
+                "published": true,
+                "hasStagedChanges": false
+            },
+            "key": "elf-daisy",
+            "taxCategory": {
+                "typeId": "tax-category",
+                "id": "45d88eeb-dfc0-44ff-898b-7433f452cf68"
+            },
+            "priceMode": "Embedded",
+            "lastVariantId": 3
+        }
+    ]
+}
