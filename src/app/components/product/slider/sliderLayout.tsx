@@ -1,31 +1,51 @@
-import React from 'react';
-import showImg from '../showImg';
+import React, { useState } from 'react';
+import { Product, Image } from '@commercetools/platform-sdk';
 
-const SliderMain = (data: { data: string }) => {
+const SliderMain = (data: Product) => {
+  console.log(data);
+  const imagesOfSlides: Image[] = data?.masterData?.current?.masterVariant?.images || [];
+  const [indexSlide, setIndexSlide] = useState(0);
+
+  const toForward = () => {
+    const index = indexSlide === imagesOfSlides.length - 1 ? 0 : indexSlide + 1;
+    setIndexSlide(index);
+    console.log(indexSlide);
+  };
+
+  const toPrevious = () => {
+    const index = indexSlide === 0 ? imagesOfSlides.length - 1 : indexSlide - 1;
+    setIndexSlide(index);
+    console.log(indexSlide);
+  };
+
   return (
-    <div id="default-carousel" className="relative w-full" data-carousel="slide">
-      {data.data}
+    <div id="default-carousel" className="relative w-3/6 mt-0 ml-auto mb-0 mr-auto" data-carousel="slide">
       <div className="relative h-56 overflow-hidden rounded-lg md:h-96 slides">
-        <div id="slide-item1" className="hidden duration-700 ease-in-out" data-carousel-item>
-          <img
-            src="https://hips.hearstapps.com/hmg-prod/images/plants-index-1558561755.png"
-            className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
-            alt="..."
-          />
-        </div>
+        {imagesOfSlides?.map((image, index) => (
+          <div id={`Slide item ${index}`} className=" duration-700 ease-in-out" key={index} data-carousel-item>
+            <img
+              src={`${image.url}`}
+              className="absolute block w-max-auto h-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-md"
+              alt="..."
+            />
+          </div>
+        ))}
       </div>
-      <div className="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
-        <button
-          type="button"
-          className="w-3 h-3 rounded-full bg-green-600 hover:bg-green-700"
-          aria-current="true"
-          aria-label="Slide 1"
-          data-carousel-slide-to="0"
-        ></button>
+      <div className="buttonSlideBottomWrapper flex w-fit absolute z-30 -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
+        {imagesOfSlides?.map((_image, index) => (
+          <button
+            key={index}
+            type="button"
+            className="w-3 h-3 rounded-full bg-green-600 hover:bg-green-700"
+            aria-current="true"
+            aria-label={`Slide ${index}`}
+            data-carousel-slide-to={index}
+          ></button>
+        ))}
       </div>
       <button
         type="button"
-        onClick={(e) => showImg(e)}
+        onClick={() => toPrevious()}
         className="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none previous"
         data-carousel-prev
       >
@@ -44,7 +64,7 @@ const SliderMain = (data: { data: string }) => {
       </button>
       <button
         type="button"
-        onClick={(e) => showImg(e)}
+        onClick={() => toForward()}
         className="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none next"
         data-carousel-next
       >

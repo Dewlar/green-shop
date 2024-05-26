@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import { Disclosure, RadioGroup, Tab } from '@headlessui/react';
 import { HeartIcon, MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 
-const product = {
-  name: 'Zip Tote Basket',
-  price: '$140',
-  images: [
+const ProductMain = () => {
+  const name = 'Zip Tote Basket';
+  const price = '$140';
+  const images = [
     {
       id: 1,
       name: 'Angled view',
@@ -14,16 +14,16 @@ const product = {
       alt: 'Angled front view with bag zipped and handles upright.',
     },
     // More images...
-  ],
-  colors: [
+  ];
+  const colors = [
     { name: 'Washed Black', bgColor: 'bg-gray-700', selectedColor: 'ring-gray-700' },
     { name: 'White', bgColor: 'bg-white', selectedColor: 'ring-gray-400' },
     { name: 'Washed Gray', bgColor: 'bg-gray-500', selectedColor: 'ring-gray-500' },
-  ],
-  description: `
+  ];
+  const description = `
     <p>The Zip Tote Basket is the perfect midpoint between shopping tote and comfy backpack. With convertible straps, you can hand carry, should sling, or backpack this convenient and spacious bag. The zip top and durable canvas construction keeps your goods protected for all-day use.</p>
-  `,
-  details: [
+  `;
+  const details = [
     {
       name: 'Features',
       items: [
@@ -37,30 +37,29 @@ const product = {
       ],
     },
     // More sections...
-  ],
-};
-// const relatedProducts = [
-//   {
-//     id: 1,
-//     name: 'Zip Tote Basket',
-//     color: 'White and black',
-//     href: '#',
-//     imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-03-related-product-01.jpg',
-//     imageAlt: 'Front of zip tote bag with white canvas, black canvas straps and handle, and black zipper pulls.',
-//     price: '$140',
-//   },
-//   // More products...
-// ];
+  ];
+  // const relatedProducts = [
+  //   {
+  //     id: 1,
+  //     name: 'Zip Tote Basket',
+  //     color: 'White and black',
+  //     href: '#',
+  //     imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-03-related-product-01.jpg',
+  //     imageAlt: 'Front of zip tote bag with white canvas, black canvas straps and handle, and black zipper pulls.',
+  //     price: '$140',
+  //   },
+  //   // More products...
+  // ];
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
-}
-export default function Example() {
+  function classNames(...classes: string[]) {
+    return classes.filter(Boolean).join(' ');
+  }
+  // export default function Example() {
   //   const [open, setOpen] = useState(false);
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
+  const [selectedColor, setSelectedColor] = useState(colors[0]);
 
   return (
-    <div className="bg-white">
+    <div className="bg-white mb">
       <main className="mx-auto max-w-7xl sm:px-6 sm:pt-16 lg:px-8">
         <div className="mx-auto max-w-2xl lg:max-w-none">
           {/* Product */}
@@ -70,7 +69,7 @@ export default function Example() {
               {/* Image selector */}
               <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
                 <Tab.List className="grid grid-cols-4 gap-6">
-                  {product.images.map((image) => (
+                  {images.map((image) => (
                     <Tab
                       key={image.id}
                       className="relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4"
@@ -96,7 +95,7 @@ export default function Example() {
               </div>
 
               <Tab.Panels className="aspect-h-1 aspect-w-1 w-full">
-                {product.images.map((image) => (
+                {images.map((image) => (
                   <Tab.Panel key={image.id}>
                     <img
                       src={image.src}
@@ -110,20 +109,17 @@ export default function Example() {
 
             {/* Product info */}
             <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-              <h1 className="text-3xl font-bold tracking-tight text-gray-900">{product.name}</h1>
+              <h1 className="text-3xl font-bold tracking-tight text-gray-900">{name}</h1>
 
               <div className="mt-3">
                 <h2 className="sr-only">Product information</h2>
-                <p className="text-3xl tracking-tight text-gray-900">{product.price}</p>
+                <p className="text-3xl tracking-tight text-gray-900">{price}</p>
               </div>
 
               <div className="mt-6">
                 <h3 className="sr-only">Description</h3>
 
-                <div
-                  className="space-y-6 text-base text-gray-700"
-                  dangerouslySetInnerHTML={{ __html: product.description }}
-                />
+                <div className="space-y-6 text-base text-gray-700" dangerouslySetInnerHTML={{ __html: description }} />
               </div>
 
               <form className="mt-6">
@@ -134,7 +130,7 @@ export default function Example() {
                   <RadioGroup value={selectedColor} onChange={setSelectedColor} className="mt-2">
                     <RadioGroup.Label className="sr-only">Choose a color</RadioGroup.Label>
                     <div className="flex items-center space-x-3">
-                      {product.colors.map((color) => (
+                      {colors.map((color) => (
                         <RadioGroup.Option
                           key={color.name}
                           value={color}
@@ -187,7 +183,7 @@ export default function Example() {
                 </h2>
 
                 <div className="divide-y divide-gray-200 border-t">
-                  {product.details.map((detail) => (
+                  {details.map((detail) => (
                     <Disclosure as="div" key={detail.name}>
                       {({ open }) => (
                         <>
@@ -235,4 +231,6 @@ export default function Example() {
       </main>
     </div>
   );
-}
+};
+
+export default ProductMain;
