@@ -1,3 +1,4 @@
+import { LoadingType } from 'react-loading';
 import { NavigateFunction } from 'react-router-dom';
 
 const sample = () => 1;
@@ -70,6 +71,11 @@ export interface ModalError {
 
 export interface TypeOfZip {
   [key: string]: RegExp;
+}
+
+export interface TypeLoading {
+  type: LoadingType;
+  color: string;
 }
 
 export default { sample, sample2 };
