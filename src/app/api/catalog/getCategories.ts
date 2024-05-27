@@ -2,7 +2,7 @@ import { CategoryPagedQueryResponse } from '@commercetools/platform-sdk';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { getProjectKey } from '../helpers';
 import AnonymousClient from '../AnonymousClient';
-import { CategoryData } from '../types';
+import { ICategoryData } from '../types';
 
 const getQueryCategories = async (): Promise<ClientResponse<CategoryPagedQueryResponse>> => {
   const projectKey = getProjectKey();
@@ -18,12 +18,10 @@ const getQueryCategories = async (): Promise<ClientResponse<CategoryPagedQueryRe
   return result as ClientResponse<CategoryPagedQueryResponse>;
 };
 
-const getCategories = async (): Promise<CategoryData[]> => {
+const getCategories = async (): Promise<ICategoryData[]> => {
   const response = await getQueryCategories();
-  const categories = [] as CategoryData[];
+  const categories = [] as ICategoryData[];
   if (response?.body) {
-    console.log('getCategories: response?.body', response?.body);
-
     const { results } = response.body;
     results?.forEach((item) => {
       categories.push({

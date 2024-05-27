@@ -10,7 +10,7 @@ import {
 } from '@commercetools/sdk-client-v2';
 import { CustomerSignInResult } from '@commercetools/platform-sdk';
 import TokenService from './TokenService';
-import { ApiResponse, CustomerData } from './types';
+import { IApiResponse, ICustomerData, IProductResultsData, IProductDataForRender } from './types';
 
 export interface ExistingTokenFlowOptions {
   authorization: string;
@@ -129,8 +129,8 @@ export const storageSet = (key: string, data: any): void => {
   localStorage.setItem(`${storageKey}_${key}`, JSON.stringify(data));
 };
 
-export const createCustomerData = (data: ApiResponse): CustomerData => {
-  const userData: CustomerData = {
+export const createCustomerData = (data: IApiResponse): ICustomerData => {
+  const userData: ICustomerData = {
     email: data.body.email,
     password: data.body.password,
     firstName: data.body.firstName,
@@ -143,4 +143,16 @@ export const createCustomerData = (data: ApiResponse): CustomerData => {
   };
 
   return userData;
+};
+export const createProductData = (data: IProductResultsData[]): IProductDataForRender[] => {
+  const productsData: IProductDataForRender[] = data.map((item) => ({
+    id: item.id,
+    name: item.masterData.staged.name.en,
+    href: '#',
+    price: '20.00',
+    imageSrc: item.masterData.current.masterVariant.images[0].url,
+    imageAlt: '',
+  }));
+
+  return productsData;
 };

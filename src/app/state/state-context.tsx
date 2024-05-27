@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import CustomerController from '../api/CustomerController';
 import TokenService from '../api/TokenService';
 import { LocalStorageKeysEnum, storageGet, storageSet } from '../api/helpers';
-import { CategoryData, CustomerData } from '../api/types';
+import { ICategoryData, ICustomerData } from '../api/types';
 
 export interface IAuthData {
   token?: string;
@@ -16,11 +16,11 @@ export interface IState {
   isAuth: boolean;
   setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
   authData: IAuthData;
-  customerData: CustomerData;
-  categoriesData: CategoryData[];
+  customerData: ICustomerData;
+  categoriesData: ICategoryData[];
   setAuthData: React.Dispatch<React.SetStateAction<IAuthData>>;
-  setCustomerData: React.Dispatch<React.SetStateAction<CustomerData>>;
-  setCategories: React.Dispatch<React.SetStateAction<CategoryData[]>>;
+  setCustomerData: React.Dispatch<React.SetStateAction<ICustomerData>>;
+  setCategories: React.Dispatch<React.SetStateAction<ICategoryData[]>>;
   logout: () => void;
 }
 
