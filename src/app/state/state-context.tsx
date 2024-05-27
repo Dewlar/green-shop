@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import CustomerController from '../api/CustomerController';
 import TokenService from '../api/TokenService';
 import { LocalStorageKeysEnum, storageGet, storageSet } from '../api/helpers';
-import { CustomerData } from '../api/types';
+import { CategoryData, CustomerData } from '../api/types';
 
 export interface IAuthData {
   token?: string;
@@ -17,8 +17,10 @@ export interface IState {
   setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
   authData: IAuthData;
   customerData: CustomerData;
+  categoriesData: CategoryData[];
   setAuthData: React.Dispatch<React.SetStateAction<IAuthData>>;
   setCustomerData: React.Dispatch<React.SetStateAction<CustomerData>>;
+  setCategories: React.Dispatch<React.SetStateAction<CategoryData[]>>;
   logout: () => void;
 }
 
@@ -43,9 +45,11 @@ function getInitialState(): IState {
       shippingAddressIds: [],
       billingAddressIds: [],
     },
+    categoriesData: [],
     setIsAuth: () => {},
     setAuthData: () => {},
     setCustomerData: () => {},
+    setCategories: () => {},
     logout: () => {},
   };
 }
@@ -65,6 +69,7 @@ export const StateProvider: FC<Props> = ({ children }) => {
   const [isAuth, setIsAuth] = useState(getInitialState().isAuth);
   const [authData, setAuthData] = useState(getInitialState().authData);
   const [customerData, setCustomerData] = useState(getInitialState().customerData);
+  const [categoriesData, setCategories] = useState(getInitialState().categoriesData);
 
   const savedToken = new TokenService();
   const customerController = new CustomerController();
@@ -89,7 +94,19 @@ export const StateProvider: FC<Props> = ({ children }) => {
   };
 
   return (
-    <StateContext.Provider value={{ isAuth, setIsAuth, authData, customerData, setCustomerData, setAuthData, logout }}>
+    <StateContext.Provider
+      value={{
+        isAuth,
+        setIsAuth,
+        authData,
+        customerData,
+        setCustomerData,
+        setAuthData,
+        categoriesData,
+        setCategories,
+        logout,
+      }}
+    >
       {children}
     </StateContext.Provider>
   );

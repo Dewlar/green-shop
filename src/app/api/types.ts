@@ -49,3 +49,8 @@ export interface ApiResponse<T = any> {
   error?: HttpErrorType;
   request?: object;
 }
+
+export interface CategoryData {
+  id: string;
+  name: string;
+}
