@@ -91,25 +91,27 @@ const LoginForm = () => {
 
     const customerController = new CustomerController();
 
-    customerController.createAnonymousCustomer().then(() => {
-      customerController
-        .loginCustomer({ email: username, password })
-        .then((response) => {
-          if (response.apiResult.statusCode === 200 && response.token) {
-            storageSet(LocalStorageKeysEnum.IS_AUTH, true);
+    customerController
+      .createAnonymousCustomer()
+      .then(() => {
+        return customerController.loginCustomer({ email: username, password });
+      })
+      .then((response) => {
+        if (response.apiResult.statusCode === 200 && response.token) {
+          storageSet(LocalStorageKeysEnum.IS_AUTH, true);
+          setIsAuth(true);
+          setAuthData(response.token);
 
-            setIsAuth(true);
-            setAuthData(response.token);
-
-            toast((response.apiResult as HttpErrorType).message);
-
-            navigate('/');
-          }
-
-          toast((response.apiResult as HttpErrorType).message);
-        })
-        .catch(); // todo: need to add toastify notification
-    });
+          toast.success('Login successful!');
+          navigate('/');
+        } else {
+          toast.error((response.apiResult as HttpErrorType).message);
+        }
+      })
+      .catch((error) => {
+        console.error('Error during login:', error);
+        toast.error('Error during login. Please try again.');
+      });
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
