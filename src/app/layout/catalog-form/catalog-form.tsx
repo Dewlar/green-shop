@@ -15,6 +15,7 @@ import {
 } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
+import { toast } from 'react-toastify';
 import getCategories from '../../api/catalog/getCategories';
 import { useStateContext } from '../../state/state-context';
 import { getProducts } from '../../api/catalog/getProducts';
@@ -58,15 +59,31 @@ const CatalogForm = () => {
   const { setCategories } = useStateContext();
 
   useEffect(() => {
-    getCategories().then((response) => {
-      setCategories(response);
-    });
+    const fetchCategories = async () => {
+      try {
+        const response = await getCategories();
+        setCategories(response);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        toast.error('Error fetching categories.');
+      }
+    };
+
+    fetchCategories();
   }, []);
 
   useEffect(() => {
-    getProducts().then((response) => {
-      setProducts(createProductData(response.body.results as IProductResultsData[]));
-    });
+    const fetchProducts = async () => {
+      try {
+        const response = await getProducts();
+        setProducts(createProductData(response.body.results as IProductResultsData[]));
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        toast.error('Error fetching products.');
+      }
+    };
+
+    fetchProducts();
   }, []);
 
   return (
