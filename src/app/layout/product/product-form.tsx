@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Product } from '@commercetools/platform-sdk';
-import SliderMain from '../../components/product/slider/sliderLayout';
+// import SliderMain from '../../components/product/slider/sliderLayout';
 import ProductMain from '../../components/product/mainLayout';
 import HeaderWidthMobile from '../../components/header/header-width-mobile';
 import Footer from '../../components/footer/footer';
@@ -24,8 +24,8 @@ const ProductForm = () => {
   return (
     <div>
       <HeaderWidthMobile></HeaderWidthMobile>
-      <SliderMain {...productStorage}></SliderMain>
-      <ProductMain></ProductMain>
+      {/* <SliderMain {...productStorage}></SliderMain> */}
+      <ProductMain {...productStorage}></ProductMain>
       <Footer></Footer>
     </div>
   );

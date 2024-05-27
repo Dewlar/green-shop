@@ -19,17 +19,19 @@ const SliderMain = (data: Product) => {
   };
 
   return (
-    <div id="default-carousel" className="relative w-3/6 mt-0 ml-auto mb-0 mr-auto" data-carousel="slide">
-      <div className="relative h-56 overflow-hidden rounded-lg md:h-96 slides">
-        {imagesOfSlides?.map((image, index) => (
-          <div id={`Slide item ${index}`} className=" duration-700 ease-in-out" key={index} data-carousel-item>
+    <div id="default-carousel" className="relative w-4/6 mt-0 ml-auto mb-0 mr-auto" data-carousel="slide">
+      <div className="w-100 h-100 flex">
+        <div className="relative overflow-hidden rounded-lg w-100 h-100 flex">
+          {imagesOfSlides?.map((image, index) => (
             <img
               src={`${image.url}`}
-              className="absolute block w-max-auto h-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-md"
+              className={`block w-max-auto h-full shrink-0 grow-0 transition-[translate] ease-in-out duration-700`}
               alt="..."
+              key={index}
+              style={{ translate: `${-100 * indexSlide}%` }}
             />
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
       <div className="buttonSlideBottomWrapper flex w-fit absolute z-30 -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
         {imagesOfSlides?.map((_image, index) => (
@@ -40,6 +42,7 @@ const SliderMain = (data: Product) => {
             aria-current="true"
             aria-label={`Slide ${index}`}
             data-carousel-slide-to={index}
+            onClick={() => setIndexSlide(index)}
           ></button>
         ))}
       </div>
