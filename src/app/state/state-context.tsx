@@ -1,14 +1,15 @@
 import React, { createContext, useState, useContext, ReactNode, FC, useEffect } from 'react';
 // import { useLocation, useNavigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { Customer, ClientResponse } from '@commercetools/platform-sdk';
 import CustomerController from '../api/CustomerController';
 import TokenService from '../api/TokenService';
 import { LocalStorageKeysEnum, storageGet, storageSet } from '../api/helpers';
-import { ICategoryData, ICustomerData } from '../api/types';
+import { ICategoryData } from '../api/types';
 
 export interface IAuthData {
-  token?: string;
-  expirationTime?: number;
+  token: string;
+  expirationTime: number;
   refreshToken?: string;
 }
 
@@ -16,15 +17,15 @@ export interface IState {
   isAuth: boolean;
   setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
   authData: IAuthData;
-  customerData: ICustomerData;
+  customerData: ClientResponse<Customer>;
   categoriesData: ICategoryData[];
   setAuthData: React.Dispatch<React.SetStateAction<IAuthData>>;
-  setCustomerData: React.Dispatch<React.SetStateAction<ICustomerData>>;
+  setCustomerData: React.Dispatch<React.SetStateAction<ClientResponse<Customer>>>;
   setCategories: React.Dispatch<React.SetStateAction<ICategoryData[]>>;
   logout: () => void;
 }
 
-function getInitialState(): IState {
+function getInitialState() {
   const isAuth = storageGet<boolean>(LocalStorageKeysEnum.IS_AUTH);
 
   return {
@@ -32,7 +33,6 @@ function getInitialState(): IState {
     authData: {
       token: '',
       expirationTime: 0,
-      refreshToken: '',
     },
     customerData: {
       id: '',
@@ -44,21 +44,16 @@ function getInitialState(): IState {
       addresses: [],
       shippingAddressIds: [],
       billingAddressIds: [],
-    },
+    } as unknown as ClientResponse<Customer>,
     categoriesData: [],
-    setIsAuth: () => {},
-    setAuthData: () => {},
-    setCustomerData: () => {},
-    setCategories: () => {},
-    logout: () => {},
   };
 }
 
 type Props = { children: ReactNode };
 // create context
-const StateContext = createContext<IState>(getInitialState());
+const StateContext = createContext<IState | undefined>(undefined);
 // custom Hook to use state context in all components ---> see header for an example of use useStateContext
-export const useStateContext = (): IState => {
+export const useStateContext = () => {
   const context = useContext(StateContext);
   if (context === undefined) throw new Error('useStateContext must be used within a StateProvider');
 
@@ -67,9 +62,9 @@ export const useStateContext = (): IState => {
 
 export const StateProvider: FC<Props> = ({ children }) => {
   const [isAuth, setIsAuth] = useState(getInitialState().isAuth);
-  const [authData, setAuthData] = useState(getInitialState().authData);
-  const [customerData, setCustomerData] = useState(getInitialState().customerData);
-  const [categoriesData, setCategories] = useState(getInitialState().categoriesData);
+  const [authData, setAuthData] = useState<IAuthData>(getInitialState().authData);
+  const [customerData, setCustomerData] = useState<ClientResponse<Customer>>(getInitialState().customerData);
+  const [categoriesData, setCategories] = useState<ICategoryData[]>(getInitialState().categoriesData);
 
   const savedToken = new TokenService();
   const customerController = new CustomerController();
@@ -78,7 +73,7 @@ export const StateProvider: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     if (savedToken.get().token !== '') {
-      setIsAuth(storageGet(LocalStorageKeysEnum.IS_AUTH) ?? false);
+      setIsAuth(storageGet<boolean>(LocalStorageKeysEnum.IS_AUTH) ?? false);
       setAuthData(savedToken.get());
     } else customerController.createAnonymousCustomer();
   }, []);
@@ -99,9 +94,9 @@ export const StateProvider: FC<Props> = ({ children }) => {
         isAuth,
         setIsAuth,
         authData,
+        setAuthData,
         customerData,
         setCustomerData,
-        setAuthData,
         categoriesData,
         setCategories,
         logout,

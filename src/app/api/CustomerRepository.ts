@@ -1,7 +1,7 @@
-import { ClientResponse, ClientResult, TokenStore } from '@commercetools/sdk-client-v2';
-import { CustomerSignInResult } from '@commercetools/platform-sdk';
+import { HttpErrorType, TokenStore } from '@commercetools/sdk-client-v2';
+import { ClientResponse, Customer } from '@commercetools/platform-sdk';
 import TokenService from './TokenService';
-import { ApiLoginResult, UserCredentialData, getProjectKey } from './helpers';
+import { UserCredentialData, getProjectKey } from './helpers';
 import RefreshTokenClient from './RefreshTokenClient';
 import AnonymousClient from './AnonymousClient';
 import AuthClient from './AuthClient';
@@ -10,6 +10,8 @@ class CustomerRepository {
   private readonly projectKey: string;
 
   private tokenService: TokenService;
+
+  private authApiResponse: ClientResponse<Customer> | undefined;
 
   constructor() {
     this.projectKey = getProjectKey();
@@ -32,7 +34,11 @@ class CustomerRepository {
     }
   }
 
-  public async loginCustomer(userData: UserCredentialData): Promise<ApiLoginResult> {
+  public getCustomerData() {
+    return this.authApiResponse;
+  }
+
+  public async loginCustomer(userData: UserCredentialData) {
     try {
       const { email, password } = userData;
       const refreshTokenClient = new RefreshTokenClient();
@@ -55,27 +61,28 @@ class CustomerRepository {
 
       const authClient = new AuthClient(userData);
       const authApiRoot = authClient.getApiRoot();
-      const authApiResponse = await authApiRoot
+      this.authApiResponse = await authApiRoot
         .withProjectKey({
           projectKey: this.projectKey,
         })
         .me()
         .get()
         .execute();
-
-      console.log('Auth Customer Response:', authApiResponse);
+      console.log('Auth Customer Response:', this.authApiResponse);
 
       const token = this.tokenService.get();
 
       return {
-        apiResult: tokenApiResult as ClientResponse<CustomerSignInResult>,
+        apiResult: tokenApiResult,
         token,
+        customer: this.authApiResponse,
       };
     } catch (error) {
       console.error('Login Error:', error);
       return {
-        apiResult: error as ClientResponse<ClientResult>,
+        apiResult: error as HttpErrorType,
         token: null,
+        customer: this.authApiResponse,
       };
     }
   }

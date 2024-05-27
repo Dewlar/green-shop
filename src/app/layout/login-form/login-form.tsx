@@ -13,7 +13,7 @@ const LoginForm = () => {
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
   const [showPassword, setShowPassword] = useState(false);
 
-  const { setIsAuth, setAuthData } = useStateContext();
+  const { setIsAuth, setAuthData, setCustomerData } = useStateContext();
   const navigate = useNavigate();
 
   const validateEmail = (email: string): string[] => {
@@ -104,6 +104,7 @@ const LoginForm = () => {
 
           toast.success('Login successful!');
           navigate('/');
+          setCustomerData(response.customer);
         } else {
           toast.error((response.apiResult as HttpErrorType).message);
         }

@@ -8,7 +8,7 @@ import {
   RefreshAuthMiddlewareOptions,
   TokenStore,
 } from '@commercetools/sdk-client-v2';
-import { CustomerSignInResult } from '@commercetools/platform-sdk';
+import { Customer, CustomerSignInResult } from '@commercetools/platform-sdk';
 import TokenService from './TokenService';
 import { IApiResponse, ICustomerData, IProductResultsData, IProductDataForRender } from './types';
 
@@ -27,6 +27,7 @@ export interface UserCredentialData {
 export interface ApiLoginResult {
   apiResult: ClientResponse<CustomerSignInResult> | ClientResponse<ClientResult> | HttpErrorType;
   token: TokenStore | null;
+  customer: ClientResponse<Customer>;
 }
 
 export const getProjectKey = (): string => {
