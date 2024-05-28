@@ -71,6 +71,11 @@ const CatalogForm = () => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [products, setProducts] = useState<IProductDataForRender[]>([]);
   const { setCategories } = useStateContext();
+  const [selectedOption, setSelectedOption] = useState('');
+
+  const handleOptionChange = (optionValue: string) => {
+    setSelectedOption(optionValue);
+  };
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -161,15 +166,19 @@ const CatalogForm = () => {
                                   <div key={option.value} className="flex items-center">
                                     <input
                                       id={`filter-mobile-${section.id}-${optionIdx}`}
-                                      name={`${section.id}[]`}
-                                      defaultValue={option.value}
-                                      type="checkbox"
-                                      defaultChecked={option.checked}
-                                      className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                      name={`${section.id}`}
+                                      value={option.value}
+                                      type="radio"
+                                      checked={selectedOption === option.value}
+                                      onChange={() => handleOptionChange(option.value)}
+                                      className="h-4 w-4 rounded-full border-gray-300 text-green-600 focus:ring-green-500 appearance-none"
+                                      style={{ opacity: '0', position: 'absolute' }} // Скрыть радиокнопку
                                     />
                                     <label
                                       htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
-                                      className="ml-3 min-w-0 flex-1 text-gray-500"
+                                      className={`ml-3 min-w-0 flex-1 text-gray-500 ${
+                                        selectedOption === option.value ? 'text-green-600' : ''
+                                      }`}
                                     >
                                       {option.label}
                                     </label>
@@ -291,13 +300,19 @@ const CatalogForm = () => {
                           <div key={option.value} className="flex items-center">
                             <input
                               id={`filter-${section.id}-${optionIdx}`}
-                              name={`${section.id}[]`}
-                              defaultValue={option.value}
-                              type="checkbox"
-                              defaultChecked={option.checked}
-                              className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                              name={`${section.id}`}
+                              value={option.value}
+                              type="radio"
+                              checked={selectedOption === option.value}
+                              onChange={() => handleOptionChange(option.value)}
+                              className="h-0 w-0 opacity-0 absolute"
                             />
-                            <label htmlFor={`filter-${section.id}-${optionIdx}`} className="ml-3 text-sm text-gray-600">
+                            <label
+                              htmlFor={`filter-${section.id}-${optionIdx}`}
+                              className={`ml-3 text-sm text-gray-600 ${
+                                selectedOption === option.value ? 'text-green-600' : ''
+                              }`}
+                            >
                               {option.label}
                             </label>
                           </div>
@@ -338,6 +353,21 @@ const CatalogForm = () => {
               <div className="lg:col-span-3">
                 {
                   <div className="bg-white">
+                    <nav aria-label="breadcrumb" className="w-max">
+                      <ol className="flex flex-wrap items-center w-full px-4 py-2 rounded-md bg-blue-gray-50 bg-opacity-60">
+                        <li className="flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer text-blue-gray-900 hover:text-light-blue-500">
+                          <a href="#" className="opacity-60">
+                            Category
+                          </a>
+                          <span className="mx-2 font-sans text-sm antialiased font-normal leading-normal pointer-events-none select-none text-blue-gray-500">
+                            /
+                          </span>
+                        </li>
+                        <li className="flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer text-blue-gray-900 hover:text-light-blue-500">
+                          <a href="#">Fantasy plants</a>
+                        </li>
+                      </ol>
+                    </nav>
                     <div className="mx-auto max-w-2xl px-4 pt-8 pb-16 sm:px-6 sm:pt-12 sm:pb-24 lg:max-w-7xl lg:px-8">
                       <h2 className="sr-only">Products</h2>
 
