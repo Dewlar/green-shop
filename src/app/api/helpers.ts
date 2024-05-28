@@ -145,15 +145,26 @@ export const createCustomerData = (data: IApiResponse): ICustomerData => {
 
   return userData;
 };
+
+const convertPrice = (price: number): number => {
+  return Number((price / 100).toFixed(2));
+};
+
+const formatPriceInEuro = (price: number): string => {
+  return new Intl.NumberFormat('de-DE', {
+    style: 'currency',
+    currency: 'EUR',
+  }).format(price);
+};
+
 export const createProductData = (data: IProductResultsData[]): IProductDataForRender[] => {
   const productsData: IProductDataForRender[] = data.map((item) => ({
     id: item.id,
     name: item.masterData.staged.name.en,
     href: '#',
-    price: '20.00',
+    price: formatPriceInEuro(convertPrice(item.masterData.current.masterVariant.prices[0].value.centAmount)),
     imageSrc: item.masterData.current.masterVariant.images[0].url,
     imageAlt: '',
   }));
-
   return productsData;
 };
