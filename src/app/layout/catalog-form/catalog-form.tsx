@@ -343,16 +343,42 @@ const CatalogForm = () => {
 
                       <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                         {products.map((product) => (
-                          <a key={product.id} href={product.href} className="group">
+                          <a
+                            key={product.id}
+                            href={product.href}
+                            className="group block border border-gray-100 rounded-lg shadow transition-transform hover:shadow-md"
+                          >
                             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
                               <img
                                 src={product.imageSrc}
                                 alt={product.imageAlt}
-                                className="h-full w-full object-cover object-center group-hover:opacity-75"
+                                className="h-full w-full object-cover object-center transition-transform duration-300 ease-in-out transform group-hover:scale-105"
                               />
                             </div>
-                            <h3 className="mt-4 text-sm text-gray-700">{product.name}</h3>
-                            <p className="mt-1 text-lg font-medium text-green-600">{product.price}</p>
+                            <h3
+                              className="mt-4 mb-2 text-lg font-bold text-center text-gray-700"
+                              style={{ height: '3.3rem', overflow: 'hidden' }}
+                            >
+                              {product.name}
+                            </h3>
+
+                            <div className="mt-1 flex items-center justify-between px-4 py-2">
+                              <p className="text-lg font-medium text-green-600">{product.price}</p>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth="1.5"
+                                stroke="currentColor"
+                                className="w-6 h-6 text-green-600"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+                                />
+                              </svg>
+                            </div>
                           </a>
                         ))}
                       </div>
