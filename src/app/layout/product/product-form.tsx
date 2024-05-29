@@ -14,7 +14,7 @@ const ProductForm = () => {
       const item = await getProductData();
       console.log(item);
 
-      await getOneProduct('08bb1b50-0429-46e2-80ec-18f6d00c4d89').then(({ body }) => {
+      await getOneProduct('b7e1546f-e7a1-4ab7-9ae7-65bc1c7240f6').then(({ body }) => {
         setProduct(body);
       });
     }
@@ -24,7 +24,6 @@ const ProductForm = () => {
   return (
     <div>
       <HeaderWidthMobile></HeaderWidthMobile>
-      {/* <SliderMain {...productStorage}></SliderMain> */}
       <ProductMain {...productStorage}></ProductMain>
       <Footer></Footer>
     </div>

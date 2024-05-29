@@ -3,7 +3,6 @@ import { Product, Image } from '@commercetools/platform-sdk';
 import { Tab } from '@headlessui/react';
 
 const SliderMain = (data: Product) => {
-  console.log(data);
   const imagesOfSlides: Image[] = data?.masterData?.current?.masterVariant?.images || [];
   const [indexSlide, setIndexSlide] = useState(0);
 
@@ -25,7 +24,6 @@ const SliderMain = (data: Product) => {
 
   return (
     <Tab.Group as="div" className="flex flex-col-reverse">
-      {/* Image selector */}
       <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
         <Tab.List className="grid grid-cols-4 gap-6">
           {imagesOfSlides.map((image, index) => (

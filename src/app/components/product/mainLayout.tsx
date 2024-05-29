@@ -1,37 +1,40 @@
 import React, { useState } from 'react';
 
-import { Disclosure, RadioGroup } from '@headlessui/react';
-import { HeartIcon, MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
-import { Attribute, Price, Product, ProductData } from '@commercetools/platform-sdk';
+import { Disclosure, Label, Radio, RadioGroup } from '@headlessui/react';
+import { HeartIcon, MinusIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Attribute, Image, Price, Product, ProductData } from '@commercetools/platform-sdk';
 import ReactLoading from 'react-loading';
 import SliderMain from './slider/sliderLayout';
 
 const ProductMain = (data: Product) => {
   const productData: ProductData = data?.masterData?.current;
   const price: Price[] = productData?.variants[0]?.prices || [];
+  const images: Image[] = data?.masterData?.current?.masterVariant?.images || [];
   const attributes: Attribute[] = productData?.masterVariant?.attributes || [];
   const sizes = [
-    { name: 'S', bgColor: 'bg-green-200', selectedSize: 'ring-gray-700' },
-    { name: 'M', bgColor: 'bg-green-500', selectedSize: 'ring-gray-400' },
-    { name: 'L', bgColor: 'bg-green-700', selectedSize: 'ring-gray-500' },
+    { name: 'S', bgColor: 'bg-green-200', selectedSize: 'ring-gray-300' },
+    { name: 'M', bgColor: 'bg-green-500', selectedSize: 'ring-gray-300' },
+    { name: 'L', bgColor: 'bg-green-700', selectedSize: 'ring-gray-300' },
   ];
   function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
   }
-  // export default function Example() {
-  //   const [open, setOpen] = useState(false);
-  console.log(price);
+
   const [selectedSize, setSelectedSize] = useState(sizes[0]);
+  const [showModalSlider, setModalSlider] = useState(false);
 
   return (
-    <div className="bg-white mb-20">
+    <div className="bg-white mb-8">
       <main className="mx-auto max-w-7xl sm:px-6 sm:pt-16 lg:px-8">
         <div className="mx-auto max-w-2xl lg:max-w-none">
-          {/* Product */}
           <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
-            {/* Image gallery */}
-            <SliderMain {...data}></SliderMain>
-            {/* Product info */}
+            {productData?.masterVariant?.images && productData?.masterVariant?.images?.length === 1 ? (
+              <img src={images[0].url} onClick={() => setModalSlider(true)}></img>
+            ) : (
+              <div onClick={() => setModalSlider(true)}>
+                <SliderMain {...data}></SliderMain>
+              </div>
+            )}
             <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
               <h1 className="text-3xl font-bold tracking-tight text-gray-900">
                 {productData?.name.en ? (
@@ -70,24 +73,24 @@ const ProductMain = (data: Product) => {
                   <h3 className="text-sm text-gray-600">Size</h3>
 
                   <RadioGroup value={selectedSize} onChange={setSelectedSize} className="mt-2">
-                    <RadioGroup.Label className="sr-only">Choose a size</RadioGroup.Label>
+                    <Label className="sr-only">Choose a size</Label>
                     <div className="flex items-center space-x-3">
                       {sizes.map((size) => (
-                        <RadioGroup.Option
+                        <Radio
                           key={size.name}
                           value={size}
-                          className={({ active, checked }) =>
+                          className={({ hover, checked }) =>
                             classNames(
                               size.selectedSize,
-                              active && checked ? 'ring ring-offset-1' : '',
-                              !active && checked ? 'ring-2' : '',
+                              hover && !checked ? 'ring ring-offset-1' : '',
+                              checked ? `ring-2` : '',
                               'relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none'
                             )
                           }
                         >
-                          <RadioGroup.Label as="span" className="sr-only">
+                          <Label as="span" className="sr-only">
                             {size.name}
-                          </RadioGroup.Label>
+                          </Label>
                           <span
                             aria-hidden="true"
                             className={classNames(
@@ -97,7 +100,7 @@ const ProductMain = (data: Product) => {
                           >
                             {size.name}
                           </span>
-                        </RadioGroup.Option>
+                        </Radio>
                       ))}
                     </div>
                   </RadioGroup>
@@ -170,6 +173,19 @@ const ProductMain = (data: Product) => {
           </div>
         </div>
       </main>
+      {showModalSlider ? (
+        <div className="fixed flex w-screen h-screen top-0 left-0 backdrop-blur-sm bg-slate-700 z-50 bg-opacity-50">
+          <div className="relative m-auto w-90 max-w-2xl opacity-100">
+            <SliderMain {...data}></SliderMain>
+            <button className="absolute top-2.5 right-2.5">
+              <XMarkIcon
+                className="h-10 w-10 text-green-400 hover:text-green-800 cursor-pointer"
+                onClick={() => setModalSlider(false)}
+              ></XMarkIcon>
+            </button>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 };
