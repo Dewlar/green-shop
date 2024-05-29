@@ -1,6 +1,8 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import {} from 'react-router-dom';
+import { Customer } from '@commercetools/platform-sdk';
 import HeaderWidthMobile from '../components/header/header-width-mobile';
+import CustomerController from '../api/CustomerController';
 
 const secondaryNavigation = [
   { name: 'Account', href: '#', current: true },
@@ -9,6 +11,39 @@ const secondaryNavigation = [
 ];
 
 const UserProfile = () => {
+  const [userInfo, setUserInfo] = useState({
+    email: '',
+    firstName: '',
+    lastName: '',
+    dateOfBirth: '',
+  });
+  useEffect(() => {
+    const getData = async (): Promise<Customer> => {
+      const customerController = new CustomerController();
+
+      const userData = await customerController.getCustomer();
+
+      // console.log('user userInfo -> : ', userInfo, userData);
+      if (userData.body) {
+        return userData.body;
+      }
+
+      throw Error('No customer info');
+    };
+
+    getData()
+      .then((response) => {
+        console.log('user response -> : ', response, userInfo);
+        setUserInfo({
+          email: response.email,
+          firstName: response.firstName ?? '',
+          lastName: response.lastName ?? '',
+          dateOfBirth: response.dateOfBirth ?? '',
+        });
+      })
+      .catch();
+  }, []);
+
   return (
     <>
       <HeaderWidthMobile></HeaderWidthMobile>
@@ -55,8 +90,10 @@ const UserProfile = () => {
                         type="text"
                         name="first-name"
                         id="first-name"
+                        disabled={true}
+                        defaultValue={userInfo.firstName}
                         autoComplete="given-name"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                        className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
                       />
                     </div>
                   </div>
@@ -70,13 +107,15 @@ const UserProfile = () => {
                         type="text"
                         name="last-name"
                         id="last-name"
+                        disabled={true}
+                        defaultValue={userInfo.lastName}
                         autoComplete="family-name"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                        className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
                       />
                     </div>
                   </div>
 
-                  <div className="col-span-full">
+                  <div className="sm:col-span-3">
                     <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                       Email address
                     </label>
@@ -85,8 +124,26 @@ const UserProfile = () => {
                         id="email"
                         name="email"
                         type="email"
+                        disabled={true}
+                        defaultValue={userInfo.email}
                         autoComplete="email"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                        className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                      />
+                    </div>
+                  </div>
+                  <div className="sm:col-span-3">
+                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                      Email address
+                    </label>
+                    <div className="mt-2">
+                      <input
+                        id="date"
+                        name="date"
+                        type="date"
+                        disabled={true}
+                        defaultValue={userInfo.dateOfBirth}
+                        autoComplete="email"
+                        className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
                       />
                     </div>
                   </div>
@@ -119,8 +176,9 @@ const UserProfile = () => {
                       <select
                         id="country"
                         name="country"
+                        disabled={true}
                         autoComplete="country-name"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:max-w-xs sm:text-sm sm:leading-6"
+                        className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:max-w-xs sm:text-sm sm:leading-6"
                       >
                         <option>United States</option>
                         <option>Canada</option>
@@ -138,8 +196,9 @@ const UserProfile = () => {
                         type="text"
                         name="street-address"
                         id="street-address"
+                        disabled={true}
                         autoComplete="street-address"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                        className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
                       />
                     </div>
                   </div>
@@ -153,8 +212,9 @@ const UserProfile = () => {
                         type="text"
                         name="city"
                         id="city"
+                        disabled={true}
                         autoComplete="address-level2"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                        className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
                       />
                     </div>
                   </div>
@@ -168,8 +228,9 @@ const UserProfile = () => {
                         type="text"
                         name="postal-code"
                         id="postal-code"
+                        disabled={true}
                         autoComplete="postal-code"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                        className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
                       />
                     </div>
                   </div>
@@ -202,10 +263,11 @@ const UserProfile = () => {
                     <div className="mt-2">
                       <input
                         id="current-password"
+                        disabled={true}
                         name="current_password"
                         type="password"
                         autoComplete="current-password"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                        className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
                       />
                     </div>
                   </div>
@@ -217,10 +279,11 @@ const UserProfile = () => {
                     <div className="mt-2">
                       <input
                         id="new-password"
+                        disabled={true}
                         name="new_password"
                         type="password"
                         autoComplete="new-password"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                        className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
                       />
                     </div>
                   </div>
@@ -232,10 +295,11 @@ const UserProfile = () => {
                     <div className="mt-2">
                       <input
                         id="confirm-password"
+                        disabled={true}
                         name="confirm_password"
                         type="password"
                         autoComplete="new-password"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                        className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
                       />
                     </div>
                   </div>

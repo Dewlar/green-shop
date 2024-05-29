@@ -1,4 +1,5 @@
-import { TokenStore } from '@commercetools/sdk-client-v2';
+import { ClientResponse, TokenStore } from '@commercetools/sdk-client-v2';
+import { Customer } from '@commercetools/platform-sdk';
 import CustomerRepository from './CustomerRepository';
 import { ApiLoginResult, UserCredentialData } from './helpers';
 
@@ -15,6 +16,10 @@ class CustomerController {
 
   public async createAnonymousCustomer(): Promise<TokenStore> {
     return this.customerRepository.createAnonymousCustomer();
+  }
+
+  public async getCustomer(): Promise<ClientResponse<Customer>> {
+    return this.customerRepository.getCustomer();
   }
 }
 

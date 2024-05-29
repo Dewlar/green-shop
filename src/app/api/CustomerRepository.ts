@@ -1,5 +1,5 @@
 import { ClientResponse, ClientResult, TokenStore } from '@commercetools/sdk-client-v2';
-import { CustomerSignInResult } from '@commercetools/platform-sdk';
+import { Customer, CustomerSignInResult } from '@commercetools/platform-sdk';
 import TokenService from './TokenService';
 import { ApiLoginResult, UserCredentialData, getProjectKey } from './helpers';
 import RefreshTokenClient from './RefreshTokenClient';
@@ -67,6 +67,14 @@ class CustomerRepository {
         token: null,
       };
     }
+  }
+
+  public async getCustomer(): Promise<ClientResponse<Customer>> {
+    const client = new RefreshTokenClient();
+    const apiRoot = client.getApiRoot();
+
+    const result = await apiRoot.withProjectKey({ projectKey: this.projectKey }).me().get().execute();
+    return result as ClientResponse<Customer>;
   }
 }
 
