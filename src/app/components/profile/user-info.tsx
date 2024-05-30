@@ -1,6 +1,32 @@
-import React from 'react';
+import React, { FC, useEffect, useState } from 'react';
+import { IUserInfo } from '../../models';
 
-const UserInfo = () => {
+const UserInfo: FC<IUserInfo> = ({ userInfo }) => {
+  const [isEdit, setIsEdit] = useState(true);
+  const [formValues, setFormValues] = useState(userInfo);
+
+  useEffect(() => {
+    setFormValues(userInfo);
+  }, [userInfo]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormValues((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    console.log(formValues);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsEdit((prevIsEdit) => !prevIsEdit);
+    if (isEdit) {
+      console.log('Form submitted', isEdit);
+      setIsEdit(false);
+      console.log(formValues);
+    }
+  };
   return (
     <div className="grid max-w-5xl mx-auto grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
       <div>
@@ -9,7 +35,7 @@ const UserInfo = () => {
       </div>
 
       {/* user info */}
-      <form className="md:col-span-2">
+      <form className="md:col-span-2" onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-xl sm:grid-cols-6">
           <div className="sm:col-span-3">
             <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
@@ -18,10 +44,11 @@ const UserInfo = () => {
             <div className="mt-2">
               <input
                 type="text"
-                name="first-name"
+                name="firstName"
                 id="first-name"
-                disabled={true}
-                defaultValue="{userInfo.firstName}"
+                disabled={isEdit}
+                value={formValues.firstName}
+                onChange={handleInputChange}
                 autoComplete="given-name"
                 className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
               />
@@ -35,10 +62,11 @@ const UserInfo = () => {
             <div className="mt-2">
               <input
                 type="text"
-                name="last-name"
+                name="lastName"
                 id="last-name"
-                disabled={true}
-                defaultValue="{userInfo.lastName}"
+                disabled={isEdit}
+                value={formValues.lastName}
+                onChange={handleInputChange}
                 autoComplete="family-name"
                 className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
               />
@@ -54,8 +82,9 @@ const UserInfo = () => {
                 id="email"
                 name="email"
                 type="email"
-                disabled={true}
-                defaultValue="{userInfo.email}"
+                disabled={isEdit}
+                value={formValues.email}
+                onChange={handleInputChange}
                 autoComplete="email"
                 className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
               />
@@ -68,10 +97,11 @@ const UserInfo = () => {
             <div className="mt-2">
               <input
                 id="date"
-                name="date"
+                name="dateOfBirth"
                 type="date"
-                disabled={true}
-                defaultValue="{userInfo.dateOfBirth}"
+                disabled={isEdit}
+                value={formValues.dateOfBirth}
+                onChange={handleInputChange}
                 autoComplete="email"
                 className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
               />
@@ -84,7 +114,7 @@ const UserInfo = () => {
             type="submit"
             className="rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
           >
-            Save
+            {isEdit ? 'Edit' : 'Save'}
           </button>
         </div>
       </form>

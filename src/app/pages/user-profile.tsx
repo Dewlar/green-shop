@@ -8,11 +8,9 @@ import UserInfo from '../components/profile/user-info';
 import UserAddresses from '../components/profile/user-addresses';
 import UserPassword from '../components/profile/user-password';
 
-const secondaryNavigation = [
-  { name: 'Account', href: <UserInfo />, current: true },
-  { name: 'Address', href: <UserAddresses />, current: false },
-  { name: 'Password', href: <UserPassword />, current: false },
-];
+function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(' ');
+}
 
 const UserProfile = () => {
   const [userInfo, setUserInfo] = useState({
@@ -21,6 +19,11 @@ const UserProfile = () => {
     lastName: '',
     dateOfBirth: '',
   });
+  const secondaryNavigation = [
+    { name: 'Account', href: <UserInfo userInfo={userInfo} />, selected: true },
+    { name: 'Address', href: <UserAddresses />, selected: false },
+    { name: 'Password', href: <UserPassword />, selected: false },
+  ];
   useEffect(() => {
     const getData = async (): Promise<Customer> => {
       const customerController = new CustomerController();
@@ -62,7 +65,12 @@ const UserProfile = () => {
                 {secondaryNavigation.map((category) => (
                   <Tab
                     key={category.name}
-                    className="whitespace-nowrap px-1 py-4 text-sm font-semibold text-gray-400 focus-visible:outline-none"
+                    className={({ selected }) =>
+                      classNames(
+                        selected ? 'text-green-500' : 'text-gray-400',
+                        'whitespace-nowrap px-1 py-4 text-sm font-semibold focus-visible:outline-none hover:text-green-500'
+                      )
+                    }
                   >
                     {category.name}
                   </Tab>
