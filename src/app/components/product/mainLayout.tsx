@@ -11,6 +11,11 @@ const ProductMain = (data: Product) => {
   const price: Price[] = productData?.variants[0]?.prices || [];
   const images: Image[] = data?.masterData?.current?.masterVariant?.images || [];
   const attributes: Attribute[] = productData?.masterVariant?.attributes || [];
+  const isDiscount =
+    price.length !== 0 && price[0].discounted?.value.centAmount
+      ? // eslint-disable-next-line
+      `${price[0]?.discounted?.value.centAmount / 100} €`
+      : '';
   const sizes = [
     { name: 'S', bgColor: 'bg-green-200', selectedSize: 'ring-gray-300' },
     { name: 'M', bgColor: 'bg-green-500', selectedSize: 'ring-gray-300' },
@@ -45,14 +50,21 @@ const ProductMain = (data: Product) => {
               </h1>
               <div className="mt-3">
                 <h2 className="sr-only">Product information</h2>
-                <span className="text-3xl tracking-tight text-gray-900">
-                  {price.length !== 0 ? (
-                    // eslint-disable-next-line no-unsafe-optional-chaining
-                    `${price[0]?.value?.centAmount / 100}€`
-                  ) : (
-                    <ReactLoading type={'bars'} color={'green'}></ReactLoading>
-                  )}
-                </span>
+                <div className="flex justify-between w-1/5 leading-none">
+                  <span
+                    className={`${isDiscount ? 'line-through text-gray-300 text-lg' : 'text-gray-900 text-3xl'}  tracking-tight`}
+                  >
+                    {price.length !== 0 ? (
+                      // eslint-disable-next-line no-unsafe-optional-chaining
+                      `${price[0]?.value?.centAmount / 100} €`
+                    ) : (
+                      <ReactLoading type={'bars'} color={'green'}></ReactLoading>
+                    )}
+                  </span>
+                  <span className="text-3xl tracking-tight text-gray-900 ml-0.5 ">
+                    {price.length !== 0 ? `${isDiscount}` : ''}
+                  </span>
+                </div>
               </div>
 
               <div className="mt-6">
