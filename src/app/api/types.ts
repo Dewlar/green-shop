@@ -179,9 +179,13 @@ export interface IProductDataForRender {
   id: string;
   name: string;
   href: string;
-  price: string;
+  priceRender: IPriceRender;
   imageSrc: string;
   imageAlt: string;
 }
 
+interface IPriceRender {
+  discount: string;
+  currentPrice: string;
+}
 export type FilterType = string | string[] | { id: { in: string } }[];

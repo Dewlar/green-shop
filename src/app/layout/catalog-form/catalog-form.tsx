@@ -26,9 +26,9 @@ import {
 import { toast } from 'react-toastify';
 import getCategories from '../../api/catalog/getCategories';
 import { useStateContext } from '../../state/state-context';
-import { getProducts } from '../../api/catalog/getProducts';
 import { createProductData } from '../../api/helpers';
 import { IProductResultsData, IProductDataForRender } from '../../api/types';
+import { getProductsAll } from '../../api/catalog/getProductsAll';
 
 // const items = [
 //   { id: 1, title: 'Back End Developer', department: 'Engineering', type: 'Full-time', location: 'Remote' },
@@ -94,7 +94,7 @@ const CatalogForm = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await getProducts();
+        const response = await getProductsAll();
         setProducts(createProductData(response.body.results as IProductResultsData[]));
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -393,7 +393,20 @@ const CatalogForm = () => {
                             </h3>
 
                             <div className="mt-1 flex items-center justify-between px-4 py-2">
-                              <p className="text-lg font-medium text-green-600">{product.price}</p>
+                              {product.priceRender.discount !== '0' ? (
+                                <>
+                                  <p className="text-lg font-medium text-red-600">{product.priceRender.discount}</p>
+                                  <p
+                                    className="text-lg font-medium text-green-600"
+                                    style={{ textDecoration: 'line-through' }}
+                                  >
+                                    {product.priceRender.currentPrice}
+                                  </p>
+                                </>
+                              ) : (
+                                <p className="text-lg font-medium text-green-600">{product.priceRender.currentPrice}</p>
+                              )}
+
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"

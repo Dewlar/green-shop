@@ -162,7 +162,14 @@ export const createProductData = (data: IProductResultsData[]): IProductDataForR
     id: item.id,
     name: item.masterData.staged.name.en,
     href: '#',
-    price: formatPriceInEuro(convertPrice(item.masterData.current.masterVariant.prices[0].value.centAmount)),
+    priceRender: {
+      discount: item.masterData.current.masterVariant.prices[0].discounted
+        ? formatPriceInEuro(convertPrice(item.masterData.current.masterVariant.prices[0].discounted?.value.centAmount))
+        : '0',
+      currentPrice: item.masterData.current.masterVariant.prices?.length
+        ? formatPriceInEuro(convertPrice(item.masterData.current.masterVariant.prices[0].value.centAmount))
+        : '0',
+    },
     imageSrc: item.masterData.current.masterVariant.images[0].url,
     imageAlt: '',
   }));
