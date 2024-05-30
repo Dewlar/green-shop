@@ -32,7 +32,7 @@ const Header: FC<HeaderProps> = ({ setOpen }) => {
                 <div className="flex h-full justify-center items-center space-x-8">
                   {mocks.navigation.pages.map((item) => {
                     return (
-                      <Link key={item.name} to={item.href} className="text-gray-500 hover:text-gray-600">
+                      <Link key={item.name} to={item.href} className="text-gray-400 hover:text-gray-600 font-semibold">
                         {item.name}
                       </Link>
                     );
