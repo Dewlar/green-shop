@@ -7,6 +7,7 @@ import ButtonEditUpdate from './button-edit-update';
 import { useStateContext } from '../../state/state-context';
 import { LocalStorageKeysEnum, storageSet } from '../../api/helpers';
 import TokenService from '../../api/TokenService';
+import PasswordInput from './password-input';
 
 interface IProps {
   email: string;
@@ -108,15 +109,11 @@ const UserPassword: FC<IProps> = ({ email }) => {
               Current password
             </label>
             <div className="mt-2">
-              <input
-                id="current-password"
-                disabled={isEdit}
-                onChange={handleInputChange}
-                value={passwords.currentPassword}
+              <PasswordInput
                 name="currentPassword"
-                type="password"
-                autoComplete="current-password"
-                className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                value={passwords.currentPassword}
+                onChange={handleInputChange}
+                disabled={isEdit}
               />
             </div>
           </div>
