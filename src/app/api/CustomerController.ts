@@ -1,5 +1,5 @@
 import { ClientResponse, TokenStore } from '@commercetools/sdk-client-v2';
-import { Customer, MyCustomerUpdate } from '@commercetools/platform-sdk';
+import { Customer, MyCustomerChangePassword, MyCustomerUpdate } from '@commercetools/platform-sdk';
 import CustomerRepository from './CustomerRepository';
 import { ApiLoginResult, UserCredentialData } from './helpers';
 
@@ -24,6 +24,10 @@ class CustomerController {
 
   public async updateCustomer(data: MyCustomerUpdate): Promise<ClientResponse<Customer>> {
     return this.customerRepository.updateCustomer(data);
+  }
+
+  public async changeCustomerPassword(data: MyCustomerChangePassword): Promise<ClientResponse<Customer>> {
+    return this.customerRepository.changeCustomerPassword(data);
   }
 }
 

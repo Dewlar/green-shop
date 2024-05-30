@@ -19,7 +19,7 @@ const UserProfile = () => {
   const secondaryNavigation = [
     { name: 'Account', href: <UserInfo userInfo={userInfo} setUserInfo={setUserInfo} />, selected: true },
     { name: 'Address', href: <UserAddresses />, selected: false },
-    { name: 'Password', href: <UserPassword />, selected: false },
+    { name: 'Password', href: <UserPassword email={userInfo.email} />, selected: false },
   ];
   useEffect(() => {
     const getData = async (): Promise<Customer> => {

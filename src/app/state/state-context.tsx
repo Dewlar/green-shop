@@ -16,7 +16,7 @@ export interface IState {
   setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
   authData: IAuthData;
   setAuthData: React.Dispatch<React.SetStateAction<IAuthData>>;
-  logout: () => void;
+  logout: (isNavigate?: boolean) => void;
 }
 
 function getInitialState(): IState {
@@ -62,14 +62,14 @@ export const StateProvider: FC<Props> = ({ children }) => {
     } else customerController.createAnonymousCustomer();
   }, []);
 
-  const logout = () => {
+  const logout = (isNavigate: boolean = true) => {
     savedToken.removeToken();
     storageSet(LocalStorageKeysEnum.IS_AUTH, false);
     customerController.createAnonymousCustomer();
     setIsAuth(false);
     // setAuthData - example of using the set function in useState, if the new state depends on the previous state, to avoid side effects
     setAuthData((prev) => ({ ...prev, ...savedToken.get() }));
-    navigate('/', { replace: true });
+    if (isNavigate) navigate('/', { replace: true });
   };
 
   return (
