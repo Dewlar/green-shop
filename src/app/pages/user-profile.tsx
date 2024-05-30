@@ -7,10 +7,7 @@ import CustomerController from '../api/CustomerController';
 import UserInfo from '../components/profile/user-info';
 import UserAddresses from '../components/profile/user-addresses';
 import UserPassword from '../components/profile/user-password';
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '../models';
 
 const UserProfile = () => {
   const [userInfo, setUserInfo] = useState({

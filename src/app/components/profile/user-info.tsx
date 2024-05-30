@@ -11,6 +11,7 @@ import {
 } from '@commercetools/platform-sdk';
 import { IUserInfo } from '../../models';
 import CustomerController from '../../api/CustomerController';
+import ButtonEditUpdate from './button-edit-update';
 
 interface Props {
   userInfo: IUserInfo;
@@ -60,12 +61,12 @@ const UserInfo: FC<Props> = ({ userInfo, setUserInfo }) => {
           lastName: formValues.lastName,
         };
 
-        const updateBirthday: MyCustomerSetDateOfBirthAction = {
+        const updateDateOfBirth: MyCustomerSetDateOfBirthAction = {
           action: 'setDateOfBirth',
           dateOfBirth: formValues.dateOfBirth,
         };
 
-        const actions: MyCustomerUpdateAction[] = [updateEmail, updateFirstName, updateLastName, updateBirthday];
+        const actions: MyCustomerUpdateAction[] = [updateEmail, updateFirstName, updateLastName, updateDateOfBirth];
 
         currentVersion = (await customerController.getCustomer()).body?.version;
 
@@ -175,12 +176,7 @@ const UserInfo: FC<Props> = ({ userInfo, setUserInfo }) => {
         </div>
 
         <div className="mt-8">
-          <button
-            type="submit"
-            className="rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
-          >
-            {isEdit ? 'Edit' : 'Save'}
-          </button>
+          <ButtonEditUpdate isEdit={isEdit} />
         </div>
       </form>
     </div>
