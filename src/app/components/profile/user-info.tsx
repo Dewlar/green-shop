@@ -1,7 +1,23 @@
 import React, { FC, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { ClientResponse } from '@commercetools/sdk-client-v2';
+import {
+  Customer,
+  MyCustomerChangeEmailAction,
+  MyCustomerSetDateOfBirthAction,
+  MyCustomerSetFirstNameAction,
+  MyCustomerSetLastNameAction,
+  MyCustomerUpdateAction,
+} from '@commercetools/platform-sdk';
 import { IUserInfo } from '../../models';
+import CustomerController from '../../api/CustomerController';
 
-const UserInfo: FC<IUserInfo> = ({ userInfo }) => {
+interface Props {
+  userInfo: IUserInfo;
+  setUserInfo: React.Dispatch<React.SetStateAction<IUserInfo>>;
+}
+
+const UserInfo: FC<Props> = ({ userInfo, setUserInfo }) => {
   const [isEdit, setIsEdit] = useState(true);
   const [formValues, setFormValues] = useState(userInfo);
 
@@ -15,16 +31,65 @@ const UserInfo: FC<IUserInfo> = ({ userInfo }) => {
       ...prev,
       [name]: value,
     }));
-    console.log(formValues);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsEdit((prevIsEdit) => !prevIsEdit);
     if (isEdit) {
-      console.log('Form submitted', isEdit);
       setIsEdit(false);
-      console.log(formValues);
+    } else {
+      setIsEdit(true);
+
+      let currentVersion;
+
+      const updateUser = async (): Promise<ClientResponse<Customer>> => {
+        const customerController = new CustomerController();
+
+        const updateEmail: MyCustomerChangeEmailAction = {
+          action: 'changeEmail',
+          email: formValues.email,
+        };
+
+        const updateFirstName: MyCustomerSetFirstNameAction = {
+          action: 'setFirstName',
+          firstName: formValues.firstName,
+        };
+
+        const updateLastName: MyCustomerSetLastNameAction = {
+          action: 'setLastName',
+          lastName: formValues.lastName,
+        };
+
+        const updateBirthday: MyCustomerSetDateOfBirthAction = {
+          action: 'setDateOfBirth',
+          dateOfBirth: formValues.dateOfBirth,
+        };
+
+        const actions: MyCustomerUpdateAction[] = [updateEmail, updateFirstName, updateLastName, updateBirthday];
+
+        currentVersion = (await customerController.getCustomer()).body?.version;
+
+        if (currentVersion) {
+          const response = await customerController.updateCustomer({
+            version: currentVersion,
+            actions,
+          });
+
+          return response;
+        }
+
+        throw Error("Can't read data");
+      };
+
+      updateUser()
+        .then(() => {
+          setUserInfo(formValues);
+          toast.success('Saving was successful');
+        })
+        .catch(() => {
+          setFormValues(userInfo);
+          toast.error('Error changing user profile');
+        });
     }
   };
   return (
