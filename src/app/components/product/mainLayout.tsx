@@ -36,9 +36,7 @@ const ProductMain = (data: Product) => {
             {productData?.masterVariant?.images && productData?.masterVariant?.images?.length === 1 ? (
               <img src={images[0].url} onClick={() => setModalSlider(true)}></img>
             ) : (
-              <div onClick={() => setModalSlider(true)}>
-                <SliderMain {...data}></SliderMain>
-              </div>
+              <SliderMain data={data} setModalSlider={setModalSlider}></SliderMain>
             )}
             <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
               <h1 className="text-3xl font-bold tracking-tight text-gray-900">
@@ -188,7 +186,7 @@ const ProductMain = (data: Product) => {
       {showModalSlider ? (
         <div className="fixed flex w-screen h-screen top-0 left-0 backdrop-blur-sm bg-slate-700 z-50 bg-opacity-50">
           <div className="relative m-auto w-90 max-w-2xl opacity-100">
-            <SliderMain {...data}></SliderMain>
+            <SliderMain data={data}></SliderMain>
             <button className="absolute top-2.5 right-2.5">
               <XMarkIcon
                 className="h-10 w-10 text-green-400 hover:text-green-800 cursor-pointer"

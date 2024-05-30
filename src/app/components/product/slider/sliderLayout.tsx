@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Product, Image } from '@commercetools/platform-sdk';
+import { Image } from '@commercetools/platform-sdk';
 import { Tab } from '@headlessui/react';
+import { ModalSlider } from '../../../models';
 
-const SliderMain = (data: Product) => {
+const SliderMain: React.FC<ModalSlider> = ({ data, setModalSlider }) => {
   const imagesOfSlides: Image[] = data?.masterData?.current?.masterVariant?.images || [];
   const [indexSlide, setIndexSlide] = useState(0);
 
@@ -56,7 +57,7 @@ const SliderMain = (data: Product) => {
         </Tab.List>
       </div>
       <div id="default-carousel" className="relative w-5/6 mt-0 ml-auto mb-0 mr-auto" data-carousel="slide">
-        <div className="w-100 h-100 flex">
+        <div className="w-100 h-100 flex" onClick={() => (setModalSlider ? setModalSlider(true) : null)}>
           <div className="relative overflow-hidden rounded-lg w-100 h-100 flex">
             {imagesOfSlides?.map((image, index) => (
               <img

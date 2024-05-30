@@ -1,3 +1,4 @@
+import { Product } from '@commercetools/platform-sdk';
 import { LoadingType } from 'react-loading';
 import { NavigateFunction } from 'react-router-dom';
 
@@ -76,6 +77,10 @@ export interface TypeOfZip {
 export interface TypeLoading {
   type: LoadingType;
   color: string;
+}
+export interface ModalSlider {
+  data: Product;
+  setModalSlider?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default { sample, sample2 };
