@@ -26,55 +26,38 @@ import {
 import { toast } from 'react-toastify';
 import getCategories from '../../api/catalog/getCategories';
 import { useStateContext } from '../../state/state-context';
-import { createProductData } from '../../api/helpers';
-import { IProductResultsData, IProductDataForRender } from '../../api/types';
+import { classNames, createProductData, formatPriceInEuro } from '../../api/helpers';
+import { IProductResultsData, IProductDataForRender, ISortOption } from '../../api/types';
 import { getProductsAll } from '../../api/catalog/getProductsAll';
-
-// const items = [
-//   { id: 1, title: 'Back End Developer', department: 'Engineering', type: 'Full-time', location: 'Remote' },
-//   { id: 2, title: 'Front End Developer', department: 'Engineering', type: 'Full-time', location: 'Remote' },
-//   { id: 3, title: 'User Interface Designer', department: 'Design', type: 'Full-time', location: 'Remote' },
-// ];
-
-const sortOptions = [
-  { name: 'Price: Low to High', href: '#', current: false },
-  { name: 'Price: High to Low', href: '#', current: false },
-];
-
-const filters = [
-  {
-    id: 'category',
-    name: 'Category',
-    options: [
-      { value: 'indoor-plants', label: 'Indoor plants', checked: false },
-      { value: 'outdoor-plants', label: 'Outdoor plants', checked: false },
-      { value: 'fantasy-plants', label: 'Fantasy plants', checked: true },
-    ],
-  },
-  {
-    id: 'size',
-    name: 'Size',
-    options: [
-      { value: 's', label: 'S', checked: false },
-      { value: 'l', label: 'L', checked: false },
-      { value: 'm', label: 'M', checked: false },
-    ],
-  },
-];
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
-}
+import { filters, sortOptionsDefault } from '../../constans';
 
 const CatalogForm = () => {
+  const { setCategories } = useStateContext();
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [products, setProducts] = useState<IProductDataForRender[]>([]);
-  const { setCategories } = useStateContext();
   const [selectedOption, setSelectedOption] = useState('');
+  const [currentSort, setCurrentSort] = useState<string | null>(null);
+  const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionsDefault);
 
   const handleOptionChange = (optionValue: string) => {
     setSelectedOption(optionValue);
+  };
+
+  const handleSortClick = (sortOption: ISortOption) => {
+    if (sortOption.sortFunc) {
+      const sortedProducts = sortOption.sortFunc([...products]);
+      setProducts(sortedProducts);
+      setCurrentSort(sortOption.name);
+
+      const updatedSortOptions = sortOptions.map((option) => ({
+        ...option,
+        current: option.name === sortOption.name,
+      }));
+      setSortOptions(updatedSortOptions);
+    } else {
+      console.error('sortFunc is not defined for the selected sort option');
+    }
   };
 
   useEffect(() => {
@@ -228,14 +211,19 @@ const CatalogForm = () => {
           <div className="flex items-baseline justify-end border-b border-gray-200 pb-6 pt-4">
             <div className="flex items-center">
               <Menu as="div" className="relative inline-block text-left">
-                <div>
-                  <MenuButton className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-green-900">
-                    Sort
-                    <ChevronDownIcon
-                      className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                      aria-hidden="true"
-                    />
-                  </MenuButton>
+                <div className="flex" style={{ width: '200px' }}>
+                  <div>
+                    <MenuButton className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-green-900">
+                      Sort
+                      <ChevronDownIcon
+                        className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                        aria-hidden="true"
+                      />
+                    </MenuButton>
+                  </div>
+                  <div className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-green-900 ml-4">
+                    {currentSort}
+                  </div>
                 </div>
 
                 <Transition
@@ -254,10 +242,11 @@ const CatalogForm = () => {
                             <a
                               href={option.href}
                               className={classNames(
-                                option.current ? 'font-medium text-gray-900' : 'text-gray-500',
+                                option.current ? 'font-medium text-gray-900 bg-green-100' : 'text-gray-500',
                                 focus ? 'bg-green-100' : '',
                                 'block px-4 py-2 text-sm'
                               )}
+                              onClick={() => handleSortClick(option)}
                             >
                               {option.name}
                             </a>
@@ -393,18 +382,22 @@ const CatalogForm = () => {
                             </h3>
 
                             <div className="mt-1 flex items-center justify-between px-4 py-2">
-                              {product.priceRender.discount !== '0' ? (
+                              {product.priceRender.discount !== 0 ? (
                                 <>
-                                  <p className="text-lg font-medium text-red-600">{product.priceRender.discount}</p>
+                                  <p className="text-lg font-medium text-red-600">
+                                    {formatPriceInEuro(product.priceRender.discount)}
+                                  </p>
                                   <p
                                     className="text-lg font-medium text-green-600"
                                     style={{ textDecoration: 'line-through' }}
                                   >
-                                    {product.priceRender.currentPrice}
+                                    {formatPriceInEuro(product.priceRender.currentPrice)}
                                   </p>
                                 </>
                               ) : (
-                                <p className="text-lg font-medium text-green-600">{product.priceRender.currentPrice}</p>
+                                <p className="text-lg font-medium text-green-600">
+                                  {formatPriceInEuro(product.priceRender.currentPrice)}
+                                </p>
                               )}
 
                               <svg

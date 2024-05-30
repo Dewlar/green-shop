@@ -185,7 +185,15 @@ export interface IProductDataForRender {
 }
 
 interface IPriceRender {
-  discount: string;
-  currentPrice: string;
+  discount: number;
+  currentPrice: number;
 }
+
+export interface ISortOption {
+  name: string;
+  href: string;
+  current: boolean;
+  sortFunc?: (products: IProductDataForRender[]) => IProductDataForRender[];
+}
+
 export type FilterType = string | string[] | { id: { in: string } }[];

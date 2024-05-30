@@ -146,15 +146,12 @@ export const createCustomerData = (data: IApiResponse): ICustomerData => {
   return userData;
 };
 
-const convertPrice = (price: number): number => {
-  return Number((price / 100).toFixed(2));
-};
-
-const formatPriceInEuro = (price: number): string => {
+export const formatPriceInEuro = (price: number): string => {
+  const convertPrice = Number((price / 100).toFixed(2));
   return new Intl.NumberFormat('de-DE', {
     style: 'currency',
     currency: 'EUR',
-  }).format(price);
+  }).format(convertPrice);
 };
 
 export const createProductData = (data: IProductResultsData[]): IProductDataForRender[] => {
@@ -164,14 +161,57 @@ export const createProductData = (data: IProductResultsData[]): IProductDataForR
     href: '#',
     priceRender: {
       discount: item.masterData.current.masterVariant.prices[0].discounted
-        ? formatPriceInEuro(convertPrice(item.masterData.current.masterVariant.prices[0].discounted?.value.centAmount))
-        : '0',
+        ? item.masterData.current.masterVariant.prices[0].discounted?.value.centAmount
+        : 0,
       currentPrice: item.masterData.current.masterVariant.prices?.length
-        ? formatPriceInEuro(convertPrice(item.masterData.current.masterVariant.prices[0].value.centAmount))
-        : '0',
+        ? item.masterData.current.masterVariant.prices[0].value.centAmount
+        : 0,
     },
     imageSrc: item.masterData.current.masterVariant.images[0].url,
     imageAlt: '',
   }));
   return productsData;
+};
+
+export const classNames = (...classes: string[]) => {
+  return classes.filter(Boolean).join(' ');
+};
+
+export const sortByNameAZ = (products: IProductDataForRender[]): IProductDataForRender[] => {
+  return products.sort((a, b) => a.name.localeCompare(b.name));
+};
+
+export const sortByNameZA = (products: IProductDataForRender[]): IProductDataForRender[] => {
+  return products.sort((a, b) => b.name.localeCompare(a.name));
+};
+
+export const sortByPriceSortLowToHigh = (products: IProductDataForRender[]): IProductDataForRender[] => {
+  return products.sort((a, b) => {
+    const priceA = a.priceRender.discount !== 0 ? a.priceRender.discount : a.priceRender.currentPrice;
+    const priceB = b.priceRender.discount !== 0 ? b.priceRender.discount : b.priceRender.currentPrice;
+    return priceA - priceB;
+  });
+};
+
+export const sortByPriceSortHighToLow = (products: IProductDataForRender[]): IProductDataForRender[] => {
+  return products.sort((a, b) => {
+    const priceA = a.priceRender.discount !== 0 ? a.priceRender.discount : a.priceRender.currentPrice;
+    const priceB = b.priceRender.discount !== 0 ? b.priceRender.discount : b.priceRender.currentPrice;
+    return priceB - priceA;
+  });
+};
+
+export const getSortParams = (sortOption: string): string => {
+  switch (sortOption) {
+    case 'Price: Low to High':
+      return 'masterData.current.masterVariant.prices.value.centAmount asc';
+    case 'Price: High to Low':
+      return 'masterData.current.masterVariant.prices.value.centAmount desc';
+    case 'A-Z':
+      return 'masterData.current.name.en asc';
+    case 'Z-A':
+      return 'masterData.current.name.en desc';
+    default:
+      return '';
+  }
 };
