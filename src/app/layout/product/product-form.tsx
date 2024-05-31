@@ -10,10 +10,8 @@ const ProductForm = () => {
 
   useEffect(() => {
     async function response() {
-      const item = await getProductData();
-      console.log(item);
-
-      await getOneProduct('08bb1b50-0429-46e2-80ec-18f6d00c4d89').then(({ body }) => {
+      await getProductData();
+      await getOneProduct('3e3b9cbe-6558-4826-b0ee-5b5f408efd8d').then(({ body }) => {
         setProduct(body);
       });
     }

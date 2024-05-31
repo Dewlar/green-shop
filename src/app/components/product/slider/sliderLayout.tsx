@@ -10,13 +10,11 @@ const SliderMain: React.FC<ModalSlider> = ({ data, setModalSlider }) => {
   const toForward = () => {
     const index = indexSlide === imagesOfSlides.length - 1 ? 0 : indexSlide + 1;
     setIndexSlide(index);
-    console.log(indexSlide);
   };
 
   const toPrevious = () => {
     const index = indexSlide === 0 ? imagesOfSlides.length - 1 : indexSlide - 1;
     setIndexSlide(index);
-    console.log(indexSlide);
   };
 
   useEffect(() => {
@@ -52,8 +50,8 @@ const SliderMain: React.FC<ModalSlider> = ({ data, setModalSlider }) => {
                   ref={
                     imagesRef
                       ? (ref) => {
-                        imagesRef.current[index] = ref; // eslint-disable-line
-                      } // eslint-disable-line
+                          imagesRef.current[index] = ref;
+                        }
                       : null
                   }
                   className={`image${index} pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2`}

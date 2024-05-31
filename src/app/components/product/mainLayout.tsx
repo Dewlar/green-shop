@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-
+import React, { useState } from 'react';
 import { Disclosure } from '@headlessui/react';
 import { HeartIcon, MinusIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Attribute, Image, Price, Product, ProductData } from '@commercetools/platform-sdk';
@@ -12,30 +11,22 @@ const ProductMain = (data: Product) => {
   const [showModalSlider, setModalSlider] = useState(false);
 
   const productData: ProductData = data?.masterData?.current;
-  const price: Price[] = productData?.variants[0]?.prices || [];
+  const price: Price[] = productData?.variants[selectedSize]?.prices || [];
   const images: Image[] = data?.masterData?.current?.masterVariant?.images || [];
   const attributes: Attribute[] = productData?.masterVariant?.attributes || [];
-  // eslint-disable-next-line no-unsafe-optional-chaining
-  const totalPrice = `${price[selectedSize]?.value?.centAmount / 100} €`;
-  const isDiscount =
-    price.length !== 0 && price[selectedSize]?.discounted?.value?.centAmount
-      ? // @ts-expect-error: bad server data
-      `${price[selectedSize].discounted?.value?.centAmount / 100} €` // eslint-disable-line
-      : '';
+  const getPrice = price[0]?.value?.centAmount;
+  const getDiscountPrice = price[0]?.discounted?.value?.centAmount;
+  const totalPrice = `${getPrice / 100} €`;
+  const isDiscount = price.length !== 0 && getDiscountPrice ? `${getDiscountPrice / 100} €` : '';
   const sizes = [
     { name: 'S', bgColor: 'bg-green-200', hoverSize: 'hover:bg-green-300' },
     { name: 'M', bgColor: 'bg-green-500', hoverSize: 'hover:bg-green-600' },
     { name: 'L', bgColor: 'bg-green-700', hoverSize: 'hover:bg-green-800' },
   ];
+
   function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
   }
-
-  useEffect(() => {
-    console.log(selectedSize);
-    console.log(totalPrice);
-    console.log(isDiscount);
-  }, [selectedSize]);
 
   return (
     <div className="bg-white mb-8">
@@ -87,13 +78,14 @@ const ProductMain = (data: Product) => {
                   <div className="mt-2">
                     <div className="flex items-center space-x-3">
                       {sizes.map((size, index) => (
-                        <SizeBtn
-                          key={index}
-                          label={size.name}
-                          setSelectedSize={setSelectedSize}
-                          color={size.bgColor}
-                          colorHover={size.hoverSize}
-                        ></SizeBtn>
+                        <div key={index}>
+                          <SizeBtn
+                            label={size.name}
+                            setSelectedSize={setSelectedSize}
+                            color={size.bgColor}
+                            colorHover={size.hoverSize}
+                          ></SizeBtn>
+                        </div>
                       ))}
                     </div>
                   </div>
@@ -101,6 +93,7 @@ const ProductMain = (data: Product) => {
                 <div className="mt-10 flex">
                   <button
                     type="submit"
+                    onClick={(e) => e.preventDefault()}
                     className="flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full"
                   >
                     Add to bag
