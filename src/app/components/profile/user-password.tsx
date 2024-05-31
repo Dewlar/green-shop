@@ -25,6 +25,7 @@ const UserPassword: FC<IProps> = ({ email }) => {
   const [isEdit, setIsEdit] = useState(true);
   const [passwords, setPasswords] = useState(initialPasswords);
   const { setIsAuth, setAuthData } = useStateContext();
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -59,7 +60,6 @@ const UserPassword: FC<IProps> = ({ email }) => {
           await customerController.changeCustomerPassword(passwordAction);
         }
 
-        // logout(false);
         const tokenService = new TokenService();
         tokenService.removeToken();
         storageSet(LocalStorageKeysEnum.IS_AUTH, false);
@@ -76,11 +76,11 @@ const UserPassword: FC<IProps> = ({ email }) => {
                 setAuthData(response.token);
               } else {
                 const errorMessage = (response.apiResult as HttpErrorType).message;
-                if (errorMessage) toast.error(`Error: ${errorMessage}`);
+                if (errorMessage) toast.error(`Api result error: ${errorMessage}`);
               }
             })
-            .catch(() => {
-              toast.error('Login error');
+            .catch((error) => {
+              toast.error(`Login error. Reason:  ${error.message}`);
             });
         });
       };
@@ -88,13 +88,15 @@ const UserPassword: FC<IProps> = ({ email }) => {
       changePass()
         .then(() => {
           setPasswords(initialPasswords);
+          setShowPassword(false);
           toast.success('Password changed successfully');
         })
         .catch((err: HttpErrorType) => {
-          toast.error(`Can't change password. ${err.message}`);
+          toast.error(`Can't change password. Reason: ${err.message}`);
         });
     }
   };
+
   return (
     <div className="grid max-w-5xl mx-auto grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
       <div>
@@ -114,6 +116,8 @@ const UserPassword: FC<IProps> = ({ email }) => {
                 value={passwords.currentPassword}
                 onChange={handleInputChange}
                 disabled={isEdit}
+                showPassword={showPassword}
+                setShowPassword={setShowPassword}
               />
             </div>
           </div>
@@ -123,15 +127,13 @@ const UserPassword: FC<IProps> = ({ email }) => {
               New password
             </label>
             <div className="mt-2">
-              <input
-                id="new-password"
-                disabled={isEdit}
-                onChange={handleInputChange}
-                value={passwords.newPassword}
+              <PasswordInput
                 name="newPassword"
-                type="password"
-                autoComplete="new-password"
-                className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                value={passwords.newPassword}
+                onChange={handleInputChange}
+                disabled={isEdit}
+                showPassword={showPassword}
+                setShowPassword={setShowPassword}
               />
             </div>
           </div>

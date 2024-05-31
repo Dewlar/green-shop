@@ -87,9 +87,9 @@ const UserInfo: FC<Props> = ({ userInfo, setUserInfo }) => {
           setUserInfo(formValues);
           toast.success('Saving was successful');
         })
-        .catch(() => {
+        .catch((error) => {
           setFormValues(userInfo);
-          toast.error('Error changing user profile');
+          toast.error(error.message);
         });
     }
   };

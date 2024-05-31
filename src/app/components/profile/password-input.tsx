@@ -1,15 +1,17 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { classNames } from '../../models';
 
-const PasswordInput: FC<{
+interface IProps {
   name: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   disabled: boolean;
-}> = ({ name, value, onChange, disabled }) => {
-  const [showPassword, setShowPassword] = useState(false);
+  showPassword: boolean;
+  setShowPassword: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
+const PasswordInput: FC<IProps> = ({ name, value, onChange, disabled, showPassword, setShowPassword }) => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -32,7 +34,6 @@ const PasswordInput: FC<{
           disabled ? 'hidden' : 'block',
           'absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700'
         )}
-        // className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
       >
         {showPassword ? (
           <EyeSlashIcon className="h-5 w-5" aria-hidden="true" />
