@@ -82,5 +82,15 @@ export interface ModalSlider {
   data: Product;
   setModalSlider?: React.Dispatch<React.SetStateAction<boolean>>;
 }
+export interface TypeSizeBtn {
+  key: number;
+  label: string;
+  setSelectedSize: React.Dispatch<React.SetStateAction<number>>;
+  color: string;
+  colorHover: string;
+}
+export interface TypeSizesOrder {
+  [key: string]: number;
+}
 
 export default { sample, sample2 };

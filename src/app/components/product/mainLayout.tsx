@@ -1,32 +1,41 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { Disclosure, Label, Radio, RadioGroup } from '@headlessui/react';
+import { Disclosure } from '@headlessui/react';
 import { HeartIcon, MinusIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Attribute, Image, Price, Product, ProductData } from '@commercetools/platform-sdk';
 import ReactLoading from 'react-loading';
 import SliderMain from './slider/sliderLayout';
+import SizeBtn from './sizeBtn';
 
 const ProductMain = (data: Product) => {
+  const [selectedSize, setSelectedSize] = useState(0);
+  const [showModalSlider, setModalSlider] = useState(false);
+
   const productData: ProductData = data?.masterData?.current;
   const price: Price[] = productData?.variants[0]?.prices || [];
   const images: Image[] = data?.masterData?.current?.masterVariant?.images || [];
   const attributes: Attribute[] = productData?.masterVariant?.attributes || [];
+  // eslint-disable-next-line no-unsafe-optional-chaining
+  const totalPrice = `${price[selectedSize]?.value?.centAmount / 100} €`;
   const isDiscount =
-    price.length !== 0 && price[0].discounted?.value.centAmount
-      ? // eslint-disable-next-line
-      `${price[0]?.discounted?.value.centAmount / 100} €`
+    price.length !== 0 && price[selectedSize]?.discounted?.value?.centAmount
+      ? // @ts-expect-error: bad server data
+      `${price[selectedSize].discounted?.value?.centAmount / 100} €` // eslint-disable-line
       : '';
   const sizes = [
-    { name: 'S', bgColor: 'bg-green-200', selectedSize: 'ring-gray-300' },
-    { name: 'M', bgColor: 'bg-green-500', selectedSize: 'ring-gray-300' },
-    { name: 'L', bgColor: 'bg-green-700', selectedSize: 'ring-gray-300' },
+    { name: 'S', bgColor: 'bg-green-200', hoverSize: 'hover:bg-green-300' },
+    { name: 'M', bgColor: 'bg-green-500', hoverSize: 'hover:bg-green-600' },
+    { name: 'L', bgColor: 'bg-green-700', hoverSize: 'hover:bg-green-800' },
   ];
   function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
   }
 
-  const [selectedSize, setSelectedSize] = useState(sizes[0]);
-  const [showModalSlider, setModalSlider] = useState(false);
+  useEffect(() => {
+    console.log(selectedSize);
+    console.log(totalPrice);
+    console.log(isDiscount);
+  }, [selectedSize]);
 
   return (
     <div className="bg-white mb-8">
@@ -52,12 +61,7 @@ const ProductMain = (data: Product) => {
                   <span
                     className={`${isDiscount ? 'line-through text-gray-300 text-lg' : 'text-gray-900 text-3xl'}  tracking-tight`}
                   >
-                    {price.length !== 0 ? (
-                      // eslint-disable-next-line no-unsafe-optional-chaining
-                      `${price[0]?.value?.centAmount / 100} €`
-                    ) : (
-                      <ReactLoading type={'bars'} color={'green'}></ReactLoading>
-                    )}
+                    {price.length !== 0 ? totalPrice : <ReactLoading type={'bars'} color={'green'}></ReactLoading>}
                   </span>
                   <span className="text-3xl tracking-tight text-gray-900 ml-0.5 ">
                     {price.length !== 0 ? `${isDiscount}` : ''}
@@ -78,44 +82,22 @@ const ProductMain = (data: Product) => {
               </div>
 
               <form className="mt-6">
-                {/* Colors */}
                 <div>
                   <h3 className="text-sm text-gray-600">Size</h3>
-
-                  <RadioGroup value={selectedSize} onChange={setSelectedSize} className="mt-2">
-                    <Label className="sr-only">Choose a size</Label>
+                  <div className="mt-2">
                     <div className="flex items-center space-x-3">
-                      {sizes.map((size) => (
-                        <Radio
-                          key={size.name}
-                          value={size}
-                          className={({ hover, checked }) =>
-                            classNames(
-                              size.selectedSize,
-                              hover && !checked ? 'ring ring-offset-1' : '',
-                              checked ? `ring-2` : '',
-                              'relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none'
-                            )
-                          }
-                        >
-                          <Label as="span" className="sr-only">
-                            {size.name}
-                          </Label>
-                          <span
-                            aria-hidden="true"
-                            className={classNames(
-                              size.bgColor,
-                              'h-8 w-8 rounded-full border border-black border-opacity-10 flex justify-center items-center'
-                            )}
-                          >
-                            {size.name}
-                          </span>
-                        </Radio>
+                      {sizes.map((size, index) => (
+                        <SizeBtn
+                          key={index}
+                          label={size.name}
+                          setSelectedSize={setSelectedSize}
+                          color={size.bgColor}
+                          colorHover={size.hoverSize}
+                        ></SizeBtn>
                       ))}
                     </div>
-                  </RadioGroup>
+                  </div>
                 </div>
-
                 <div className="mt-10 flex">
                   <button
                     type="submit"
