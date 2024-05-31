@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { Image } from '@commercetools/platform-sdk';
-import { Tab } from '@headlessui/react';
 import { ModalSlider } from '../../../models';
 
 const SliderMain: React.FC<ModalSlider> = ({ data, setModalSlider }) => {
   const imagesOfSlides: Image[] = data?.masterData?.current?.masterVariant?.images || [];
   const [indexSlide, setIndexSlide] = useState(0);
+  const imagesRef: MutableRefObject<null[]> | MutableRefObject<HTMLSpanElement[]> = useRef([]);
 
   const toForward = () => {
     const index = indexSlide === imagesOfSlides.length - 1 ? 0 : indexSlide + 1;
@@ -19,42 +19,50 @@ const SliderMain: React.FC<ModalSlider> = ({ data, setModalSlider }) => {
     console.log(indexSlide);
   };
 
-  function classNames(...classes: string[]) {
-    return classes.filter(Boolean).join(' ');
-  }
+  useEffect(() => {
+    const refs = imagesRef?.current;
+    if (imagesRef) {
+      refs.forEach((ref) => ref?.classList?.remove('ring-indigo-500'));
+      refs.forEach((ref) => ref?.classList?.add('ring-transparent'));
+      refs[indexSlide]?.classList?.remove('ring-transparent');
+      refs[indexSlide]?.classList?.add('ring-indigo-500');
+    }
+  }, [indexSlide]);
 
   return (
-    <Tab.Group as="div" className="flex flex-col-reverse">
+    <div className="flex flex-col-reverse">
       <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
-        <Tab.List className="grid grid-cols-4 gap-6">
+        <div className="grid grid-cols-4 gap-6">
           {imagesOfSlides.map((image, index) => (
-            <Tab
+            <span
               key={index}
-              className="relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4"
+              className={`relative flex imageRef h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4`}
             >
-              {({ selected }) => (
-                <>
-                  <span className="sr-only">{`image${index}`}</span>
-                  <span className="absolute inset-0 overflow-hidden rounded-md">
-                    <img
-                      src={image.url}
-                      alt=""
-                      className="h-full w-full object-cover object-center"
-                      onClick={() => setIndexSlide(index)}
-                    />
-                  </span>
-                  <span
-                    className={classNames(
-                      selected ? 'ring-indigo-500' : 'ring-transparent',
-                      'pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2'
-                    )}
-                    aria-hidden="true"
+              <div>
+                <span className="sr-only">{`image${index}`}</span>
+                <span className="absolute inset-0 overflow-hidden rounded-md">
+                  <img
+                    src={image.url}
+                    alt=""
+                    className="h-full w-full object-cover object-center"
+                    onClick={() => setIndexSlide(index)}
                   />
-                </>
-              )}
-            </Tab>
+                </span>
+                <span
+                  ref={
+                    imagesRef
+                      ? (ref) => {
+                        imagesRef.current[index] = ref; // eslint-disable-line
+                      } // eslint-disable-line
+                      : null
+                  }
+                  className={`image${index} pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2`}
+                  aria-hidden="true"
+                />
+              </div>
+            </span>
           ))}
-        </Tab.List>
+        </div>
       </div>
       <div id="default-carousel" className="relative w-5/6 mt-0 ml-auto mb-0 mr-auto" data-carousel="slide">
         <div className="w-100 h-100 flex" onClick={() => (setModalSlider ? setModalSlider(true) : null)}>
@@ -134,7 +142,7 @@ const SliderMain: React.FC<ModalSlider> = ({ data, setModalSlider }) => {
           </span>
         </button>
       </div>
-    </Tab.Group>
+    </div>
   );
 };
 
