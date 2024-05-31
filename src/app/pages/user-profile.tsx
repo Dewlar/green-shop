@@ -7,42 +7,58 @@ import CustomerController from '../api/CustomerController';
 import UserInfo from '../components/profile/user-info';
 import UserAddresses from '../components/profile/user-addresses';
 import UserPassword from '../components/profile/user-password';
-import { classNames } from '../models';
+import { classNames, IUserAddresses, IUserInfo } from '../models';
 
 const UserProfile = () => {
-  const [userInfo, setUserInfo] = useState({
+  const [userInfo, setUserInfo] = useState<IUserInfo>({
     email: '',
     firstName: '',
     lastName: '',
     dateOfBirth: '',
   });
+
+  const [addresses, setAddresses] = useState<IUserAddresses>({
+    addresses: [],
+    billingAddressIds: [],
+    shippingAddressIds: [],
+    defaultBillingAddressId: '',
+    defaultShippingAddressId: '',
+  });
+
   const secondaryNavigation = [
-    { name: 'Account', href: <UserInfo userInfo={userInfo} setUserInfo={setUserInfo} />, selected: true },
-    { name: 'Address', href: <UserAddresses />, selected: false },
+    { name: 'Account', href: <UserInfo userInfo={userInfo} setUserInfo={setUserInfo} />, selected: false },
+    { name: 'Address', href: <UserAddresses addresses={addresses} setAddresses={setAddresses} />, selected: true },
     { name: 'Password', href: <UserPassword email={userInfo.email} />, selected: false },
   ];
+
   useEffect(() => {
     const getData = async (): Promise<Customer> => {
       const customerController = new CustomerController();
 
       const userData = await customerController.getCustomer();
 
-      // console.log('user userInfo -> : ', userInfo, userData);
-      if (userData.body) {
-        return userData.body;
-      }
+      console.log('user body -> : ', userData.body);
+      if (userData.body) return userData.body;
 
       throw Error('No customer info');
     };
 
     getData()
       .then((response) => {
-        console.log('user response -> : ', response, userInfo);
+        console.log('user response -> : ', response);
         setUserInfo({
           firstName: response.firstName ?? '',
           lastName: response.lastName ?? '',
           email: response.email,
           dateOfBirth: response.dateOfBirth ?? '',
+        });
+
+        setAddresses({
+          addresses: response.addresses,
+          billingAddressIds: response.billingAddressIds ?? [],
+          shippingAddressIds: response.shippingAddressIds ?? [],
+          defaultBillingAddressId: response.defaultBillingAddressId ?? '',
+          defaultShippingAddressId: response.defaultShippingAddressId ?? '',
         });
       })
       .catch();
@@ -76,7 +92,7 @@ const UserProfile = () => {
             </div>
             <Tab.Panels as={Fragment}>
               {secondaryNavigation.map((category) => (
-                <Tab.Panel key={category.name} className="">
+                <Tab.Panel key={category.name} className="focus-visible:outline-none">
                   {category.href}
                 </Tab.Panel>
               ))}

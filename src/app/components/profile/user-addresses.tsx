@@ -1,6 +1,29 @@
-import React from 'react';
+import React, { FC, useState } from 'react';
+import { IUserAddresses } from '../../models';
+import DefaultAddressSwitch from './default-address-switch';
+import ButtonEditUpdate from './button-edit-update';
 
-const UserAddresses = () => {
+interface IProps {
+  addresses: IUserAddresses;
+  setAddresses: React.Dispatch<React.SetStateAction<IUserAddresses>>;
+}
+
+const UserAddresses: FC<IProps> = ({ addresses, setAddresses }) => {
+  const [isEdit, setIsEdit] = useState(true);
+  console.log(addresses.addresses[0].city, setAddresses); // todo: delete console log
+
+  const [isDefaultBillingAddress, setIsDefaultBillingAddress] = useState(true);
+  const [isDefaultShippingAddress, setIsDefaultShippingAddress] = useState(true);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isEdit) {
+      setIsEdit(false);
+    } else {
+      setIsEdit(true);
+    }
+  };
+
   return (
     <div className="grid max-w-5xl mx-auto grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
       <div>
@@ -8,7 +31,7 @@ const UserAddresses = () => {
         <p className="mt-1 text-sm leading-6 text-gray-600">Billing and shipping addresses.</p>
       </div>
 
-      <form className="md:col-span-2">
+      <form className="md:col-span-2" onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-xl sm:grid-cols-6">
           <div className="sm:col-span-3">
             <label htmlFor="country" className="block text-sm font-medium leading-6 text-gray-900">
@@ -18,7 +41,7 @@ const UserAddresses = () => {
               <select
                 id="country"
                 name="country"
-                disabled={true}
+                disabled={isEdit}
                 autoComplete="country-name"
                 className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:max-w-xs sm:text-sm sm:leading-6"
               >
@@ -38,7 +61,7 @@ const UserAddresses = () => {
                 type="text"
                 name="street-address"
                 id="street-address"
-                disabled={true}
+                disabled={isEdit}
                 autoComplete="street-address"
                 className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
               />
@@ -54,7 +77,7 @@ const UserAddresses = () => {
                 type="text"
                 name="city"
                 id="city"
-                disabled={true}
+                disabled={isEdit}
                 autoComplete="address-level2"
                 className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
               />
@@ -70,21 +93,33 @@ const UserAddresses = () => {
                 type="text"
                 name="postal-code"
                 id="postal-code"
-                disabled={true}
+                disabled={isEdit}
                 autoComplete="postal-code"
                 className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
               />
             </div>
           </div>
+
+          <div className="sm:col-span-3 flex flex-col gap-1">
+            <DefaultAddressSwitch
+              title={'Set as default billing.'}
+              isEdit={isEdit}
+              isDefaultAddress={isDefaultBillingAddress}
+              setIsDefaultAddress={setIsDefaultBillingAddress}
+            />
+            <DefaultAddressSwitch
+              title={'Set as default shipping.'}
+              isEdit={isEdit}
+              isDefaultAddress={isDefaultShippingAddress}
+              setIsDefaultAddress={setIsDefaultShippingAddress}
+            />
+          </div>
+
+          <div className="sm:col-span-3"></div>
         </div>
 
         <div className="mt-8 flex">
-          <button
-            type="submit"
-            className="rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
-          >
-            Save
-          </button>
+          <ButtonEditUpdate isEdit={isEdit} />
         </div>
       </form>
     </div>
