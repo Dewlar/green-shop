@@ -20,10 +20,10 @@ const SliderMain: React.FC<ModalSlider> = ({ data, setModalSlider }) => {
   useEffect(() => {
     const refs = imagesRef?.current;
     if (imagesRef) {
-      refs.forEach((ref) => ref?.classList?.remove('ring-indigo-500'));
+      refs.forEach((ref) => ref?.classList?.remove('ring-green-500'));
       refs.forEach((ref) => ref?.classList?.add('ring-transparent'));
       refs[indexSlide]?.classList?.remove('ring-transparent');
-      refs[indexSlide]?.classList?.add('ring-indigo-500');
+      refs[indexSlide]?.classList?.add('ring-green-500');
     }
   }, [indexSlide]);
 

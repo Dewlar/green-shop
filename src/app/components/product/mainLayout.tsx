@@ -94,7 +94,7 @@ const ProductMain = (data: Product) => {
                   <button
                     type="submit"
                     onClick={(e) => e.preventDefault()}
-                    className="flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full"
+                    className="flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-green-600 px-8 py-3 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full"
                   >
                     Add to bag
                   </button>
@@ -121,14 +121,14 @@ const ProductMain = (data: Product) => {
                         <h3>
                           <Disclosure.Button className="group relative flex w-full items-center justify-between py-6 text-left">
                             <span
-                              className={classNames(open ? 'text-indigo-600' : 'text-gray-900', 'text-sm font-medium')}
+                              className={classNames(open ? 'text-green-600' : 'text-gray-900', 'text-sm font-medium')}
                             >
                               {`Features`}
                             </span>
                             <span className="ml-6 flex items-center">
                               {open ? (
                                 <MinusIcon
-                                  className="block h-6 w-6 text-indigo-400 group-hover:text-indigo-500"
+                                  className="block h-6 w-6 text-green-400 group-hover:text-green-500"
                                   aria-hidden="true"
                                 />
                               ) : (
