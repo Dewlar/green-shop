@@ -14,3 +14,9 @@ export interface IUserAddresses {
   defaultBillingAddressId: string;
   defaultShippingAddressId: string;
 }
+
+export enum CountryEnum {
+  DE = 'Germany',
+  NL = 'Netherlands',
+  AU = 'Austria',
+}

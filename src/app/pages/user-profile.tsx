@@ -27,7 +27,7 @@ const UserProfile = () => {
 
   const secondaryNavigation = [
     { name: 'Account', href: <UserInfo userInfo={userInfo} setUserInfo={setUserInfo} />, selected: false },
-    { name: 'Address', href: <UserAddresses addresses={addresses} setAddresses={setAddresses} />, selected: true },
+    { name: 'Address', href: <UserAddresses addressData={addresses} setAddressData={setAddresses} />, selected: true },
     { name: 'Password', href: <UserPassword email={userInfo.email} />, selected: false },
   ];
 
