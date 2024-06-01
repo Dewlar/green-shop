@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import {} from 'react-router-dom';
 import { Customer } from '@commercetools/platform-sdk';
 import { Tab } from '@headlessui/react';
 import HeaderWidthMobile from '../components/header/header-width-mobile';
@@ -7,7 +6,7 @@ import CustomerController from '../api/CustomerController';
 import UserInfo from '../components/profile/user-info';
 import UserAddresses from '../components/profile/user-addresses';
 import UserPassword from '../components/profile/user-password';
-import { classNames, IUserAddresses, IUserInfo } from '../models';
+import { classNames, IUserInfo } from '../models';
 
 const UserProfile = () => {
   const [userInfo, setUserInfo] = useState<IUserInfo>({
@@ -17,17 +16,17 @@ const UserProfile = () => {
     dateOfBirth: '',
   });
 
-  const [addresses, setAddresses] = useState<IUserAddresses>({
-    addresses: [],
-    billingAddressIds: [],
-    shippingAddressIds: [],
-    defaultBillingAddressId: '',
-    defaultShippingAddressId: '',
-  });
+  // const [addresses, setAddresses] = useState<IUserAddresses>({
+  //   addresses: [],
+  //   billingAddressIds: [],
+  //   shippingAddressIds: [],
+  //   defaultBillingAddressId: '',
+  //   defaultShippingAddressId: '',
+  // });
 
   const secondaryNavigation = [
     { name: 'Account', href: <UserInfo userInfo={userInfo} setUserInfo={setUserInfo} />, selected: false },
-    { name: 'Address', href: <UserAddresses addressData={addresses} setAddressData={setAddresses} />, selected: true },
+    { name: 'Address', href: <UserAddresses />, selected: true },
     { name: 'Password', href: <UserPassword email={userInfo.email} />, selected: false },
   ];
 
@@ -53,13 +52,13 @@ const UserProfile = () => {
           dateOfBirth: response.dateOfBirth ?? '',
         });
 
-        setAddresses({
-          addresses: response.addresses,
-          billingAddressIds: response.billingAddressIds ?? [],
-          shippingAddressIds: response.shippingAddressIds ?? [],
-          defaultBillingAddressId: response.defaultBillingAddressId ?? '',
-          defaultShippingAddressId: response.defaultShippingAddressId ?? '',
-        });
+        // setAddresses({
+        //   addresses: response.addresses,
+        //   billingAddressIds: response.billingAddressIds ?? [],
+        //   shippingAddressIds: response.shippingAddressIds ?? [],
+        //   defaultBillingAddressId: response.defaultBillingAddressId ?? '',
+        //   defaultShippingAddressId: response.defaultShippingAddressId ?? '',
+        // });
       })
       .catch();
   }, []);

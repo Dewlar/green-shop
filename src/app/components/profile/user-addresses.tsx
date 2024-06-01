@@ -1,14 +1,42 @@
-import React, { FC } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Customer } from '@commercetools/platform-sdk';
 import { IUserAddresses } from '../../models';
 import AddressForm from './address-form';
+import CustomerController from '../../api/CustomerController';
 
-interface IProps {
-  addressData: IUserAddresses;
-  setAddressData: React.Dispatch<React.SetStateAction<IUserAddresses>>;
-}
+const UserAddresses = () => {
+  const [customerData, setCustomerData] = useState<IUserAddresses>({
+    addresses: [],
+    billingAddressIds: [],
+    shippingAddressIds: [],
+    defaultBillingAddressId: '',
+    defaultShippingAddressId: '',
+  });
 
-const UserAddresses: FC<IProps> = ({ addressData, setAddressData }) => {
-  console.log(addressData.addresses[0].city, setAddressData); // todo: delete console log
+  useEffect(() => {
+    const getData = async (): Promise<Customer> => {
+      const customerController = new CustomerController();
+
+      const userData = await customerController.getCustomer();
+
+      console.log('user body -> : ', userData.body);
+      if (userData.body) return userData.body;
+
+      throw Error('No customer info');
+    };
+
+    getData()
+      .then((response) => {
+        setCustomerData({
+          addresses: response.addresses,
+          billingAddressIds: response.billingAddressIds ?? [],
+          shippingAddressIds: response.shippingAddressIds ?? [],
+          defaultBillingAddressId: response.defaultBillingAddressId ?? '',
+          defaultShippingAddressId: response.defaultShippingAddressId ?? '',
+        });
+      })
+      .catch();
+  }, []);
 
   return (
     <div className="grid max-w-5xl mx-auto grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
@@ -17,13 +45,8 @@ const UserAddresses: FC<IProps> = ({ addressData, setAddressData }) => {
         <p className="mt-1 text-sm leading-6 text-gray-600">Billing and shipping addresses.</p>
       </div>
 
-      {addressData.addresses.map((address) => (
-        <AddressForm
-          key={address.id}
-          address={address}
-          defaultShippingAddressId={addressData.defaultShippingAddressId}
-          defaultBillingAddressId={addressData.defaultBillingAddressId}
-        />
+      {customerData.addresses.map((address) => (
+        <AddressForm key={address.id} address={address} customerData={customerData} setCustomerData={setCustomerData} />
       ))}
     </div>
   );

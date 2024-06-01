@@ -1,28 +1,32 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Address } from '@commercetools/platform-sdk';
-import { CountryEnum } from '../../models';
+import { Address, MyCustomerRemoveAddressAction } from '@commercetools/platform-sdk';
+import { TrashIcon } from '@heroicons/react/24/outline';
+import { toast } from 'react-toastify';
+import { HttpErrorType } from '@commercetools/sdk-client-v2';
+import { CountryEnum, IUserAddresses } from '../../models';
 import DefaultAddressSwitch from './default-address-switch';
 import ButtonEditUpdate from './button-edit-update';
+import CustomerController from '../../api/CustomerController';
 
 interface IProps {
   address: Address;
-  defaultShippingAddressId: string;
-  defaultBillingAddressId: string;
+  customerData: IUserAddresses;
+  setCustomerData: React.Dispatch<React.SetStateAction<IUserAddresses>>;
 }
 
-const AddressForm: FC<IProps> = ({ address, defaultShippingAddressId, defaultBillingAddressId }) => {
+const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => {
   const [isEdit, setIsEdit] = useState(true);
   const [isDefaultBillingAddress, setIsDefaultBillingAddress] = useState(true);
   const [isDefaultShippingAddress, setIsDefaultShippingAddress] = useState(true);
 
   useEffect(() => {
-    setIsDefaultBillingAddress(address.id === defaultBillingAddressId);
-    setIsDefaultShippingAddress(address.id === defaultShippingAddressId);
+    setIsDefaultBillingAddress(address.id === customerData.defaultBillingAddressId);
+    setIsDefaultShippingAddress(address.id === customerData.defaultShippingAddressId);
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(isDefaultBillingAddress);
+    console.log('form submit -> ', isDefaultBillingAddress);
     if (isEdit) {
       setIsEdit(false);
     } else {
@@ -30,9 +34,47 @@ const AddressForm: FC<IProps> = ({ address, defaultShippingAddressId, defaultBil
     }
   };
 
+  // todo: add modal dialog with text: a you sure?
+  const handleAddressDelete = (e: React.FormEvent): void => {
+    e.preventDefault();
+    (async (): Promise<void> => {
+      const deleteAddressAction: MyCustomerRemoveAddressAction = {
+        action: 'removeAddress',
+        addressId: address.id,
+      };
+
+      const customerController = new CustomerController();
+
+      const currentVersion = (await customerController.getCustomer()).body?.version;
+
+      if (currentVersion) {
+        const deleteAddressResponse = await customerController.updateCustomer({
+          version: currentVersion,
+          actions: [deleteAddressAction],
+        });
+
+        if (deleteAddressResponse.body) {
+          setCustomerData({
+            addresses: deleteAddressResponse.body.addresses,
+            billingAddressIds: deleteAddressResponse.body.billingAddressIds ?? [],
+            shippingAddressIds: deleteAddressResponse.body.shippingAddressIds ?? [],
+            defaultBillingAddressId: deleteAddressResponse.body.defaultBillingAddressId ?? '',
+            defaultShippingAddressId: deleteAddressResponse.body.defaultShippingAddressId ?? '',
+          });
+        }
+
+        console.log('deleteAddressResponse -> ', deleteAddressResponse);
+
+        toast.success('Delete address was successful');
+      }
+    })().catch((err: HttpErrorType) => {
+      toast.error(err.message);
+    });
+  };
+
   return (
     <form key={address.id} className="md:col-span-2 md:col-start-2 border rounded-md p-3" onSubmit={handleSubmit}>
-      <div className="grid grid-cols-1 gap-x-6 gap-y-7 sm:max-w-xl sm:grid-cols-6">
+      <div className="grid grid-cols-1 gap-x-6 gap-y-7 sm:grid-cols-6">
         <div className="sm:col-span-3">
           <label htmlFor="country" className="block text-sm font-medium leading-6 text-gray-900">
             Country
@@ -124,8 +166,11 @@ const AddressForm: FC<IProps> = ({ address, defaultShippingAddressId, defaultBil
         <div className="sm:col-span-3"></div>
       </div>
 
-      <div className="mt-8 flex">
+      <div className="mt-8 flex justify-between items-center">
         <ButtonEditUpdate isEdit={isEdit} />
+        <button onClick={handleAddressDelete}>
+          <TrashIcon className="text-green-500 w-7 h-7" />
+        </button>
       </div>
     </form>
   );
