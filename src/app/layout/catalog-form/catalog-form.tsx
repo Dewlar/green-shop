@@ -25,19 +25,21 @@ const CatalogForm = () => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [products, setProducts] = useState<ProductProjection[] | undefined>(undefined);
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
-  const [selectedCategoryName, setSelectedCategoryName] = useState('');
-  const [selectedSize, setSelectedSize] = useState('');
+  const [selectedCategoryValue, setSelectedCategoryValue] = useState('');
+  const [selectedSizeValue, setSelectedSizeValue] = useState('');
+  const [selectedSizeLabel, setSelectedSizeLabel] = useState('');
   const [sortName, setSortName] = useState<string>('');
   const [sortMethod, setSortMethod] = useState<string>('name.en asc');
   const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionForCTP);
 
-  const handleCategoryClick = (categoryId: string, categoryName: string) => {
+  const handleCategoryClick = (categoryId: string, categoryValue: string) => {
     setSelectedCategoryId(categoryId === '' ? '' : `categories.id:subtree("${categoryId}")`);
-    setSelectedCategoryName(categoryId === '' ? '' : categoryName);
+    setSelectedCategoryValue(categoryValue === '' ? '' : categoryValue);
   };
 
-  const handleSizeClick = (categoryValue: string) => {
-    setSelectedSize(categoryValue);
+  const handleSizeClick = (sizeValue: string, sizeLabel: string) => {
+    setSelectedSizeValue(sizeValue === '' ? '' : `variants.attributes.Size:"${sizeValue}"`);
+    setSelectedSizeLabel(sizeLabel === '' ? '' : sizeLabel);
   };
 
   const handleSortClick = (sortOption: ISortOption) => {
@@ -59,7 +61,7 @@ const CatalogForm = () => {
     const fetchProducts = async () => {
       try {
         const response: ClientResponse<ProductProjectionPagedQueryResponse> = await getProductsFilter({
-          filter: [selectedCategoryId],
+          filter: [selectedCategoryId, selectedSizeValue],
           sort: [sortMethod],
           limit: 10,
           offset: 0,
@@ -73,7 +75,7 @@ const CatalogForm = () => {
     };
 
     fetchProducts();
-  }, [selectedCategoryId, sortMethod]);
+  }, [selectedCategoryId, selectedSizeValue, sortMethod]);
 
   return (
     <div className="bg-white">
@@ -122,19 +124,42 @@ const CatalogForm = () => {
                     {categoryFilters.map((category, categoryIdx) => (
                       <div
                         key={category.value}
-                        className={`border-b border-gray-200 py-6 ${selectedCategoryName === category.value ? 'bg-gray-100' : ''}`}
+                        className={`border-b border-gray-200 py-6 ${selectedCategoryValue === category.value ? 'bg-gray-100' : ''}`}
                         onClick={() => handleCategoryClick(category.id, category.value)}
                       >
                         <div className="flex items-center">
                           <label
                             htmlFor={`filter-${category.value}-${categoryIdx}`}
-                            className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryName === category.value ? 'text-green-600' : ''}`}
+                            className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryValue === category.value ? 'text-green-600' : ''}`}
                           >
                             {category.label}
                           </label>
                         </div>
                       </div>
                     ))}
+
+                    <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleSizeClick('', '')}>
+                      <div className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400">
+                        <span className="font-medium text-gray-900">Size</span>
+                      </div>
+                    </h3>
+                    {sizeFilters.map((size, sizeIdx) => (
+                      <div
+                        key={size.label}
+                        className={`border-b border-gray-200 py-6 cursor-pointer ${selectedSizeLabel === size.label ? 'bg-gray-100' : ''}`}
+                        onClick={() => handleSizeClick(size.value, size.label)}
+                      >
+                        <div className="flex items-center">
+                          <label
+                            htmlFor={`filter-${size.value}-${sizeIdx}`}
+                            className={`text-sm text-gray-600 cursor-pointer ${selectedSizeValue === size.value ? 'text-green-600' : ''}`}
+                          >
+                            {size.label}
+                          </label>
+                        </div>
+                      </div>
+                    ))}
+
                     <div className="price border-t border-gray-200 px-4 py-6">
                       <h3 className="text-sm font-medium text-gray-900">Price</h3>
                       <div className="mt-6">
@@ -246,13 +271,13 @@ const CatalogForm = () => {
                 {categoryFilters.map((category, categoryIdx) => (
                   <div
                     key={category.value}
-                    className={`border-b border-gray-200 py-6 cursor-pointer ${selectedCategoryName === category.value ? 'bg-gray-100' : ''}`}
+                    className={`border-b border-gray-200 py-6 cursor-pointer ${selectedCategoryValue === category.value ? 'bg-gray-100' : ''}`}
                     onClick={() => handleCategoryClick(category.id, category.value)}
                   >
                     <div className="flex items-center">
                       <label
                         htmlFor={`filter-${category.value}-${categoryIdx}`}
-                        className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryName === category.value ? 'text-green-600' : ''}`}
+                        className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryValue === category.value ? 'text-green-600' : ''}`}
                       >
                         {category.label}
                       </label>
@@ -260,37 +285,24 @@ const CatalogForm = () => {
                   </div>
                 ))}
 
-                {sizeFilters.map((section) => (
-                  <div key={section.id} className="border-b border-gray-200 py-6">
-                    <h3 className="-my-3 flow-root">
-                      <div className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400">
-                        <span className="font-medium text-gray-900">{section.name}</span>
-                      </div>
-                    </h3>
-                    <div className="pt-6">
-                      <div className="space-y-4">
-                        {section.options.map((option, optionIdx) => (
-                          <div key={option.value} className="flex items-center">
-                            <input
-                              id={`filter-${section.id}-${optionIdx}`}
-                              name={`${section.id}`}
-                              value={option.value}
-                              type="radio"
-                              checked={selectedSize === option.value}
-                              onChange={() => handleSizeClick(option.value)}
-                              className="h-0 w-0 opacity-0 absolute"
-                            />
-                            <label
-                              htmlFor={`filter-${section.id}-${optionIdx}`}
-                              className={`ml-3 text-sm text-gray-600 ${
-                                selectedSize === option.value ? 'text-green-600' : ''
-                              }`}
-                            >
-                              {option.label}
-                            </label>
-                          </div>
-                        ))}
-                      </div>
+                <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleSizeClick('', '')}>
+                  <div className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400">
+                    <span className="font-medium text-gray-900">Size</span>
+                  </div>
+                </h3>
+                {sizeFilters.map((size, sizeIdx) => (
+                  <div
+                    key={size.label}
+                    className={`border-b border-gray-200 py-6 cursor-pointer ${selectedSizeLabel === size.label ? 'bg-gray-100' : ''}`}
+                    onClick={() => handleSizeClick(size.value, size.label)}
+                  >
+                    <div className="flex items-center">
+                      <label
+                        htmlFor={`filter-${size.value}-${sizeIdx}`}
+                        className={`text-sm text-gray-600 cursor-pointer ${selectedSizeValue === size.value ? 'text-green-600' : ''}`}
+                      >
+                        {size.label}
+                      </label>
                     </div>
                   </div>
                 ))}

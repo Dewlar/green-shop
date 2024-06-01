@@ -26,13 +26,25 @@ export const categoryFilters = [
 
 export const sizeFilters = [
   {
-    id: 'size',
     name: 'Size',
-    options: [
-      { value: 's', label: 'S', checked: false },
-      { value: 'l', label: 'L', checked: false },
-      { value: 'm', label: 'M', checked: false },
-    ],
+    value: 'S',
+    label: 'S',
+    id: '',
+    checked: false,
+  },
+  {
+    name: 'Size',
+    value: 'M',
+    label: 'M',
+    id: '',
+    checked: false,
+  },
+  {
+    name: 'Size',
+    value: 'L',
+    label: 'L',
+    id: '',
+    checked: false,
   },
 ];
 
