@@ -1,30 +1,15 @@
-import { ClientResponse, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
+import { ClientResponse } from '@commercetools/sdk-client-v2';
+import { ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import { getProjectKey } from '../helpers';
 import AnonymousClient from '../AnonymousClient';
 
-export const LIMIT = 20;
-export const OFFSET = 0;
-
 const projectKey = getProjectKey();
 
-export const getProductsAll = async () => {
-  const client = new AnonymousClient();
-  const apiRoot = client.getApiRoot();
-  const result = await apiRoot
-    .withProjectKey({
-      projectKey,
-    })
-    .products()
-    .get()
-    .execute();
-  return result;
-};
-
-export const getQueryProducts = async (
+const getQueryProducts = async (
   filter?: string[],
   sort?: string[],
-  limit = LIMIT,
-  offset = OFFSET,
+  limit = 20,
+  offset = 0,
   search?: string
 ): Promise<ClientResponse<ProductProjectionPagedQueryResponse>> => {
   const client = new AnonymousClient();
@@ -48,3 +33,21 @@ export const getQueryProducts = async (
     .execute();
   return result as ClientResponse<ProductProjectionPagedQueryResponse>;
 };
+
+const getProductsFilter = async ({
+  filter,
+  sort,
+  limit = 20,
+  offset = 0,
+  search = '',
+}: {
+  filter?: string[];
+  sort?: string[];
+  limit?: number;
+  offset?: number;
+  search?: string;
+}): Promise<ClientResponse<ProductProjectionPagedQueryResponse>> => {
+  return getQueryProducts(filter, sort, limit, offset, search);
+};
+
+export default getProductsFilter;

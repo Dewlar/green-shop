@@ -8,7 +8,7 @@ import {
   RefreshAuthMiddlewareOptions,
   TokenStore,
 } from '@commercetools/sdk-client-v2';
-import { Customer, CustomerSignInResult } from '@commercetools/platform-sdk';
+import { Customer, CustomerSignInResult, ProductProjection } from '@commercetools/platform-sdk';
 import TokenService from './TokenService';
 import { IApiResponse, ICustomerData, IProductResultsData, IProductDataForRender } from './types';
 
@@ -214,4 +214,25 @@ export const getSortParams = (sortOption: string): string => {
     default:
       return '';
   }
+};
+
+export const getAttributes = (products: ProductProjection[]): string[] => {
+  const attributes: string[] = [];
+
+  products.forEach((product) => {
+    product.masterVariant.attributes?.forEach((item: { name: string; value: string }) => {
+      if (item.name === 'Size' && !attributes.includes(item.value)) {
+        attributes.push(item.value);
+      }
+    });
+    product.variants?.forEach((variant) => {
+      variant.attributes?.forEach((item: { name: string; value: string }) => {
+        if (item.name === 'Size' && !attributes.includes(item.value)) {
+          attributes.push(item.value);
+        }
+      });
+    });
+  });
+
+  return attributes.sort();
 };

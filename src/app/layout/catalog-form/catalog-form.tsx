@@ -14,71 +14,57 @@ import {
   TransitionChild,
 } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import {
-  ChevronDownIcon,
-  FunnelIcon,
-  MinusIcon,
-  PlusIcon,
-  Squares2X2Icon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from '@heroicons/react/20/solid';
+import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
 import { toast } from 'react-toastify';
-import getCategories from '../../api/catalog/getCategories';
-import { useStateContext } from '../../state/state-context';
-import { classNames, createProductData, formatPriceInEuro } from '../../api/helpers';
-import { IProductResultsData, IProductDataForRender, ISortOption } from '../../api/types';
-import { getProductsAll } from '../../api/catalog/getProductsAll';
-import { filters, sortOptionsDefault } from '../../constans';
+import { ClientResponse } from '@commercetools/sdk-client-v2';
+import { ProductProjection, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
+import { classNames, formatPriceInEuro } from '../../api/helpers';
+import { ISortOption } from '../../api/types';
+import { filters, sortOptionForCTP } from '../../constans';
+import getProductsFilter from '../../api/catalog/getProductsFilter';
 
 const CatalogForm = () => {
-  const { setCategories } = useStateContext();
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [products, setProducts] = useState<IProductDataForRender[]>([]);
+  const [products, setProducts] = useState<ProductProjection[] | undefined>(undefined);
   const [selectedOption, setSelectedOption] = useState('');
-  const [currentSort, setCurrentSort] = useState<string | null>(null);
-  const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionsDefault);
+  const [sortName, setSortName] = useState<string>('');
+  const [sortMethod, setSortMethod] = useState<string>('name.en asc');
+  const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionForCTP);
 
   const handleOptionChange = (optionValue: string) => {
     setSelectedOption(optionValue);
   };
 
   const handleSortClick = (sortOption: ISortOption) => {
-    if (sortOption.sortFunc) {
-      const sortedProducts = sortOption.sortFunc([...products]);
-      setProducts(sortedProducts);
-      setCurrentSort(sortOption.name);
+    setSortName(sortOption.name);
+    setSortMethod(sortOption.method);
 
-      const updatedSortOptions = sortOptions.map((option) => ({
-        ...option,
-        current: option.name === sortOption.name,
-      }));
-      setSortOptions(updatedSortOptions);
-    } else {
-      console.error('sortFunc is not defined for the selected sort option');
-    }
+    const updatedSortOptions = sortOptions.map((option) => ({
+      ...option,
+      current: option.name === sortOption.name,
+    }));
+    setSortOptions(updatedSortOptions);
   };
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await getCategories();
-        setCategories(response);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-        toast.error('Error fetching categories.');
-      }
-    };
-
-    fetchCategories();
-  }, []);
+  // const filterCategory1 = 'categories.id:subtree("8adc3358-2e20-41ac-80db-85d4e23ebbf9")';
+  // const filterCategory2 = 'categories.id:subtree("c2175cba-15d8-4a65-a3d8-16b0b28e89b1")';
+  // const filterAttribute = 'variants.attributes.Moisture-loving:"true"';
+  // const filterAttribute2 = ' variants.attributes.Easy-care:"true"';
+  // const filterPrice = 'variants.price.centAmount:range (401 to 6000)';
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await getProductsAll();
-        setProducts(createProductData(response.body.results as IProductResultsData[]));
+        const response: ClientResponse<ProductProjectionPagedQueryResponse> = await getProductsFilter({
+          filter: [],
+          sort: [sortMethod],
+          limit: 10,
+          offset: 0,
+          search: '',
+        });
+        setProducts(response.body?.results);
+        console.log('response.body?.results', response.body?.results);
       } catch (error) {
         console.error('Error fetching products:', error);
         toast.error('Error fetching products.');
@@ -86,7 +72,7 @@ const CatalogForm = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [sortMethod]);
 
   return (
     <div className="bg-white">
@@ -222,7 +208,7 @@ const CatalogForm = () => {
                     </MenuButton>
                   </div>
                   <div className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-green-900 ml-4">
-                    {currentSort}
+                    {sortName}
                   </div>
                 </div>
 
@@ -361,43 +347,51 @@ const CatalogForm = () => {
                       <h2 className="sr-only">Products</h2>
 
                       <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-                        {products.map((product) => (
+                        {products?.map((product) => (
                           <a
                             key={product.id}
-                            href={product.href}
+                            href="#"
                             className="group block border border-gray-100 rounded-lg shadow transition-transform hover:shadow-md"
                           >
                             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-                              <img
-                                src={product.imageSrc}
-                                alt={product.imageAlt}
-                                className="h-full w-full object-cover object-center transition-transform duration-300 ease-in-out transform group-hover:scale-105"
-                              />
+                              {product.masterVariant?.images?.[0]?.url ? (
+                                <img
+                                  src={product.masterVariant.images[0].url}
+                                  alt={typeof product.name === 'string' ? product.name : product.name.en}
+                                  className="h-full w-full object-cover object-center transition-transform duration-300 ease-in-out transform group-hover:scale-105"
+                                />
+                              ) : (
+                                <div className="h-full w-full flex items-center justify-center bg-gray-100">
+                                  <span className="text-gray-500">No image available</span>
+                                </div>
+                              )}
                             </div>
                             <h3
                               className="mt-4 mb-2 text-lg font-bold text-center text-gray-700"
                               style={{ height: '3.3rem', overflow: 'hidden' }}
                             >
-                              {product.name}
+                              {typeof product.name === 'string' ? product.name : product.name.en}
                             </h3>
 
                             <div className="mt-1 flex items-center justify-between px-4 py-2">
-                              {product.priceRender.discount !== 0 ? (
+                              {product.masterVariant?.prices?.[0]?.discounted?.discount ? (
                                 <>
                                   <p className="text-lg font-medium text-red-600">
-                                    {formatPriceInEuro(product.priceRender.discount)}
+                                    {formatPriceInEuro(product.masterVariant.prices[0].discounted.value.centAmount)}
                                   </p>
                                   <p
                                     className="text-lg font-medium text-green-600"
                                     style={{ textDecoration: 'line-through' }}
                                   >
-                                    {formatPriceInEuro(product.priceRender.currentPrice)}
+                                    {formatPriceInEuro(product.masterVariant.prices[0].value.centAmount)}
                                   </p>
                                 </>
                               ) : (
-                                <p className="text-lg font-medium text-green-600">
-                                  {formatPriceInEuro(product.priceRender.currentPrice)}
-                                </p>
+                                product.masterVariant?.prices?.[0]?.value?.centAmount && (
+                                  <p className="text-lg font-medium text-green-600">
+                                    {formatPriceInEuro(product.masterVariant.prices[0].value.centAmount)}
+                                  </p>
+                                )
                               )}
 
                               <svg
@@ -437,7 +431,7 @@ const CatalogForm = () => {
                       Next
                     </a>
                   </div>
-                  <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-end">
+                  {/* <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-end">
                     <div>
                       <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
                         <a
@@ -447,7 +441,7 @@ const CatalogForm = () => {
                           <span className="sr-only">Previous</span>
                           <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
                         </a>
-                        {/* Current: "z-10 bg-green-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" */}
+                         Current: "z-10 bg-green-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" 
                         <a
                           href="#"
                           aria-current="page"
@@ -497,7 +491,7 @@ const CatalogForm = () => {
                         </a>
                       </nav>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

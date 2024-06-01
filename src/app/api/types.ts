@@ -193,7 +193,7 @@ export interface ISortOption {
   name: string;
   href: string;
   current: boolean;
-  sortFunc?: (products: IProductDataForRender[]) => IProductDataForRender[];
+  method: string;
 }
 
 export type FilterType = string | string[] | { id: { in: string } }[];
