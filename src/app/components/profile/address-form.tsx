@@ -1,5 +1,11 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Address, MyCustomerRemoveAddressAction } from '@commercetools/platform-sdk';
+import {
+  Address,
+  MyCustomerChangeAddressAction,
+  MyCustomerRemoveAddressAction,
+  MyCustomerSetDefaultBillingAddressAction,
+  MyCustomerSetDefaultShippingAddressAction,
+} from '@commercetools/platform-sdk';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { toast } from 'react-toastify';
 import { HttpErrorType } from '@commercetools/sdk-client-v2';
@@ -18,19 +24,86 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
   const [isEdit, setIsEdit] = useState(true);
   const [isDefaultBillingAddress, setIsDefaultBillingAddress] = useState(true);
   const [isDefaultShippingAddress, setIsDefaultShippingAddress] = useState(true);
+  const [formData, setFormData] = useState({
+    country: address.country,
+    streetName: address.streetName,
+    city: address.city,
+    postalCode: address.postalCode,
+  });
 
   useEffect(() => {
     setIsDefaultBillingAddress(address.id === customerData.defaultBillingAddressId);
     setIsDefaultShippingAddress(address.id === customerData.defaultShippingAddressId);
-  }, []);
+  }, [address, customerData]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    // console.log(formData);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('form submit -> ', isDefaultBillingAddress);
     if (isEdit) {
       setIsEdit(false);
     } else {
       setIsEdit(true);
+      console.log('галя, замена!');
+      const customerController = new CustomerController();
+
+      // let currentVersion;
+      const actionsList = [];
+      const changeAddress: MyCustomerChangeAddressAction = {
+        action: 'changeAddress',
+        addressId: address.id,
+        address: {
+          country: formData.country,
+          city: formData.city,
+          streetName: formData.streetName,
+          postalCode: formData.postalCode,
+        },
+      };
+      if (isDefaultShippingAddress) {
+        const setDefaultShippingAddress: MyCustomerSetDefaultShippingAddressAction = {
+          action: 'setDefaultShippingAddress',
+          addressId: address.id,
+        };
+
+        actionsList.push(setDefaultShippingAddress);
+      }
+      if (isDefaultBillingAddress) {
+        const setDefaultBillingAddress: MyCustomerSetDefaultBillingAddressAction = {
+          action: 'setDefaultBillingAddress',
+          addressId: address.id,
+        };
+
+        actionsList.push(setDefaultBillingAddress);
+      }
+
+      actionsList.push(changeAddress);
+      const currentVersion = (await customerController.getCustomer()).body?.version;
+
+      if (currentVersion) {
+        const changeAddressResponse = await customerController.updateCustomer({
+          version: currentVersion,
+          actions: actionsList,
+        });
+
+        if (changeAddressResponse.body) {
+          setCustomerData({
+            addresses: changeAddressResponse.body.addresses,
+            billingAddressIds: changeAddressResponse.body.billingAddressIds ?? [],
+            shippingAddressIds: changeAddressResponse.body.shippingAddressIds ?? [],
+            defaultBillingAddressId: changeAddressResponse.body.defaultBillingAddressId ?? '',
+            defaultShippingAddressId: changeAddressResponse.body.defaultShippingAddressId ?? '',
+          });
+        }
+
+        toast.success('Change address was successful');
+      }
     }
   };
 
@@ -63,7 +136,7 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
           });
         }
 
-        console.log('deleteAddressResponse -> ', deleteAddressResponse);
+        // console.log('deleteAddressResponse -> ', deleteAddressResponse);
 
         toast.success('Delete address was successful');
       }
@@ -85,7 +158,8 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
               name="country"
               disabled={isEdit}
               autoComplete="country-name"
-              defaultValue={address.country}
+              value={formData.country}
+              onChange={handleInputChange}
               className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:max-w-xs sm:text-sm sm:leading-6"
             >
               {Object.entries(CountryEnum).map(([code, name]) => (
@@ -104,10 +178,11 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
           <div className="mt-2">
             <input
               type="text"
-              name="street-address"
+              name="streetName"
               id="street-address"
               disabled={isEdit}
-              value={address.streetName}
+              value={formData.streetName}
+              onChange={handleInputChange}
               autoComplete="street-address"
               className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
             />
@@ -124,7 +199,8 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
               name="city"
               id="city"
               disabled={isEdit}
-              value={address.city}
+              value={formData.city}
+              onChange={handleInputChange}
               autoComplete="address-level2"
               className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
             />
@@ -138,10 +214,11 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
           <div className="mt-2">
             <input
               type="text"
-              name="postal-code"
+              name="postalCode"
               id="postal-code"
               disabled={isEdit}
-              value={address.postalCode}
+              value={formData.postalCode}
+              onChange={handleInputChange}
               autoComplete="postal-code"
               className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
             />

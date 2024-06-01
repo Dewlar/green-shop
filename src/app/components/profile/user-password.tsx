@@ -98,7 +98,7 @@ const UserPassword: FC<IProps> = ({ email }) => {
   };
 
   return (
-    <div className="grid max-w-5xl mx-auto grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
+    <div className="grid max-w-5xl mx-auto grid-cols-1 gap-x-6 gap-y-8 px-4 py-12 sm:px-6 md:grid-cols-3 lg:px-8">
       <div>
         <h2 className="text-base font-semibold leading-7 text-gray-900">Change password</h2>
         <p className="mt-1 text-sm leading-6 text-gray-600">Update your password associated with your account.</p>
