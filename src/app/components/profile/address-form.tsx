@@ -42,7 +42,7 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
       ...prev,
       [name]: value,
     }));
-    // console.log(formData);
+    // console.log(isDefaultBillingAddress, isDefaultShippingAddress);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -73,11 +73,25 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
         };
 
         actionsList.push(setDefaultShippingAddress);
+      } else if (address.id === customerData.defaultShippingAddressId) {
+        const setDefaultShippingAddress: MyCustomerSetDefaultShippingAddressAction = {
+          action: 'setDefaultShippingAddress',
+          addressId: undefined,
+        };
+
+        actionsList.push(setDefaultShippingAddress);
       }
       if (isDefaultBillingAddress) {
         const setDefaultBillingAddress: MyCustomerSetDefaultBillingAddressAction = {
           action: 'setDefaultBillingAddress',
           addressId: address.id,
+        };
+
+        actionsList.push(setDefaultBillingAddress);
+      } else if (address.id === customerData.defaultBillingAddressId) {
+        const setDefaultBillingAddress: MyCustomerSetDefaultBillingAddressAction = {
+          action: 'setDefaultBillingAddress',
+          addressId: undefined,
         };
 
         actionsList.push(setDefaultBillingAddress);
