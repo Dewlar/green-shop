@@ -92,6 +92,8 @@ const UserPassword: FC<IProps> = ({ email }) => {
           toast.success('Password changed successfully');
         })
         .catch((err: HttpErrorType) => {
+          setPasswords(initialPasswords);
+          setShowPassword(false);
           toast.error(`Can't change password. Reason: ${err.message}`);
         });
     }
