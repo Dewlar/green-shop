@@ -10,10 +10,11 @@ import {
   Transition,
   TransitionChild,
 } from '@headlessui/react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon, FunnelIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
 import { toast } from 'react-toastify';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
+import { Link } from 'react-router-dom';
 import { ProductProjection, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import { classNames, formatPriceInEuro } from '../../api/helpers';
 import { ISortOption } from '../../api/types';
@@ -28,11 +29,15 @@ const CatalogForm = () => {
   const [selectedSizeValue, setSelectedSizeValue] = useState('');
   const [selectedSizeLabel, setSelectedSizeLabel] = useState('');
   const [sortName, setSortName] = useState<string>('');
-  const [priceRange, setPriceRange] = useState([0, 20000]);
   const [sortMethod, setSortMethod] = useState<string>('name.en asc');
   const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionForCTP);
+  const [priceRange, setPriceRange] = useState([0, 20000]);
+  const [inputSearch, setInputSearch] = useState('');
+  console.log('products0000000000000000', products);
 
-  console.log(selectedCategoryValue, selectedSizeLabel);
+  const handleInputSearch = (value: string) => {
+    setInputSearch(value);
+  };
 
   const handleCategoryClick = (categoryId: string, categoryValue: string) => {
     setSelectedCategoryId(categoryId === '' ? '' : `categories.id:subtree("${categoryId}")`);
@@ -60,6 +65,10 @@ const CatalogForm = () => {
     handleSizeClick('', '');
   };
 
+  // const filteredProducts = products?.filter((product) =>
+  //   product.name.en.toLowerCase().includes(inputSearch.toLowerCase())
+  // );
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -70,9 +79,9 @@ const CatalogForm = () => {
             `variants.price.centAmount:range (${priceRange[0]} to ${priceRange[1]})`,
           ],
           sort: [sortMethod],
-          limit: 10,
+          limit: 12,
           offset: 0,
-          search: '',
+          search: inputSearch,
         });
         setProducts(response.body?.results);
       } catch (error) {
@@ -82,7 +91,7 @@ const CatalogForm = () => {
     };
 
     fetchProducts();
-  }, [selectedCategoryId, selectedSizeValue, sortMethod, priceRange]);
+  }, [selectedCategoryId, selectedSizeValue, sortMethod, priceRange, inputSearch]);
 
   return (
     <div className="bg-white">
@@ -204,6 +213,18 @@ const CatalogForm = () => {
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-baseline justify-end border-b border-gray-200 pb-6 pt-4">
             <div className="flex items-center">
+              <div className="relative mr-4">
+                <input
+                  type="text"
+                  value={inputSearch}
+                  onChange={(e) => handleInputSearch(e.target.value)}
+                  placeholder="Search"
+                  className="block w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                </div>
+              </div>
               <Menu as="div" className="relative inline-block text-left">
                 <div className="flex" style={{ width: '200px' }}>
                   <div>
@@ -392,9 +413,9 @@ const CatalogForm = () => {
                     <h2 className="sr-only">Products</h2>
                     <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                       {products?.map((product) => (
-                        <a
+                        <Link
                           key={product.id}
-                          href="#"
+                          to={`/catalog/${product.id}`}
                           className="group block border border-gray-100 rounded-lg shadow transition-transform hover:shadow-md"
                         >
                           <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
@@ -453,7 +474,7 @@ const CatalogForm = () => {
                               />
                             </svg>
                           </div>
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   </div>
