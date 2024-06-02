@@ -1,8 +1,7 @@
-import { TypeOfInputs } from '../../models';
+import { TypeOfInputs, CountryEnum } from '../../models';
 import isOlderThan13 from './checkDate';
 import { regulars, regularsZip } from './regExp';
 import { setErrorStyle, removeErrorStyle } from './setErrorStyle';
-import states from './states';
 
 const handler = (
   e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>,
@@ -37,7 +36,7 @@ const handler = (
       setErrorStyle(e);
       errorItems[indexOfProp] = `Country is empty`;
     } else {
-      const country = Object.keys(states).find((key) => states[key] === e.target.value);
+      const country = CountryEnum[e.target.value as keyof typeof CountryEnum];
       const countryWithFormat = country![0].toLowerCase() + country!.slice(1);
       const regularOfCountryZip = regularsZip[countryWithFormat];
       if (e.target.name === 'country') {

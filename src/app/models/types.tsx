@@ -1,4 +1,5 @@
 import { Address } from '@commercetools/platform-sdk';
+// import { StringObject } from './interfaces';
 
 export interface IUserInfo {
   email: string;
@@ -19,4 +20,10 @@ export enum CountryEnum {
   DE = 'Germany',
   NL = 'Netherlands',
   AU = 'Austria',
+}
+
+export enum States {
+  Germany = 'DE',
+  Netherlands = 'NL',
+  Austria = 'AU',
 }

@@ -12,7 +12,7 @@ import {
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { toast } from 'react-toastify';
 import { HttpErrorType } from '@commercetools/sdk-client-v2';
-import { CountryEnum, IUserAddresses } from '../../models';
+import { CountryEnum, IUserAddresses, States } from '../../models';
 import DefaultAddressSwitch from './default-address-switch';
 import ButtonEditUpdate from './button-edit-update';
 import CustomerController from '../../api/CustomerController';
@@ -64,7 +64,7 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
         const addAddress: MyCustomerAddAddressAction = {
           action: 'addAddress',
           address: {
-            country: formData.country,
+            country: formData.country ? formData.country : States.Germany,
             city: formData.city,
             streetName: formData.streetName,
             postalCode: formData.postalCode,
