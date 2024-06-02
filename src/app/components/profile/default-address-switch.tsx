@@ -10,17 +10,21 @@ interface IProps {
 }
 
 const DefaultAddressSwitch: FC<IProps> = ({ title, isEdit, isDefaultAddress, setIsDefaultAddress }) => {
-  const disabledClasses = (): string => {
-    if (isEdit) {
-      return 'bg-gray-700 cursor-default';
-    }
-    return isDefaultAddress ? 'bg-green-500' : 'bg-gray-200';
-  };
+  // const disabledClasses = (): string => {
+  //   if (isEdit) {
+  //     return 'cursor-auto';
+  //   }
+  //   return isDefaultAddress ? 'bg-green-500' : 'bg-gray-200';
+  // };
 
   return (
     <Field as="div" className="flex">
-      <Label as="dt" className="flex-none font-medium text-sm text-gray-900" passive>
-        {title}
+      <Label as="dt" className="flex-none font-medium text-sm text-gray-600" passive>
+        Set as{' '}
+        <span className={classNames(isDefaultAddress ? 'text-green-500' : '', ' transition-colors duration-200')}>
+          {title}
+        </span>
+        .
       </Label>
       <dd className="flex flex-auto items-center justify-end">
         <Switch
@@ -28,7 +32,8 @@ const DefaultAddressSwitch: FC<IProps> = ({ title, isEdit, isDefaultAddress, set
           checked={isDefaultAddress}
           onChange={setIsDefaultAddress}
           className={classNames(
-            disabledClasses(),
+            isEdit ? 'cursor-auto' : '',
+            isDefaultAddress ? 'bg-green-500' : 'bg-gray-200',
             'flex w-8 cursor-pointer rounded-full p-px ring-1 ring-inset ring-gray-900/5 transition-colors duration-200 ease-in-out focus-visible:outline-none'
           )}
         >

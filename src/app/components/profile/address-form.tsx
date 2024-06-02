@@ -1,6 +1,9 @@
 import React, { FC, useEffect, useState } from 'react';
 import {
   Address,
+  MyCustomerAddAddressAction,
+  MyCustomerAddBillingAddressIdAction,
+  MyCustomerAddShippingAddressIdAction,
   MyCustomerChangeAddressAction,
   MyCustomerRemoveAddressAction,
   MyCustomerSetDefaultBillingAddressAction,
@@ -52,72 +55,147 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
       setIsEdit(false);
     } else {
       setIsEdit(true);
-      console.log('галя, замена!');
-      const customerController = new CustomerController();
+      if (address.isNew) {
+        console.log('галя, ты глянь - новый !');
+        // adding a new address;
+        const customerController = new CustomerController();
 
-      // let currentVersion;
-      const actionsList = [];
-      const changeAddress: MyCustomerChangeAddressAction = {
-        action: 'changeAddress',
-        addressId: address.id,
-        address: {
-          country: formData.country,
-          city: formData.city,
-          streetName: formData.streetName,
-          postalCode: formData.postalCode,
-        },
-      };
-      if (isDefaultShippingAddress) {
-        const setDefaultShippingAddress: MyCustomerSetDefaultShippingAddressAction = {
-          action: 'setDefaultShippingAddress',
-          addressId: address.id,
+        let currentVersion;
+        const addAddress: MyCustomerAddAddressAction = {
+          action: 'addAddress',
+          address: {
+            country: formData.country,
+            city: formData.city,
+            streetName: formData.streetName,
+            postalCode: formData.postalCode,
+          },
         };
-
-        actionsList.push(setDefaultShippingAddress);
-      } else if (address.id === customerData.defaultShippingAddressId) {
-        const setDefaultShippingAddress: MyCustomerSetDefaultShippingAddressAction = {
-          action: 'setDefaultShippingAddress',
-          addressId: undefined,
-        };
-
-        actionsList.push(setDefaultShippingAddress);
-      }
-      if (isDefaultBillingAddress) {
-        const setDefaultBillingAddress: MyCustomerSetDefaultBillingAddressAction = {
-          action: 'setDefaultBillingAddress',
-          addressId: address.id,
-        };
-
-        actionsList.push(setDefaultBillingAddress);
-      } else if (address.id === customerData.defaultBillingAddressId) {
-        const setDefaultBillingAddress: MyCustomerSetDefaultBillingAddressAction = {
-          action: 'setDefaultBillingAddress',
-          addressId: undefined,
-        };
-
-        actionsList.push(setDefaultBillingAddress);
-      }
-
-      actionsList.push(changeAddress);
-      const currentVersion = (await customerController.getCustomer()).body?.version;
-
-      if (currentVersion) {
-        const changeAddressResponse = await customerController.updateCustomer({
-          version: currentVersion,
-          actions: actionsList,
-        });
-
-        if (changeAddressResponse.body) {
-          setCustomerData({
-            addresses: changeAddressResponse.body.addresses,
-            billingAddressIds: changeAddressResponse.body.billingAddressIds ?? [],
-            shippingAddressIds: changeAddressResponse.body.shippingAddressIds ?? [],
-            defaultBillingAddressId: changeAddressResponse.body.defaultBillingAddressId ?? '',
-            defaultShippingAddressId: changeAddressResponse.body.defaultShippingAddressId ?? '',
+        currentVersion = (await customerController.getCustomer()).body?.version;
+        if (currentVersion) {
+          const response = await customerController.updateCustomer({
+            version: currentVersion,
+            actions: [addAddress],
           });
+
+          const getNewAddressId = response.body?.addresses.at(-1)?.id;
+
+          const actionsList = [];
+          const setBillingAddress: MyCustomerAddBillingAddressIdAction = {
+            action: 'addBillingAddressId',
+            addressId: getNewAddressId,
+          };
+          const setShippingAddress: MyCustomerAddShippingAddressIdAction = {
+            action: 'addShippingAddressId',
+            addressId: getNewAddressId,
+          };
+          actionsList.push(setBillingAddress, setShippingAddress);
+          if (isDefaultBillingAddress) {
+            const setDefaultBillingAddress: MyCustomerSetDefaultBillingAddressAction = {
+              action: 'setDefaultBillingAddress',
+              addressId: getNewAddressId,
+            };
+
+            actionsList.push(setDefaultBillingAddress);
+          }
+          if (isDefaultShippingAddress) {
+            const setDefaultShippingAddress: MyCustomerSetDefaultShippingAddressAction = {
+              action: 'setDefaultShippingAddress',
+              addressId: getNewAddressId,
+            };
+
+            actionsList.push(setDefaultShippingAddress);
+          }
+
+          currentVersion = (await customerController.getCustomer()).body?.version;
+
+          if (currentVersion) {
+            const addAddressResponse = await customerController.updateCustomer({
+              version: currentVersion,
+              actions: actionsList,
+            });
+
+            if (addAddressResponse.body) {
+              setCustomerData({
+                addresses: addAddressResponse.body.addresses,
+                billingAddressIds: addAddressResponse.body.billingAddressIds ?? [],
+                shippingAddressIds: addAddressResponse.body.shippingAddressIds ?? [],
+                defaultBillingAddressId: addAddressResponse.body.defaultBillingAddressId ?? '',
+                defaultShippingAddressId: addAddressResponse.body.defaultShippingAddressId ?? '',
+              });
+            }
+
+            toast.success('New address added successfully');
+          }
+        }
+      } else {
+        console.log('галя, замена!');
+        // address update;
+        const customerController = new CustomerController();
+
+        // let currentVersion;
+        const actionsList = [];
+        const changeAddress: MyCustomerChangeAddressAction = {
+          action: 'changeAddress',
+          addressId: address.id,
+          address: {
+            country: formData.country,
+            city: formData.city,
+            streetName: formData.streetName,
+            postalCode: formData.postalCode,
+          },
+        };
+        if (isDefaultShippingAddress) {
+          const setDefaultShippingAddress: MyCustomerSetDefaultShippingAddressAction = {
+            action: 'setDefaultShippingAddress',
+            addressId: address.id,
+          };
+
+          actionsList.push(setDefaultShippingAddress);
+        } else if (address.id === customerData.defaultShippingAddressId) {
+          const setDefaultShippingAddress: MyCustomerSetDefaultShippingAddressAction = {
+            action: 'setDefaultShippingAddress',
+            addressId: undefined,
+          };
+
+          actionsList.push(setDefaultShippingAddress);
+        }
+        if (isDefaultBillingAddress) {
+          const setDefaultBillingAddress: MyCustomerSetDefaultBillingAddressAction = {
+            action: 'setDefaultBillingAddress',
+            addressId: address.id,
+          };
+
+          actionsList.push(setDefaultBillingAddress);
+        } else if (address.id === customerData.defaultBillingAddressId) {
+          const setDefaultBillingAddress: MyCustomerSetDefaultBillingAddressAction = {
+            action: 'setDefaultBillingAddress',
+            addressId: undefined,
+          };
+
+          actionsList.push(setDefaultBillingAddress);
         }
 
-        toast.success('Change address was successful');
+        actionsList.push(changeAddress);
+        const currentVersion = (await customerController.getCustomer()).body?.version;
+
+        if (currentVersion) {
+          const changeAddressResponse = await customerController.updateCustomer({
+            version: currentVersion,
+            actions: actionsList,
+          });
+
+          if (changeAddressResponse.body) {
+            setCustomerData({
+              addresses: changeAddressResponse.body.addresses,
+              billingAddressIds: changeAddressResponse.body.billingAddressIds ?? [],
+              shippingAddressIds: changeAddressResponse.body.shippingAddressIds ?? [],
+              defaultBillingAddressId: changeAddressResponse.body.defaultBillingAddressId ?? '',
+              defaultShippingAddressId: changeAddressResponse.body.defaultShippingAddressId ?? '',
+            });
+          }
+
+          toast.success('Change address was successful');
+        }
       }
     }
   };
@@ -242,13 +320,13 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
 
         <div className="sm:col-span-3 flex flex-col gap-1">
           <DefaultAddressSwitch
-            title={'Set as default billing.'}
+            title={'default billing'}
             isEdit={isEdit}
             isDefaultAddress={isDefaultBillingAddress}
             setIsDefaultAddress={setIsDefaultBillingAddress}
           />
           <DefaultAddressSwitch
-            title={'Set as default shipping.'}
+            title={'default shipping'}
             isEdit={isEdit}
             isDefaultAddress={isDefaultShippingAddress}
             setIsDefaultAddress={setIsDefaultShippingAddress}
