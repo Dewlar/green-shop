@@ -19,7 +19,7 @@ const UserAddresses = () => {
 
       const userData = await customerController.getCustomer();
 
-      console.log('user body -> : ', userData.body);
+      // console.log('user body -> : ', userData.body);
       if (userData.body) return userData.body;
 
       throw Error('No customer info');
@@ -39,11 +39,13 @@ const UserAddresses = () => {
   }, []);
 
   const handleAddNewAddress = () => {
-    const newAddress: Address = {
+    const newAddress: Address & { isNew: boolean } = {
+      id: `${Date.now()}`,
       country: '',
       streetName: '',
       city: '',
       postalCode: '',
+      isNew: true,
     };
 
     setCustomerData((prevData) => ({
@@ -66,9 +68,16 @@ const UserAddresses = () => {
         </button>
       </div>
 
-      {customerData.addresses.map((address) => (
-        <AddressForm key={address.id} address={address} customerData={customerData} setCustomerData={setCustomerData} />
-      ))}
+      {customerData.addresses.map((address) => {
+        return (
+          <AddressForm
+            key={address.id}
+            address={address}
+            customerData={customerData}
+            setCustomerData={setCustomerData}
+          />
+        );
+      })}
     </div>
   );
 };

@@ -15,13 +15,13 @@ import ButtonEditUpdate from './button-edit-update';
 import CustomerController from '../../api/CustomerController';
 
 interface IProps {
-  address: Address;
+  address: Address & { isNew?: boolean };
   customerData: IUserAddresses;
   setCustomerData: React.Dispatch<React.SetStateAction<IUserAddresses>>;
 }
 
 const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => {
-  const [isEdit, setIsEdit] = useState(true);
+  const [isEdit, setIsEdit] = useState(!address.isNew ?? true);
   const [isDefaultBillingAddress, setIsDefaultBillingAddress] = useState(true);
   const [isDefaultShippingAddress, setIsDefaultShippingAddress] = useState(true);
   const [formData, setFormData] = useState({
@@ -43,6 +43,7 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
       [name]: value,
     }));
     // console.log(isDefaultBillingAddress, isDefaultShippingAddress);
+    // console.log(customerData, 'address');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -258,7 +259,7 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
       </div>
 
       <div className="mt-8 flex justify-between items-center">
-        <ButtonEditUpdate isEdit={isEdit} />
+        <ButtonEditUpdate isEdit={isEdit} isNew={address.isNew} />
         <button onClick={handleAddressDelete}>
           <TrashIcon className="text-green-500 w-7 h-7" />
         </button>

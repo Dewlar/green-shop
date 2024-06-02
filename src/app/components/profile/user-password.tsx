@@ -33,7 +33,7 @@ const UserPassword: FC<IProps> = ({ email }) => {
       ...prev,
       [name]: value,
     }));
-    console.log(passwords, email);
+    // console.log(passwords, email);
   };
 
   const handleSubmit = (e: React.FormEvent) => {

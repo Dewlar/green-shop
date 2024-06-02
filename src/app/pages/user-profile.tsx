@@ -36,7 +36,7 @@ const UserProfile = () => {
 
       const userData = await customerController.getCustomer();
 
-      console.log('user body -> : ', userData.body);
+      // console.log('user body -> : ', userData.body);
       if (userData.body) return userData.body;
 
       throw Error('No customer info');
@@ -44,7 +44,7 @@ const UserProfile = () => {
 
     getData()
       .then((response) => {
-        console.log('user response -> : ', response);
+        // console.log('user response -> : ', response);
         setUserInfo({
           firstName: response.firstName ?? '',
           lastName: response.lastName ?? '',
