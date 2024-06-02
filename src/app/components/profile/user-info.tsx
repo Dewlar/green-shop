@@ -102,7 +102,7 @@ const UserInfo: FC<Props> = ({ userInfo, setUserInfo }) => {
 
       {/* user info */}
       <form className="md:col-span-2" onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-xl sm:grid-cols-6">
+        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div className="sm:col-span-3">
             <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
               First name

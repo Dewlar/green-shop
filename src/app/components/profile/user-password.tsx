@@ -107,7 +107,7 @@ const UserPassword: FC<IProps> = ({ email }) => {
       </div>
 
       <form className="md:col-span-2" onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-xl sm:grid-cols-6">
+        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-md sm:grid-cols-6">
           <div className="col-span-full">
             <label htmlFor="current-password" className="block text-sm font-medium leading-6 text-gray-900">
               Current password
