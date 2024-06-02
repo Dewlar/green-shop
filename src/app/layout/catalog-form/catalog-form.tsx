@@ -21,7 +21,6 @@ import { categoryFilters, sizeFilters, sortOptionForCTP } from '../../constans';
 import getProductsFilter from '../../api/catalog/getProductsFilter';
 
 const CatalogForm = () => {
-  const [priceRange, setPriceRange] = useState([0, 100]);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [products, setProducts] = useState<ProductProjection[] | undefined>(undefined);
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
@@ -29,6 +28,7 @@ const CatalogForm = () => {
   const [selectedSizeValue, setSelectedSizeValue] = useState('');
   const [selectedSizeLabel, setSelectedSizeLabel] = useState('');
   const [sortName, setSortName] = useState<string>('');
+  const [priceRange, setPriceRange] = useState([0, 20000]);
   const [sortMethod, setSortMethod] = useState<string>('name.en asc');
   const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionForCTP);
 
@@ -53,15 +53,17 @@ const CatalogForm = () => {
     setSortOptions(updatedSortOptions);
   };
 
-  // const filterAttribute = 'variants.attributes.Moisture-loving:"true"';
-  // const filterAttribute2 = ' variants.attributes.Easy-care:"true"';
   // const filterPrice = 'variants.price.centAmount:range (401 to 6000)';
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response: ClientResponse<ProductProjectionPagedQueryResponse> = await getProductsFilter({
-          filter: [selectedCategoryId, selectedSizeValue],
+          filter: [
+            selectedCategoryId,
+            selectedSizeValue,
+            `variants.price.centAmount:range (${priceRange[0]} to ${priceRange[1]})`,
+          ],
           sort: [sortMethod],
           limit: 10,
           offset: 0,
@@ -75,7 +77,7 @@ const CatalogForm = () => {
     };
 
     fetchProducts();
-  }, [selectedCategoryId, selectedSizeValue, sortMethod]);
+  }, [selectedCategoryId, selectedSizeValue, sortMethod, priceRange]);
 
   return (
     <div className="bg-white">
@@ -166,7 +168,7 @@ const CatalogForm = () => {
                         <Range
                           step={1}
                           min={0}
-                          max={100}
+                          max={200}
                           values={priceRange}
                           onChange={(values) => setPriceRange(values)}
                           renderTrack={({ props, children }) => (
@@ -182,8 +184,8 @@ const CatalogForm = () => {
                           )}
                         />
                         <div className="flex justify-between text-xs">
-                          <span>${priceRange[0]}</span>
-                          <span>${priceRange[1]}</span>
+                          <span>€{priceRange[0].toFixed(2)}</span>
+                          <span>€{priceRange[1].toFixed(2)}</span>
                         </div>
                       </div>
                     </div>
@@ -311,9 +313,9 @@ const CatalogForm = () => {
                   <h3 className="text-sm font-medium text-gray-900">Price</h3>
                   <div className="mt-6">
                     <Range
-                      step={1}
+                      step={100}
                       min={0}
-                      max={100}
+                      max={20000}
                       values={priceRange}
                       onChange={(values) => setPriceRange(values)}
                       renderTrack={({ props, children }) => (
@@ -329,8 +331,8 @@ const CatalogForm = () => {
                       )}
                     />
                     <div className="flex justify-between text-xs">
-                      <span>${priceRange[0]}</span>
-                      <span>${priceRange[1]}</span>
+                      <span>€{(priceRange[0] / 100).toFixed(2)}</span>
+                      <span>€{(priceRange[1] / 100).toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
