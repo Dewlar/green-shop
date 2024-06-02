@@ -32,6 +32,8 @@ const CatalogForm = () => {
   const [sortMethod, setSortMethod] = useState<string>('name.en asc');
   const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionForCTP);
 
+  console.log(selectedCategoryValue, selectedSizeLabel);
+
   const handleCategoryClick = (categoryId: string, categoryValue: string) => {
     setSelectedCategoryId(categoryId === '' ? '' : `categories.id:subtree("${categoryId}")`);
     setSelectedCategoryValue(categoryValue === '' ? '' : categoryValue);
@@ -53,7 +55,10 @@ const CatalogForm = () => {
     setSortOptions(updatedSortOptions);
   };
 
-  // const filterPrice = 'variants.price.centAmount:range (401 to 6000)';
+  const handleResetFilters = () => {
+    handleCategoryClick('', '');
+    handleSizeClick('', '');
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -166,9 +171,9 @@ const CatalogForm = () => {
                       <h3 className="text-sm font-medium text-gray-900">Price</h3>
                       <div className="mt-6">
                         <Range
-                          step={1}
+                          step={100}
                           min={0}
-                          max={200}
+                          max={20000}
                           values={priceRange}
                           onChange={(values) => setPriceRange(values)}
                           renderTrack={({ props, children }) => (
@@ -184,8 +189,8 @@ const CatalogForm = () => {
                           )}
                         />
                         <div className="flex justify-between text-xs">
-                          <span>€{priceRange[0].toFixed(2)}</span>
-                          <span>€{priceRange[1].toFixed(2)}</span>
+                          <span>€{(priceRange[0] / 100).toFixed(2)}</span>
+                          <span>€{(priceRange[1] / 100).toFixed(2)}</span>
                         </div>
                       </div>
                     </div>
@@ -342,22 +347,49 @@ const CatalogForm = () => {
                 <div className="bg-white">
                   <nav aria-label="breadcrumb" className="w-max">
                     <ol className="flex flex-wrap items-center w-full px-4 py-2 rounded-md bg-blue-gray-50 bg-opacity-60">
-                      <li className="flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer text-blue-gray-900 hover:text-light-blue-500">
-                        <a href="#" className="opacity-60">
+                      <li
+                        className={`flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer hover:text-light-blue-500 ${!selectedCategoryValue && !selectedSizeLabel ? 'text-green-600' : 'text-gray-500'}`}
+                      >
+                        <a
+                          href="#"
+                          className={`${!selectedCategoryValue && !selectedSizeLabel ? 'text-green-600' : ''}`}
+                          onClick={handleResetFilters}
+                        >
                           Category
                         </a>
-                        <span className="mx-2 font-sans text-sm antialiased font-normal leading-normal pointer-events-none select-none text-blue-gray-500">
-                          /
-                        </span>
+                        {(selectedCategoryValue || selectedSizeLabel) && (
+                          <span className="mx-2 font-sans text-sm antialiased font-normal leading-normal pointer-events-none select-none text-blue-gray-500">
+                            /
+                          </span>
+                        )}
                       </li>
-                      <li className="flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer text-blue-gray-900 hover:text-light-blue-500">
-                        <a href="#">Fantasy plants</a>
-                      </li>
+                      {selectedCategoryValue && (
+                        <li className="flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer text-blue-gray-900 hover:text-light-blue-500">
+                          <a href="#" onClick={() => handleSizeClick('', '')}>
+                            {selectedCategoryValue.charAt(0).toUpperCase() + selectedCategoryValue.slice(1)}
+                          </a>
+                          {selectedSizeLabel && (
+                            <span className="mx-2 font-sans text-sm antialiased font-normal leading-normal pointer-events-none select-none text-blue-gray-500">
+                              /
+                            </span>
+                          )}
+                        </li>
+                      )}
+                      {selectedSizeLabel && (
+                        <li className="flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer text-blue-gray-900 hover:text-light-blue-500">
+                          <a
+                            href="#"
+                            // onClick={() => handleCategoryClick('', '')}
+                          >
+                            {selectedSizeLabel}
+                          </a>
+                        </li>
+                      )}
                     </ol>
                   </nav>
+
                   <div className="mx-auto max-w-2xl px-4 pt-8 pb-16 sm:px-6 sm:pt-12 sm:pb-24 lg:max-w-7xl lg:px-8">
                     <h2 className="sr-only">Products</h2>
-
                     <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                       {products?.map((product) => (
                         <a
