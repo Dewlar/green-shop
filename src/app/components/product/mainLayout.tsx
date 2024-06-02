@@ -48,13 +48,13 @@ const ProductMain = (data: Product) => {
               </h1>
               <div className="mt-3">
                 <h2 className="sr-only">Product information</h2>
-                <div className="flex justify-between w-1/5 leading-none">
+                <div className="flex gap-8 justify-between w-fit leading-none">
                   <span
-                    className={`${isDiscount ? 'line-through text-gray-300 text-lg' : 'text-gray-900 text-3xl'}  tracking-tight`}
+                    className={`${isDiscount ? 'line-through text-gray-300 text-lg' : 'text-gray-900 text-2xl'}  tracking-tight`}
                   >
                     {price.length !== 0 ? totalPrice : <ReactLoading type={'bars'} color={'green'}></ReactLoading>}
                   </span>
-                  <span className="text-3xl tracking-tight text-gray-900 ml-0.5 ">
+                  <span className="text-2xl tracking-tight text-gray-900 ml-0.5">
                     {price.length !== 0 ? `${isDiscount}` : ''}
                   </span>
                 </div>
