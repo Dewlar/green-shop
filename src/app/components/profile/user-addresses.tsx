@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Customer } from '@commercetools/platform-sdk';
+import { Address, Customer } from '@commercetools/platform-sdk';
 import { IUserAddresses } from '../../models';
 import AddressForm from './address-form';
 import CustomerController from '../../api/CustomerController';
@@ -38,11 +38,32 @@ const UserAddresses = () => {
       .catch();
   }, []);
 
+  const handleAddNewAddress = () => {
+    const newAddress: Address = {
+      country: '',
+      streetName: '',
+      city: '',
+      postalCode: '',
+    };
+
+    setCustomerData((prevData) => ({
+      ...prevData,
+      addresses: [newAddress, ...prevData.addresses],
+    }));
+  };
+
   return (
     <div className="grid max-w-5xl mx-auto grid-cols-1 gap-x-6 gap-y-8 px-4 py-12 sm:px-6 md:grid-cols-3 lg:px-8">
       <div>
         <h2 className="text-base font-semibold leading-7 text-gray-900">Addresses</h2>
         <p className="mt-1 text-sm leading-6 text-gray-600">Billing and shipping addresses.</p>
+        <button
+          type="button"
+          onClick={handleAddNewAddress}
+          className="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-sm rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none"
+        >
+          Add New Address
+        </button>
       </div>
 
       {customerData.addresses.map((address) => (
