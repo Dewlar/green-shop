@@ -9,7 +9,7 @@ const MySelect = (
     <select {...props}>
       <option value={''}>Choose your country</option>
       <option value={'DE'}>Germany</option>
-      <option value={'AU'}>Austria</option>
+      <option value={'AT'}>Austria</option>
       <option value={'NL'}>Netherlands</option>
     </select>
   );

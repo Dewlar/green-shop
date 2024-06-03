@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { HttpErrorType } from '@commercetools/sdk-client-v2';
 import { Link, useNavigate } from 'react-router-dom';
 import CustomerController from '../../api/CustomerController';
-import { IAuth, useStateContext } from '../../state/state-context';
+import { useStateContext } from '../../state/state-context';
 import { LocalStorageKeysEnum, storageSet } from '../../api/helpers';
 
 const LoginForm = () => {
@@ -13,7 +13,7 @@ const LoginForm = () => {
   const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
   const [showPassword, setShowPassword] = useState(false);
 
-  const { auth } = useStateContext();
+  const { setIsAuth, setAuthData, setCustomerData } = useStateContext();
   const navigate = useNavigate();
 
   const validateEmail = (email: string): string[] => {
@@ -91,29 +91,28 @@ const LoginForm = () => {
 
     const customerController = new CustomerController();
 
-    customerController.createAnonymousCustomer().then(() => {
-      customerController
-        .loginCustomer({ email: username, password })
-        .then((response) => {
-          if (response.apiResult.statusCode === 200 && response.token) {
-            storageSet(LocalStorageKeysEnum.IS_AUTH, true);
+    customerController
+      .createAnonymousCustomer()
+      .then(() => {
+        return customerController.loginCustomer({ email: username, password });
+      })
+      .then((response) => {
+        if (response.apiResult.statusCode === 200 && response.token) {
+          storageSet(LocalStorageKeysEnum.IS_AUTH, true);
+          setIsAuth(true);
+          setAuthData(response.token);
 
-            const authData: IAuth = {
-              isAuth: true,
-              authData: response.token,
-            };
-
-            auth.set(authData);
-
-            toast((response.apiResult as HttpErrorType).message);
-
-            navigate('/');
-          }
-
-          toast((response.apiResult as HttpErrorType).message);
-        })
-        .catch(); // todo: need to add toastify notification
-    });
+          toast.success('Login successful!');
+          navigate('/');
+          setCustomerData(response.customer);
+        } else {
+          toast.error((response.apiResult as HttpErrorType).message);
+        }
+      })
+      .catch((error) => {
+        console.error('Error during login:', error);
+        toast.error('Error during login. Please try again.');
+      });
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {

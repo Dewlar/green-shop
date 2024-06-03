@@ -1,7 +1,7 @@
-import { ClientResponse, ClientResult, TokenStore } from '@commercetools/sdk-client-v2';
-import { CustomerSignInResult } from '@commercetools/platform-sdk';
+import { HttpErrorType, TokenStore } from '@commercetools/sdk-client-v2';
+import { ClientResponse, Customer } from '@commercetools/platform-sdk';
 import TokenService from './TokenService';
-import { ApiLoginResult, UserCredentialData, getProjectKey } from './helpers';
+import { UserCredentialData, getProjectKey } from './helpers';
 import RefreshTokenClient from './RefreshTokenClient';
 import AnonymousClient from './AnonymousClient';
 import AuthClient from './AuthClient';
@@ -11,21 +11,34 @@ class CustomerRepository {
 
   private tokenService: TokenService;
 
+  private authApiResponse: ClientResponse<Customer> | undefined;
+
   constructor() {
     this.projectKey = getProjectKey();
     this.tokenService = new TokenService();
   }
 
   public async createAnonymousCustomer(): Promise<TokenStore> {
-    const client = new AnonymousClient();
-    const apiRoot = client.getApiRoot();
+    try {
+      const client = new AnonymousClient();
+      const apiRoot = client.getApiRoot();
 
-    await apiRoot.withProjectKey({ projectKey: this.projectKey }).get().execute();
+      const response = await apiRoot.withProjectKey({ projectKey: this.projectKey }).get().execute();
 
-    return this.tokenService.get();
+      console.log('Create Anonymous Customer Response:', response);
+
+      return this.tokenService.get();
+    } catch (error) {
+      console.error('Create Anonymous Customer Error:', error);
+      throw error;
+    }
   }
 
-  public async loginCustomer(userData: UserCredentialData): Promise<ApiLoginResult> {
+  public getCustomerData() {
+    return this.authApiResponse;
+  }
+
+  public async loginCustomer(userData: UserCredentialData) {
     try {
       const { email, password } = userData;
       const refreshTokenClient = new RefreshTokenClient();
@@ -44,27 +57,32 @@ class CustomerRepository {
         })
         .execute();
 
+      console.log('Login Customer Response:', tokenApiResult);
+
       const authClient = new AuthClient(userData);
       const authApiRoot = authClient.getApiRoot();
-      await authApiRoot
+      this.authApiResponse = await authApiRoot
         .withProjectKey({
           projectKey: this.projectKey,
         })
         .me()
         .get()
         .execute();
+      console.log('Auth Customer Response:', this.authApiResponse);
 
       const token = this.tokenService.get();
 
       return {
-        apiResult: tokenApiResult as ClientResponse<CustomerSignInResult>,
+        apiResult: tokenApiResult,
         token,
+        customer: this.authApiResponse,
       };
     } catch (error) {
-      // console.error('Login Error:', error);
+      console.error('Login Error:', error);
       return {
-        apiResult: error as ClientResponse<ClientResult>,
+        apiResult: error as HttpErrorType,
         token: null,
+        customer: this.authApiResponse,
       };
     }
   }

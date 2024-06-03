@@ -1,6 +1,6 @@
 import { TokenStore } from '@commercetools/sdk-client-v2';
 import CustomerRepository from './CustomerRepository';
-import { ApiLoginResult, UserCredentialData } from './helpers';
+import { UserCredentialData } from './helpers';
 
 class CustomerController {
   private customerRepository: CustomerRepository;
@@ -9,7 +9,7 @@ class CustomerController {
     this.customerRepository = new CustomerRepository();
   }
 
-  public async loginCustomer(userData: UserCredentialData): Promise<ApiLoginResult> {
+  public async loginCustomer(userData: UserCredentialData) {
     return this.customerRepository.loginCustomer(userData);
   }
 

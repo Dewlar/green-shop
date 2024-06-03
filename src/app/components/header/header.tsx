@@ -5,13 +5,15 @@ import mocks from '../mocks-data/mocks';
 import { useStateContext } from '../../state/state-context';
 import CartIcon from './cart-icon';
 import UserIconDropdown from './user-icon-dropdown';
+import DepthImg from './enumDepth';
 
 interface HeaderProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  depth?: string;
 }
-const Header: FC<HeaderProps> = ({ setOpen }) => {
-  const { auth } = useStateContext();
+const Header: FC<HeaderProps> = ({ setOpen, depth = '1' }) => {
+  const { isAuth } = useStateContext();
 
   return (
     <header className="relative">
@@ -24,7 +26,7 @@ const Header: FC<HeaderProps> = ({ setOpen }) => {
               <div className="hidden lg:flex lg:flex-1 lg:items-center">
                 <Link to="/">
                   <span className="sr-only">Green shop</span>
-                  <img className="h-8 w-auto" src="./assets/logo/logo.png" alt="logo" />
+                  <img className="h-8 w-auto" src={`${DepthImg[depth]}assets/logo/logo.png`} alt="logo" />
                 </Link>
               </div>
 
@@ -59,7 +61,7 @@ const Header: FC<HeaderProps> = ({ setOpen }) => {
               </Link>
 
               <div className="flex flex-1 items-center justify-end">
-                {auth.get.isAuth ? (
+                {isAuth ? (
                   <div className="flex items-center lg:ml-8">
                     {/* User icon dropdown menu */}
                     <UserIconDropdown></UserIconDropdown>
