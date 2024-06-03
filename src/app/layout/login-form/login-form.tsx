@@ -109,8 +109,8 @@ const LoginForm = () => {
           toast.error((response.apiResult as HttpErrorType).message);
         }
       })
-      .catch((error) => {
-        console.error('Error during login:', error);
+      .catch(() => {
+        // console.error('Error during login:', error);
         toast.error('Error during login. Please try again.');
       });
   };

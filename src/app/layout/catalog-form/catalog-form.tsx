@@ -33,7 +33,6 @@ const CatalogForm = () => {
   const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionForCTP);
   const [priceRange, setPriceRange] = useState([0, 200000]);
   const [inputSearch, setInputSearch] = useState('');
-  console.log('products0000000000000000', products);
 
   const handleInputSearch = (value: string) => {
     setInputSearch(value);
@@ -85,7 +84,7 @@ const CatalogForm = () => {
         });
         setProducts(response.body?.results);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        // console.error('Error fetching products:', error);
         toast.error('Error fetching products.');
       }
     };

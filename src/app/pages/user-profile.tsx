@@ -16,14 +16,6 @@ const UserProfile = () => {
     dateOfBirth: '',
   });
 
-  // const [addresses, setAddresses] = useState<IUserAddresses>({
-  //   addresses: [],
-  //   billingAddressIds: [],
-  //   shippingAddressIds: [],
-  //   defaultBillingAddressId: '',
-  //   defaultShippingAddressId: '',
-  // });
-
   const secondaryNavigation = [
     { name: 'Account', href: <UserInfo userInfo={userInfo} setUserInfo={setUserInfo} />, selected: false },
     { name: 'Address', href: <UserAddresses />, selected: true },
@@ -36,7 +28,6 @@ const UserProfile = () => {
 
       const userData = await customerController.getCustomer();
 
-      // console.log('user body -> : ', userData.body);
       if (userData.body) return userData.body;
 
       throw Error('No customer info');
@@ -44,21 +35,12 @@ const UserProfile = () => {
 
     getData()
       .then((response) => {
-        // console.log('user response -> : ', response);
         setUserInfo({
           firstName: response.firstName ?? '',
           lastName: response.lastName ?? '',
           email: response.email,
           dateOfBirth: response.dateOfBirth ?? '',
         });
-
-        // setAddresses({
-        //   addresses: response.addresses,
-        //   billingAddressIds: response.billingAddressIds ?? [],
-        //   shippingAddressIds: response.shippingAddressIds ?? [],
-        //   defaultBillingAddressId: response.defaultBillingAddressId ?? '',
-        //   defaultShippingAddressId: response.defaultShippingAddressId ?? '',
-        // });
       })
       .catch();
   }, []);

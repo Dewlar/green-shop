@@ -1,7 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { ClientResponse } from '@commercetools/sdk-client-v2';
+// import { ClientResponse } from '@commercetools/sdk-client-v2';
 import {
+  ClientResponse,
   Customer,
   MyCustomerChangeEmailAction,
   MyCustomerSetDateOfBirthAction,

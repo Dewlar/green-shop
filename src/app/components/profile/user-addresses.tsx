@@ -19,7 +19,6 @@ const UserAddresses = () => {
 
       const userData = await customerController.getCustomer();
 
-      // console.log('user body -> : ', userData.body);
       if (userData.body) return userData.body;
 
       throw Error('No customer info');

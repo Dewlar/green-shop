@@ -1,5 +1,5 @@
 import { HttpErrorType, TokenStore } from '@commercetools/sdk-client-v2';
-import { ClientResponse, Customer } from '@commercetools/platform-sdk';
+import { ClientResponse, Customer, MyCustomerChangePassword, MyCustomerUpdate } from '@commercetools/platform-sdk';
 import TokenService from './TokenService';
 import { UserCredentialData, getProjectKey } from './helpers';
 import RefreshTokenClient from './RefreshTokenClient';
@@ -23,9 +23,7 @@ class CustomerRepository {
       const client = new AnonymousClient();
       const apiRoot = client.getApiRoot();
 
-      const response = await apiRoot.withProjectKey({ projectKey: this.projectKey }).get().execute();
-
-      console.log('Create Anonymous Customer Response:', response);
+      await apiRoot.withProjectKey({ projectKey: this.projectKey }).get().execute();
 
       return this.tokenService.get();
     } catch (error) {
@@ -57,8 +55,6 @@ class CustomerRepository {
         })
         .execute();
 
-      console.log('Login Customer Response:', tokenApiResult);
-
       const authClient = new AuthClient(userData);
       const authApiRoot = authClient.getApiRoot();
       this.authApiResponse = await authApiRoot
@@ -68,7 +64,6 @@ class CustomerRepository {
         .me()
         .get()
         .execute();
-      console.log('Auth Customer Response:', this.authApiResponse);
 
       const token = this.tokenService.get();
 

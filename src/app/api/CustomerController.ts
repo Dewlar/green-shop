@@ -1,5 +1,5 @@
-import { ClientResponse, TokenStore } from '@commercetools/sdk-client-v2';
-import { Customer, MyCustomerChangePassword, MyCustomerUpdate } from '@commercetools/platform-sdk';
+import { TokenStore } from '@commercetools/sdk-client-v2';
+import { ClientResponse, Customer, MyCustomerChangePassword, MyCustomerUpdate } from '@commercetools/platform-sdk';
 import CustomerRepository from './CustomerRepository';
 import { UserCredentialData } from './helpers';
 

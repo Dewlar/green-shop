@@ -45,8 +45,6 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
       ...prev,
       [name]: value,
     }));
-    // console.log(isDefaultBillingAddress, isDefaultShippingAddress);
-    // console.log(customerData, 'address');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,7 +54,6 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
     } else {
       setIsEdit(true);
       if (address.isNew) {
-        console.log('галя, ты глянь - новый !');
         // adding a new address;
         const customerController = new CustomerController();
 
@@ -128,7 +125,6 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
           }
         }
       } else {
-        console.log('галя, замена!');
         // address update;
         const customerController = new CustomerController();
 
@@ -228,8 +224,6 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
             defaultShippingAddressId: deleteAddressResponse.body.defaultShippingAddressId ?? '',
           });
         }
-
-        // console.log('deleteAddressResponse -> ', deleteAddressResponse);
 
         toast.success('Delete address was successful');
       }

@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import createApiRoot from '../../signup/connect/client';
 
 export const getProductData = () => {
@@ -5,7 +6,7 @@ export const getProductData = () => {
     .products()
     .get()
     .execute()
-    .catch((err: string) => console.log(err));
+    .catch((err: string) => toast.error(err));
 };
 
 export const getProductDataTypes = () => {
@@ -13,14 +14,14 @@ export const getProductDataTypes = () => {
     .productTypes()
     .get()
     .execute()
-    .catch((err: string) => console.log(err));
+    .catch((err: string) => toast.error(err));
 };
 export const getProductDiscounts = () => {
   return createApiRoot()
     .productDiscounts()
     .get()
     .execute()
-    .catch((err: string) => console.log(err));
+    .catch((err: string) => toast.error(err));
 };
 export const getOneProduct = (product: string) => {
   return createApiRoot().products().withId({ ID: product }).get().execute();

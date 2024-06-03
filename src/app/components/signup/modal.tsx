@@ -34,7 +34,6 @@ const MyModal = ({ className, classText, errorText, type, login, password /* , r
               setIsAuth(true);
               setAuthData(response.token);
 
-              toast((response.apiResult as HttpErrorType).message);
               navigate('/');
             }
 
