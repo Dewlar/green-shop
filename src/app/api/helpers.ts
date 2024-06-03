@@ -8,8 +8,9 @@ import {
   RefreshAuthMiddlewareOptions,
   TokenStore,
 } from '@commercetools/sdk-client-v2';
-import { CustomerSignInResult } from '@commercetools/platform-sdk';
+import { Customer, CustomerSignInResult, ProductProjection } from '@commercetools/platform-sdk';
 import TokenService from './TokenService';
+import { IApiResponse, ICustomerData, IProductResultsData, IProductDataForRender } from './types';
 
 export interface ExistingTokenFlowOptions {
   authorization: string;
@@ -26,6 +27,7 @@ export interface UserCredentialData {
 export interface ApiLoginResult {
   apiResult: ClientResponse<CustomerSignInResult> | ClientResponse<ClientResult> | HttpErrorType;
   token: TokenStore | null;
+  customer: ClientResponse<Customer>;
 }
 
 export const getProjectKey = (): string => {
@@ -126,4 +128,111 @@ export function storageGet<T>(key: string): T | null {
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 export const storageSet = (key: string, data: any): void => {
   localStorage.setItem(`${storageKey}_${key}`, JSON.stringify(data));
+};
+
+export const createCustomerData = (data: IApiResponse): ICustomerData => {
+  const userData: ICustomerData = {
+    email: data.body.email,
+    password: data.body.password,
+    firstName: data.body.firstName,
+    lastName: data.body.lastName,
+    dateOfBirth: data.body.dateOfBirth,
+    id: data.body.id,
+    addresses: data.body.addresses,
+    shippingAddressIds: data.body.shippingAddressIds,
+    billingAddressIds: data.body.billingAddressIds,
+  };
+
+  return userData;
+};
+
+export const formatPriceInEuro = (price: number): string => {
+  const convertPrice = Number((price / 100).toFixed(2));
+  return new Intl.NumberFormat('de-DE', {
+    style: 'currency',
+    currency: 'EUR',
+  }).format(convertPrice);
+};
+
+export const createProductData = (data: IProductResultsData[]): IProductDataForRender[] => {
+  const productsData: IProductDataForRender[] = data.map((item) => ({
+    id: item.id,
+    name: item.masterData.staged.name.en,
+    href: '#',
+    priceRender: {
+      discount: item.masterData.current.masterVariant.prices[0].discounted
+        ? item.masterData.current.masterVariant.prices[0].discounted?.value.centAmount
+        : 0,
+      currentPrice: item.masterData.current.masterVariant.prices?.length
+        ? item.masterData.current.masterVariant.prices[0].value.centAmount
+        : 0,
+    },
+    imageSrc: item.masterData.current.masterVariant.images[0].url,
+    imageAlt: '',
+  }));
+  return productsData;
+};
+
+export const classNames = (...classes: string[]) => {
+  return classes.filter(Boolean).join(' ');
+};
+
+export const sortByNameAZ = (products: IProductDataForRender[]): IProductDataForRender[] => {
+  return products.sort((a, b) => a.name.localeCompare(b.name));
+};
+
+export const sortByNameZA = (products: IProductDataForRender[]): IProductDataForRender[] => {
+  return products.sort((a, b) => b.name.localeCompare(a.name));
+};
+
+export const sortByPriceSortLowToHigh = (products: IProductDataForRender[]): IProductDataForRender[] => {
+  return products.sort((a, b) => {
+    const priceA = a.priceRender.discount !== 0 ? a.priceRender.discount : a.priceRender.currentPrice;
+    const priceB = b.priceRender.discount !== 0 ? b.priceRender.discount : b.priceRender.currentPrice;
+    return priceA - priceB;
+  });
+};
+
+export const sortByPriceSortHighToLow = (products: IProductDataForRender[]): IProductDataForRender[] => {
+  return products.sort((a, b) => {
+    const priceA = a.priceRender.discount !== 0 ? a.priceRender.discount : a.priceRender.currentPrice;
+    const priceB = b.priceRender.discount !== 0 ? b.priceRender.discount : b.priceRender.currentPrice;
+    return priceB - priceA;
+  });
+};
+
+export const getSortParams = (sortOption: string): string => {
+  switch (sortOption) {
+    case 'Price: Low to High':
+      return 'masterData.current.masterVariant.prices.value.centAmount asc';
+    case 'Price: High to Low':
+      return 'masterData.current.masterVariant.prices.value.centAmount desc';
+    case 'A-Z':
+      return 'masterData.current.name.en asc';
+    case 'Z-A':
+      return 'masterData.current.name.en desc';
+    default:
+      return '';
+  }
+};
+
+export const getAttributes = (products: ProductProjection[]): string[] => {
+  const attributes: string[] = [];
+
+  products.forEach((product) => {
+    product.masterVariant.attributes?.forEach((item: { name: string; value: string }) => {
+      if (item.name === 'Size' && !attributes.includes(item.value)) {
+        attributes.push(item.value);
+      }
+    });
+    product.variants?.forEach((variant) => {
+      variant.attributes?.forEach((item: { name: string; value: string }) => {
+        if (item.name === 'Size' && !attributes.includes(item.value)) {
+          attributes.push(item.value);
+        }
+      });
+    });
+  });
+
+  return attributes.sort();
 };
