@@ -1,3 +1,5 @@
+import { Product } from '@commercetools/platform-sdk';
+import { LoadingType } from 'react-loading';
 import { NavigateFunction } from 'react-router-dom';
 
 const sample = () => 1;
@@ -70,6 +72,24 @@ export interface ModalError {
 
 export interface TypeOfZip {
   [key: string]: RegExp;
+}
+
+export interface TypeLoading {
+  type: LoadingType;
+  color: string;
+}
+export interface ModalSlider {
+  data: Product;
+  setModalSlider?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export interface TypeSizeBtn {
+  label: string;
+  setSelectedSize: React.Dispatch<React.SetStateAction<number>>;
+  color: string;
+  colorHover: string;
+}
+export interface TypeSizesOrder {
+  [key: string]: number;
 }
 
 export default { sample, sample2 };

@@ -1,28 +1,30 @@
-import React, { useState } from 'react';
-import SliderMain from '../../components/product/slider/sliderLayout';
-import {
-  getProductData,
-  // getProductDataTypes,
-  // getProductDiscounts,
-  getOneProduct,
-} from '../../components/product/getProduct/getDataProduct';
+import React, { useEffect, useState } from 'react';
+import { Product } from '@commercetools/platform-sdk';
+import ProductMain from '../../components/product/mainLayout';
+import HeaderWidthMobile from '../../components/header/header-width-mobile';
+import Footer from '../../components/footer/footer';
+import { getOneProduct, getProductData } from '../../components/product/getProduct/getDataProduct';
 
 const ProductForm = () => {
-  const [productStorage, setProduct] = useState('');
-  getProductData().then((item) => {
-    console.log(item);
-  });
-  // getProductDataTypes().then((item) => {
-  //   console.log(item);
-  // });
-  // getProductDiscounts().then((item) => {
-  //   console.log(item);
-  // });
-  getOneProduct('8b164fdb-3665-4f13-b3a0-6bb1e23123c2').then(({ body }) => {
-    setProduct(JSON.stringify(body));
-    console.log(productStorage);
-  });
-  return <SliderMain data={productStorage}></SliderMain>;
+  const [productStorage, setProduct] = useState({} as Product);
+
+  useEffect(() => {
+    async function response() {
+      await getProductData();
+      await getOneProduct('76f95e70-0cd4-4b42-94d5-de5f2c288b55').then(({ body }) => {
+        setProduct(body);
+      });
+    }
+    response();
+  }, []);
+
+  return (
+    <div>
+      <HeaderWidthMobile></HeaderWidthMobile>
+      <ProductMain {...productStorage}></ProductMain>
+      <Footer></Footer>
+    </div>
+  );
 };
 
 export default ProductForm;
