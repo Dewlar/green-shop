@@ -11,10 +11,10 @@ import Home from './pages/home';
 import Signup from './pages/signup';
 import UserProfile from './pages/user-profile';
 import RouteGuard from './route/route-guard';
-// import { useStateContext } from './state/state-context';
+import { useStateContext } from './state/state-context';
 
 const App = () => {
-  // const { auth } = useStateContext();
+  const { isAuth } = useStateContext();
   return (
     <Routes>
       <Route element={<Product />} path="catalog/:id" />
@@ -23,7 +23,7 @@ const App = () => {
       <Route element={<Home />} path="/" />
       <Route
         element={
-          <RouteGuard redirectPath={'/'}>
+          <RouteGuard redirectPath={'/'} isRedirect={isAuth}>
             <Login />
           </RouteGuard>
         }
@@ -31,7 +31,14 @@ const App = () => {
       />
       <Route element={<Signup />} path="signup" />
       <Route element={<About />} path="about" />
-      <Route element={<UserProfile />} path="profile" />
+      <Route
+        element={
+          <RouteGuard redirectPath={'/'} isRedirect={!isAuth}>
+            <UserProfile />
+          </RouteGuard>
+        }
+        path="profile"
+      />
       <Route element={<Page404 />} path="*" />
     </Routes>
   );

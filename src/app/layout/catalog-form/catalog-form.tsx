@@ -31,7 +31,7 @@ const CatalogForm = () => {
   const [sortName, setSortName] = useState<string>('');
   const [sortMethod, setSortMethod] = useState<string>('name.en asc');
   const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionForCTP);
-  const [priceRange, setPriceRange] = useState([0, 20000]);
+  const [priceRange, setPriceRange] = useState([0, 200000]);
   const [inputSearch, setInputSearch] = useState('');
   console.log('products0000000000000000', products);
 
@@ -182,7 +182,7 @@ const CatalogForm = () => {
                         <Range
                           step={100}
                           min={0}
-                          max={20000}
+                          max={200000}
                           values={priceRange}
                           onChange={(values) => setPriceRange(values)}
                           renderTrack={({ props, children }) => (
@@ -218,6 +218,10 @@ const CatalogForm = () => {
                   type="text"
                   value={inputSearch}
                   onChange={(e) => handleInputSearch(e.target.value)}
+                  onBlur={() => {
+                    setInputSearch('');
+                    handleCategoryClick('', '');
+                  }}
                   placeholder="Search"
                   className="block w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                 />
@@ -341,7 +345,7 @@ const CatalogForm = () => {
                     <Range
                       step={100}
                       min={0}
-                      max={20000}
+                      max={200000}
                       values={priceRange}
                       onChange={(values) => setPriceRange(values)}
                       renderTrack={({ props, children }) => (

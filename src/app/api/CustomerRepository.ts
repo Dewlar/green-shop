@@ -78,13 +78,46 @@ class CustomerRepository {
         customer: this.authApiResponse,
       };
     } catch (error) {
-      console.error('Login Error:', error);
+      // console.error('Login Error:', error);
       return {
         apiResult: error as HttpErrorType,
         token: null,
         customer: this.authApiResponse,
       };
     }
+  }
+
+  public async getCustomer(): Promise<ClientResponse<Customer>> {
+    const client = new RefreshTokenClient();
+    const apiRoot = client.getApiRoot();
+
+    const result = await apiRoot.withProjectKey({ projectKey: this.projectKey }).me().get().execute();
+    return result as ClientResponse<Customer>;
+  }
+
+  public async updateCustomer(data: MyCustomerUpdate): Promise<ClientResponse<Customer>> {
+    const client = new RefreshTokenClient();
+    const apiRoot = client.getApiRoot();
+    const result = await apiRoot
+      .withProjectKey({ projectKey: this.projectKey })
+      .me()
+      .post({
+        body: data,
+      })
+      .execute();
+    return result as ClientResponse<Customer>;
+  }
+
+  public async changeCustomerPassword(data: MyCustomerChangePassword): Promise<ClientResponse<Customer>> {
+    const client = new RefreshTokenClient();
+    const apiRoot = client.getApiRoot();
+    const result = await apiRoot
+      .withProjectKey({ projectKey: this.projectKey })
+      .me()
+      .password()
+      .post({ body: data })
+      .execute();
+    return result as ClientResponse<Customer>;
   }
 }
 

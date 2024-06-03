@@ -45,8 +45,11 @@ body {
 
   .Toastify__toast {
     cursor: pointer;
-
   }
+}
+
+button {
+  user-select: none;
 }
 
 .signUpFormWrapper {

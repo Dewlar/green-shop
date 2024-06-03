@@ -40,7 +40,7 @@ const footerNavigation = {
     { name: 'Catalog', href: '/catalog' },
     { name: 'About us', href: '/about' },
     { name: 'Registration', href: '/signup' },
-    { name: 'Your account', href: '/login' },
+    { name: 'Your account', href: '/profile' },
   ],
   follow: [
     { name: 'Dewlar', href: 'https://github.com/Dewlar' },

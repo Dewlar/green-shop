@@ -27,9 +27,9 @@ const getEndpoints = (allInputs: Array<string>) => {
     firstName: allInputValues[0],
     lastName: allInputValues[1],
     dateOfBirth: allInputValues[2],
-    addresses: [billing, shipping],
-    billingAddresses: [0],
-    shippingAddresses: allInputValues[9] ? [1] : [0],
+    addresses: allInputValues[9] ? [billing, shipping] : [billing],
+    billingAddresses: allInputValues[9] ? [0, 1] : [0],
+    shippingAddresses: allInputValues[9] ? [0, 1] : [0],
     email: allInputValues[11],
     password: allInputValues[12],
   };
