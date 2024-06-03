@@ -57,7 +57,7 @@ const Header: FC<HeaderProps> = ({ setOpen, depth = '1' }) => {
               {/* Logo (lg-) */}
               <Link to="/" className="lg:hidden">
                 <span className="sr-only">Green shop</span>
-                <img src="./assets/logo/logo.png" alt="logo" className="h-8 w-auto" />
+                <img src={`${DepthImg[depth]}assets/logo/logo.png`} alt="logo" className="h-8 w-auto" />
               </Link>
 
               <div className="flex flex-1 items-center justify-end">
