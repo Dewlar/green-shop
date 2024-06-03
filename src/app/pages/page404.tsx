@@ -23,7 +23,7 @@ const Page404 = () => {
         <div className="mt-6 flex items-center justify-center gap-x-6">
           <Link
             to="/"
-            className="rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline-none"
           >
             Go back home
           </Link>

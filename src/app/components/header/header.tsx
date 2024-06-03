@@ -5,13 +5,15 @@ import mocks from '../mocks-data/mocks';
 import { useStateContext } from '../../state/state-context';
 import CartIcon from './cart-icon';
 import UserIconDropdown from './user-icon-dropdown';
+import DepthImg from './enumDepth';
 
 interface HeaderProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  depth?: string;
 }
-const Header: FC<HeaderProps> = ({ setOpen }) => {
-  const { auth } = useStateContext();
+const Header: FC<HeaderProps> = ({ setOpen, depth = '1' }) => {
+  const { isAuth } = useStateContext();
 
   return (
     <header className="relative">
@@ -24,7 +26,7 @@ const Header: FC<HeaderProps> = ({ setOpen }) => {
               <div className="hidden lg:flex lg:flex-1 lg:items-center">
                 <Link to="/">
                   <span className="sr-only">Green shop</span>
-                  <img className="h-8 w-auto" src="./assets/logo/logo.png" alt="logo" />
+                  <img className="h-8 w-auto" src={`${DepthImg[depth]}assets/logo/logo.png`} alt="logo" />
                 </Link>
               </div>
 
@@ -32,7 +34,7 @@ const Header: FC<HeaderProps> = ({ setOpen }) => {
                 <div className="flex h-full justify-center items-center space-x-8">
                   {mocks.navigation.pages.map((item) => {
                     return (
-                      <Link key={item.name} to={item.href} className="text-gray-500 hover:text-gray-600">
+                      <Link key={item.name} to={item.href} className="text-gray-400 hover:text-gray-600 font-semibold">
                         {item.name}
                       </Link>
                     );
@@ -55,11 +57,11 @@ const Header: FC<HeaderProps> = ({ setOpen }) => {
               {/* Logo (lg-) */}
               <Link to="/" className="lg:hidden">
                 <span className="sr-only">Green shop</span>
-                <img src="./assets/logo/logo.png" alt="logo" className="h-8 w-auto" />
+                <img src={`${DepthImg[depth]}assets/logo/logo.png`} alt="logo" className="h-8 w-auto" />
               </Link>
 
               <div className="flex flex-1 items-center justify-end">
-                {auth.get.isAuth ? (
+                {isAuth ? (
                   <div className="flex items-center lg:ml-8">
                     {/* User icon dropdown menu */}
                     <UserIconDropdown></UserIconDropdown>

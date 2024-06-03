@@ -3,13 +3,10 @@ import { Menu, Transition } from '@headlessui/react';
 import { UserIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 import { useStateContext } from '../../state/state-context';
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '../../models';
 
 const UserIconDropdown = () => {
-  const { auth } = useStateContext();
+  const { logout } = useStateContext();
 
   return (
     <div className="flex">
@@ -46,7 +43,7 @@ const UserIconDropdown = () => {
             <Menu.Item>
               {({ active }) => (
                 <button
-                  onClick={auth.logout}
+                  onClick={logout}
                   className={classNames(active ? 'bg-gray-200' : '', 'block w-full px-4 py-2 text-sm text-gray-700')}
                 >
                   Logout

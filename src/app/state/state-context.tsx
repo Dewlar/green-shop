@@ -1,48 +1,59 @@
 import React, { createContext, useState, useContext, ReactNode, FC, useEffect } from 'react';
 // import { useLocation, useNavigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { Customer, ClientResponse } from '@commercetools/platform-sdk';
 import CustomerController from '../api/CustomerController';
 import TokenService from '../api/TokenService';
 import { LocalStorageKeysEnum, storageGet, storageSet } from '../api/helpers';
+import { ICategoryData } from '../api/types';
 
-export interface IAuth {
-  isAuth: boolean;
-  authData: IAuthData;
-}
 export interface IAuthData {
-  token?: string;
-  expirationTime?: number;
+  token: string;
+  expirationTime: number;
   refreshToken?: string;
 }
 
-export interface IAuthContext {
-  get: IAuth;
-  set: React.Dispatch<React.SetStateAction<IAuth>>;
+export interface IState {
+  isAuth: boolean;
+  setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
+  authData: IAuthData;
+  customerData: ClientResponse<Customer>;
+  categoriesData: ICategoryData[];
+  setAuthData: React.Dispatch<React.SetStateAction<IAuthData>>;
+  setCustomerData: React.Dispatch<React.SetStateAction<ClientResponse<Customer>>>;
+  setCategories: React.Dispatch<React.SetStateAction<ICategoryData[]>>;
   logout: () => void;
 }
-export interface StateContextType {
-  auth: IAuthContext;
-}
-const initialContext: StateContextType = {
-  auth: {
-    get: {
-      isAuth: false,
-      authData: {
-        token: '',
-        expirationTime: 0,
-        refreshToken: '',
-      },
+
+function getInitialState() {
+  const isAuth = storageGet<boolean>(LocalStorageKeysEnum.IS_AUTH);
+
+  return {
+    isAuth: isAuth ?? false,
+    authData: {
+      token: '',
+      expirationTime: 0,
     },
-    set: () => {},
-    logout: () => {},
-  },
-};
+    customerData: {
+      id: '',
+      email: '',
+      firstName: '',
+      lastName: '',
+      dateOfBirth: '',
+      password: '',
+      addresses: [],
+      shippingAddressIds: [],
+      billingAddressIds: [],
+    } as unknown as ClientResponse<Customer>,
+    categoriesData: [],
+  };
+}
 
 type Props = { children: ReactNode };
 // create context
-const StateContext = createContext<StateContextType>(initialContext);
+const StateContext = createContext<IState | undefined>(undefined);
 // custom Hook to use state context in all components ---> see header for an example of use useStateContext
-export const useStateContext = (): StateContextType => {
+export const useStateContext = () => {
   const context = useContext(StateContext);
   if (context === undefined) throw new Error('useStateContext must be used within a StateProvider');
 
@@ -50,7 +61,10 @@ export const useStateContext = (): StateContextType => {
 };
 
 export const StateProvider: FC<Props> = ({ children }) => {
-  const [getAuth, setAuth] = useState(initialContext.auth.get);
+  const [isAuth, setIsAuth] = useState(getInitialState().isAuth);
+  const [authData, setAuthData] = useState<IAuthData>(getInitialState().authData);
+  const [customerData, setCustomerData] = useState<ClientResponse<Customer>>(getInitialState().customerData);
+  const [categoriesData, setCategories] = useState<ICategoryData[]>(getInitialState().categoriesData);
 
   const savedToken = new TokenService();
   const customerController = new CustomerController();
@@ -59,21 +73,36 @@ export const StateProvider: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     if (savedToken.get().token !== '') {
-      setAuth({ isAuth: storageGet(LocalStorageKeysEnum.IS_AUTH) ?? false, authData: savedToken.get() });
+      setIsAuth(storageGet<boolean>(LocalStorageKeysEnum.IS_AUTH) ?? false);
+      setAuthData(savedToken.get());
     } else customerController.createAnonymousCustomer();
   }, []);
 
-  const auth = {
-    get: getAuth,
-    set: setAuth,
-    logout: () => {
-      savedToken.removeToken();
-      storageSet(LocalStorageKeysEnum.IS_AUTH, false);
-      customerController.createAnonymousCustomer();
-      setAuth({ isAuth: false, authData: savedToken.get() });
-      navigate('/', { replace: true });
-    },
+  const logout = () => {
+    savedToken.removeToken();
+    storageSet(LocalStorageKeysEnum.IS_AUTH, false);
+    customerController.createAnonymousCustomer();
+    setIsAuth(false);
+    // setAuthData - example of using the set function in useState, if the new state depends on the previous state, to avoid side effects
+    setAuthData((prev) => ({ ...prev, ...savedToken.get() }));
+    navigate('/', { replace: true });
   };
 
-  return <StateContext.Provider value={{ auth }}>{children}</StateContext.Provider>;
+  return (
+    <StateContext.Provider
+      value={{
+        isAuth,
+        setIsAuth,
+        authData,
+        setAuthData,
+        customerData,
+        setCustomerData,
+        categoriesData,
+        setCategories,
+        logout,
+      }}
+    >
+      {children}
+    </StateContext.Provider>
+  );
 };
