@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { forwardRef } from 'react';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { classNames } from '../../models';
 
@@ -11,7 +11,9 @@ interface IProps {
   setShowPassword: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PasswordInput: FC<IProps> = ({ name, value, onChange, disabled, showPassword, setShowPassword }) => {
+const PasswordInput = forwardRef<HTMLInputElement, IProps>((props, ref) => {
+  const { name, value, onChange, disabled, showPassword, setShowPassword } = props;
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -25,6 +27,7 @@ const PasswordInput: FC<IProps> = ({ name, value, onChange, disabled, showPasswo
         value={value}
         onChange={onChange}
         disabled={disabled}
+        ref={ref}
         className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
       />
       <button
@@ -43,6 +46,7 @@ const PasswordInput: FC<IProps> = ({ name, value, onChange, disabled, showPasswo
       </button>
     </div>
   );
-};
+});
 
+PasswordInput.displayName = 'PasswordInput';
 export default PasswordInput;
