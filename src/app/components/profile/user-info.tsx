@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-// import { ClientResponse } from '@commercetools/sdk-client-v2';
 import {
   ClientResponse,
   Customer,
@@ -10,9 +9,11 @@ import {
   MyCustomerSetLastNameAction,
   MyCustomerUpdateAction,
 } from '@commercetools/platform-sdk';
+import { Controller, useForm } from 'react-hook-form';
 import { IUserInfo } from '../../models';
 import CustomerController from '../../api/CustomerController';
 import ButtonEditUpdate from './button-edit-update';
+import { validationRules } from '../signup/regExp';
 
 interface Props {
   userInfo: IUserInfo;
@@ -21,27 +22,24 @@ interface Props {
 
 const UserInfo: FC<Props> = ({ userInfo, setUserInfo }) => {
   const [isEdit, setIsEdit] = useState(true);
-  const [formValues, setFormValues] = useState(userInfo);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+    reset,
+  } = useForm<IUserInfo>({
+    mode: 'onChange',
+    defaultValues: userInfo,
+  });
 
   useEffect(() => {
-    setFormValues(userInfo);
-  }, [userInfo]);
+    reset(userInfo);
+  }, [userInfo, reset]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormValues((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = (data: IUserInfo) => {
+    console.log(isValid);
     if (isEdit) {
-      setIsEdit(false);
-    } else {
-      setIsEdit(true);
-
       let currentVersion;
 
       const updateUser = async (): Promise<ClientResponse<Customer>> => {
@@ -49,22 +47,22 @@ const UserInfo: FC<Props> = ({ userInfo, setUserInfo }) => {
 
         const updateEmail: MyCustomerChangeEmailAction = {
           action: 'changeEmail',
-          email: formValues.email,
+          email: data.email,
         };
 
         const updateFirstName: MyCustomerSetFirstNameAction = {
           action: 'setFirstName',
-          firstName: formValues.firstName,
+          firstName: data.firstName,
         };
 
         const updateLastName: MyCustomerSetLastNameAction = {
           action: 'setLastName',
-          lastName: formValues.lastName,
+          lastName: data.lastName,
         };
 
         const updateDateOfBirth: MyCustomerSetDateOfBirthAction = {
           action: 'setDateOfBirth',
-          dateOfBirth: formValues.dateOfBirth,
+          dateOfBirth: data.dateOfBirth,
         };
 
         const actions: MyCustomerUpdateAction[] = [updateEmail, updateFirstName, updateLastName, updateDateOfBirth];
@@ -85,11 +83,12 @@ const UserInfo: FC<Props> = ({ userInfo, setUserInfo }) => {
 
       updateUser()
         .then(() => {
-          setUserInfo(formValues);
+          setUserInfo(data);
+          reset(data);
           toast.success('Saving was successful');
         })
         .catch((error) => {
-          setFormValues(userInfo);
+          // setFormValues(userInfo);
           toast.error(error.message);
         });
     }
@@ -102,23 +101,28 @@ const UserInfo: FC<Props> = ({ userInfo, setUserInfo }) => {
       </div>
 
       {/* user info */}
-      <form className="md:col-span-2" onSubmit={handleSubmit}>
+      <form className="md:col-span-2" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div className="sm:col-span-3">
             <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
               First name
             </label>
             <div className="mt-2">
-              <input
-                type="text"
+              <Controller
                 name="firstName"
-                id="first-name"
-                disabled={isEdit}
-                value={formValues.firstName}
-                onChange={handleInputChange}
-                autoComplete="given-name"
-                className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                control={control}
+                rules={validationRules.name}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    id="first-name"
+                    type="text"
+                    disabled={isEdit}
+                    className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                  />
+                )}
               />
+              {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName.message}</p>}
             </div>
           </div>
 
@@ -127,16 +131,21 @@ const UserInfo: FC<Props> = ({ userInfo, setUserInfo }) => {
               Last name
             </label>
             <div className="mt-2">
-              <input
-                type="text"
+              <Controller
                 name="lastName"
-                id="last-name"
-                disabled={isEdit}
-                value={formValues.lastName}
-                onChange={handleInputChange}
-                autoComplete="family-name"
-                className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                control={control}
+                rules={validationRules.surname}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    id="last-name"
+                    type="text"
+                    disabled={isEdit}
+                    className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                  />
+                )}
               />
+              {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName.message}</p>}
             </div>
           </div>
 
@@ -145,16 +154,21 @@ const UserInfo: FC<Props> = ({ userInfo, setUserInfo }) => {
               Email address
             </label>
             <div className="mt-2">
-              <input
-                id="email"
+              <Controller
                 name="email"
-                type="email"
-                disabled={isEdit}
-                value={formValues.email}
-                onChange={handleInputChange}
-                autoComplete="email"
-                className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                control={control}
+                rules={validationRules.email}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    id="email"
+                    type="email"
+                    disabled={isEdit}
+                    className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                  />
+                )}
               />
+              {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
             </div>
           </div>
           <div className="sm:col-span-3">
@@ -162,22 +176,27 @@ const UserInfo: FC<Props> = ({ userInfo, setUserInfo }) => {
               Date of birth
             </label>
             <div className="mt-2">
-              <input
-                id="date"
+              <Controller
                 name="dateOfBirth"
-                type="date"
-                disabled={isEdit}
-                value={formValues.dateOfBirth}
-                onChange={handleInputChange}
-                autoComplete="email"
-                className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                control={control}
+                rules={validationRules.dateOfBirth}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    id="dateOfBirth"
+                    type="date"
+                    disabled={isEdit}
+                    className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                  />
+                )}
               />
+              {errors.dateOfBirth && <p className="text-red-500 text-xs mt-1">{errors.dateOfBirth.message}</p>}
             </div>
           </div>
         </div>
 
         <div className="mt-8">
-          <ButtonEditUpdate isEdit={isEdit} />
+          <ButtonEditUpdate isEdit={isEdit} setIsEdit={setIsEdit} />
         </div>
       </form>
     </div>

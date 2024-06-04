@@ -19,11 +19,11 @@ export interface IUserAddresses {
 export enum CountryEnum {
   DE = 'Germany',
   NL = 'Netherlands',
-  AU = 'Austria',
+  AT = 'Austria',
 }
 
 export enum States {
   Germany = 'DE',
   Netherlands = 'NL',
-  Austria = 'AU',
+  Austria = 'AT',
 }
