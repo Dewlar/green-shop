@@ -1,4 +1,5 @@
 import { TypeOfInputs, TypeOfZip } from '../../models';
+import isOlderThan13 from './checkDate';
 
 export const regulars: TypeOfInputs = {
   name: /^[a-zA-Z]+$/,
@@ -40,7 +41,7 @@ const validationTemplate = {
 
 export const validationRules = {
   name: {
-    required: true,
+    required: 'Name is required',
     validate: {
       pattern1: (value: string) => validationTemplate.name.test(value) || 'Letter required',
     },
@@ -51,8 +52,8 @@ export const validationRules = {
       pattern1: (value: string) => validationTemplate.email.test(value) || 'Invalid format',
     },
   },
-  surName: {
-    required: true,
+  surname: {
+    required: 'Last name is required',
     validate: {
       pattern1: (value: string) => validationTemplate.surname.test(value) || 'Invalid format',
     },
@@ -61,6 +62,7 @@ export const validationRules = {
     required: 'Is required',
     validate: {
       pattern1: (value: string) => validationTemplate.dateOfBirth.test(value) || 'Invalid format',
+      pattern2: (value: string) => isOlderThan13(value) || 'Must be older than 13.',
     },
   },
   password2: {
