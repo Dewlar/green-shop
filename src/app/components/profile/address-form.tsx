@@ -12,10 +12,12 @@ import {
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { toast } from 'react-toastify';
 import { HttpErrorType } from '@commercetools/sdk-client-v2';
+import { Controller, useForm } from 'react-hook-form';
 import { CountryEnum, IUserAddresses, States } from '../../models';
 import DefaultAddressSwitch from './default-address-switch';
 import ButtonEditUpdate from './button-edit-update';
 import CustomerController from '../../api/CustomerController';
+import { validationRules } from '../signup/regExp';
 
 interface IProps {
   address: Address & { isNew?: boolean };
@@ -27,44 +29,36 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
   const [isEdit, setIsEdit] = useState(!address.isNew ?? true);
   const [isDefaultBillingAddress, setIsDefaultBillingAddress] = useState(true);
   const [isDefaultShippingAddress, setIsDefaultShippingAddress] = useState(true);
-  const [formData, setFormData] = useState({
-    country: address.country,
-    streetName: address.streetName,
-    city: address.city,
-    postalCode: address.postalCode,
-  });
 
   useEffect(() => {
     setIsDefaultBillingAddress(address.id === customerData.defaultBillingAddressId);
     setIsDefaultShippingAddress(address.id === customerData.defaultShippingAddressId);
   }, [address, customerData]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+    reset,
+  } = useForm<Address>({
+    mode: 'onChange',
+    defaultValues: address.isNew ? { ...address, country: States.Germany } : address,
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: Address) => {
+    console.log('form valid -> ', isValid);
     if (isEdit) {
-      setIsEdit(false);
-    } else {
-      setIsEdit(true);
       if (address.isNew) {
-        // adding a new address;
         const customerController = new CustomerController();
 
         let currentVersion;
         const addAddress: MyCustomerAddAddressAction = {
           action: 'addAddress',
           address: {
-            country: formData.country ? formData.country : States.Germany,
-            city: formData.city,
-            streetName: formData.streetName,
-            postalCode: formData.postalCode,
+            country: data.country,
+            city: data.city,
+            streetName: data.streetName,
+            postalCode: data.postalCode,
           },
         };
         currentVersion = (await customerController.getCustomer()).body?.version;
@@ -121,23 +115,22 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
               });
             }
 
+            reset(data);
             toast.success('New address added successfully');
           }
         }
       } else {
-        // address update;
         const customerController = new CustomerController();
 
-        // let currentVersion;
         const actionsList = [];
         const changeAddress: MyCustomerChangeAddressAction = {
           action: 'changeAddress',
           addressId: address.id,
           address: {
-            country: formData.country,
-            city: formData.city,
-            streetName: formData.streetName,
-            postalCode: formData.postalCode,
+            country: data.country,
+            city: data.city,
+            streetName: data.streetName,
+            postalCode: data.postalCode,
           },
         };
         if (isDefaultShippingAddress) {
@@ -181,6 +174,7 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
           });
 
           if (changeAddressResponse.body) {
+            console.log('П О Е Х А Л И');
             setCustomerData({
               addresses: changeAddressResponse.body.addresses,
               billingAddressIds: changeAddressResponse.body.billingAddressIds ?? [],
@@ -190,6 +184,7 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
             });
           }
 
+          reset(data);
           toast.success('Change address was successful');
         }
       }
@@ -233,28 +228,37 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
   };
 
   return (
-    <form key={address.id} className="md:col-span-2 md:col-start-2 border rounded-md p-3" onSubmit={handleSubmit}>
+    <form
+      key={address.id}
+      className="md:col-span-2 md:col-start-2 border rounded-md p-3"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <div className="grid grid-cols-1 gap-x-6 gap-y-7 sm:grid-cols-6">
         <div className="sm:col-span-3">
           <label htmlFor="country" className="block text-sm font-medium leading-6 text-gray-900">
             Country
           </label>
           <div className="mt-2">
-            <select
-              id="country"
+            <Controller
               name="country"
-              disabled={isEdit}
-              autoComplete="country-name"
-              value={formData.country}
-              onChange={handleInputChange}
-              className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:max-w-xs sm:text-sm sm:leading-6"
-            >
-              {Object.entries(CountryEnum).map(([code, name]) => (
-                <option key={code} value={code}>
-                  {name}
-                </option>
-              ))}
-            </select>
+              control={control}
+              rules={validationRules.country}
+              render={({ field }) => (
+                <select
+                  {...field}
+                  id="country"
+                  disabled={isEdit}
+                  className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:max-w-xs sm:text-sm sm:leading-6"
+                >
+                  {Object.entries(CountryEnum).map(([code, name]) => (
+                    <option key={code} value={code}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
+              )}
+            />
+            {errors.country && <p className="text-red-500 text-xs mt-1">{errors.country.message}</p>}
           </div>
         </div>
 
@@ -263,16 +267,21 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
             Street address
           </label>
           <div className="mt-2">
-            <input
-              type="text"
+            <Controller
               name="streetName"
-              id="street-address"
-              disabled={isEdit}
-              value={formData.streetName}
-              onChange={handleInputChange}
-              autoComplete="street-address"
-              className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+              control={control}
+              rules={validationRules.streetName}
+              render={({ field }) => (
+                <input
+                  {...field}
+                  id="street-address"
+                  type="text"
+                  disabled={isEdit}
+                  className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                />
+              )}
             />
+            {errors.streetName && <p className="text-red-500 text-xs mt-1">{errors.streetName.message}</p>}
           </div>
         </div>
 
@@ -281,16 +290,21 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
             City
           </label>
           <div className="mt-2">
-            <input
-              type="text"
+            <Controller
               name="city"
-              id="city"
-              disabled={isEdit}
-              value={formData.city}
-              onChange={handleInputChange}
-              autoComplete="address-level2"
-              className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+              control={control}
+              rules={validationRules.city}
+              render={({ field }) => (
+                <input
+                  {...field}
+                  id="city"
+                  type="text"
+                  disabled={isEdit}
+                  className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                />
+              )}
             />
+            {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city.message}</p>}
           </div>
         </div>
 
@@ -299,16 +313,21 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
             ZIP / Postal code
           </label>
           <div className="mt-2">
-            <input
-              type="text"
+            <Controller
               name="postalCode"
-              id="postal-code"
-              disabled={isEdit}
-              value={formData.postalCode}
-              onChange={handleInputChange}
-              autoComplete="postal-code"
-              className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+              control={control}
+              rules={validationRules.zip}
+              render={({ field }) => (
+                <input
+                  {...field}
+                  id="postal-code"
+                  type="text"
+                  disabled={isEdit}
+                  className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                />
+              )}
             />
+            {errors.postalCode && <p className="text-red-500 text-xs mt-1">{errors.postalCode.message}</p>}
           </div>
         </div>
 
@@ -331,7 +350,7 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
       </div>
 
       <div className="mt-8 flex justify-between items-center">
-        <ButtonEditUpdate isEdit={isEdit} isNew={address.isNew} />
+        <ButtonEditUpdate isEdit={isEdit} isNew={address.isNew} setIsEdit={setIsEdit} />
         <button onClick={handleAddressDelete}>
           <TrashIcon className="text-green-500 w-7 h-7" />
         </button>

@@ -30,9 +30,9 @@ const validationTemplate = {
   name: /^[a-zA-Z]+$/,
   surname: /^[a-zA-Z]+$/,
   dateOfBirth: /^\d{4}-\d{2}-\d{2}$/,
-  country: /\b(?:germany|netherlands|austria)\b/i,
+  country: /\b(?:AT|DE|NL)\b/i,
   city: /^[a-zA-Z]+$/,
-  street: /[a-zA-Z]/,
+  street: /^[a-zA-Z]+$/,
   zip: /^\d+$/,
   email:
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -80,6 +80,31 @@ export const validationRules = {
       hasNumber: (value: string) => /\d/.test(value) || 'Password must contain at least one number',
       hasSpecialChar: (value: string) =>
         /[@$!%*?&]/.test(value) || 'Password must contain at least one special character',
+    },
+  },
+  country: {
+    // Д О Д Е Л А Т Ь
+    required: 'Is required',
+    validate: {
+      pattern1: (value: string | undefined) => validationTemplate.country.test(value || '') || 'Invalid format',
+    },
+  },
+  city: {
+    required: 'Is required',
+    validate: {
+      pattern1: (value: string | undefined) => validationTemplate.city.test(value || '') || 'Invalid format',
+    },
+  },
+  streetName: {
+    required: 'Is required',
+    validate: {
+      pattern1: (value: string | undefined) => validationTemplate.street.test(value || '') || 'Invalid format',
+    },
+  },
+  zip: {
+    required: 'Is required',
+    validate: {
+      pattern1: (value: string | undefined) => validationTemplate.zip.test(value || '') || 'Invalid format',
     },
   },
 };

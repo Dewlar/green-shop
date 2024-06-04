@@ -1,4 +1,4 @@
-import { StringObject } from '../../models/interfaces';
+import { StringObject } from '../../models';
 
 const states: StringObject = {
   Germany: 'DE',
