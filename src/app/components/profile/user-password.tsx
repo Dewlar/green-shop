@@ -156,7 +156,7 @@ const UserPassword: FC<IProps> = ({ email }) => {
                   />
                 )}
               />
-              {errors.currentPassword && <p className="text-red-500 text-xs mt-1">{errors.currentPassword.message}</p>}
+              {errors.newPassword && <p className="text-red-500 text-xs mt-1">{errors.newPassword.message}</p>}
             </div>
           </div>
         </div>
