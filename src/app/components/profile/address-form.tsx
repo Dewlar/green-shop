@@ -12,7 +12,7 @@ import {
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { toast } from 'react-toastify';
 import { HttpErrorType } from '@commercetools/sdk-client-v2';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { CountryEnum, IUserAddresses, States } from '../../models';
 import DefaultAddressSwitch from './default-address-switch';
 import ButtonEditUpdate from './button-edit-update';
@@ -29,6 +29,7 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
   const [isEdit, setIsEdit] = useState(!address.isNew ?? true);
   const [isDefaultBillingAddress, setIsDefaultBillingAddress] = useState(true);
   const [isDefaultShippingAddress, setIsDefaultShippingAddress] = useState(true);
+  const [isChangeCountry, setIsChangeCountry] = useState(false);
 
   useEffect(() => {
     setIsDefaultBillingAddress(address.id === customerData.defaultBillingAddressId);
@@ -40,10 +41,20 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
     handleSubmit,
     formState: { errors, isValid },
     reset,
+    setValue,
   } = useForm<Address>({
     mode: 'onChange',
     defaultValues: address.isNew ? { ...address, country: States.Germany } : address,
   });
+
+  const selectedCountry = useWatch({ control, name: 'country' });
+
+  useEffect(() => {
+    if (isChangeCountry) {
+      setValue('postalCode', '', { shouldValidate: true, shouldDirty: true, shouldTouch: true });
+      setIsChangeCountry(false);
+    }
+  }, [isChangeCountry, selectedCountry, setValue]);
 
   const onSubmit = async (data: Address) => {
     console.log('form valid -> ', isValid);
@@ -249,6 +260,10 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
                   id="country"
                   disabled={isEdit}
                   className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:max-w-xs sm:text-sm sm:leading-6"
+                  onChange={(e) => {
+                    field.onChange(e);
+                    setIsChangeCountry(true);
+                  }}
                 >
                   {Object.entries(CountryEnum).map(([code, name]) => (
                     <option key={code} value={code}>
@@ -316,7 +331,7 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
             <Controller
               name="postalCode"
               control={control}
-              rules={validationRules.zip}
+              rules={validationRules.postalCode(selectedCountry)}
               render={({ field }) => (
                 <input
                   {...field}

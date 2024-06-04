@@ -1,4 +1,4 @@
-import { TypeOfInputs, TypeOfZip } from '../../models';
+import { CountryEnum, TypeOfInputs, TypeOfZip } from '../../models';
 import isOlderThan13 from './checkDate';
 
 export const regulars: TypeOfInputs = {
@@ -38,7 +38,18 @@ const validationTemplate = {
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
   password: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*[@$!%*?&])[^\s]{8,}$/,
 };
-
+const getPostalCodePattern = (country: string) => {
+  switch (country) {
+    case 'NL':
+      return validationPostalCodeTemplate.netherlands;
+    case 'DE':
+      return validationPostalCodeTemplate.germany;
+    case 'AT':
+      return validationPostalCodeTemplate.austria;
+    default:
+      return null;
+  }
+};
 export const validationRules = {
   name: {
     required: 'Name is required',
@@ -107,4 +118,16 @@ export const validationRules = {
       pattern1: (value: string | undefined) => validationTemplate.zip.test(value || '') || 'Invalid format',
     },
   },
+  postalCode: (country: string) => ({
+    required: 'Postal code is required',
+    validate: {
+      pattern1: (value: string | undefined) => {
+        const pattern = getPostalCodePattern(country);
+        if (value === undefined || value === '') return 'Postal code is required';
+        return pattern
+          ? pattern.test(value) || `Invalid format for ${CountryEnum[country as keyof typeof CountryEnum]}`
+          : true;
+      },
+    },
+  }),
 };

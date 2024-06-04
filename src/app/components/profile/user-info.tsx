@@ -35,12 +35,10 @@ const UserInfo: FC<Props> = ({ userInfo, setUserInfo }) => {
 
   useEffect(() => {
     reset(userInfo);
-    console.log('date -> ', userInfo.dateOfBirth);
   }, [userInfo, reset]);
 
   const onSubmit = (data: IUserInfo) => {
-    // e.preventDefault();
-    console.log('isValid user info -> ', isValid, isEdit);
+    console.log(isValid);
     if (isEdit) {
       let currentVersion;
 
