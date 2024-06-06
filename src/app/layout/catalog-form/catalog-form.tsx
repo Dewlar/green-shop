@@ -82,6 +82,15 @@ const CatalogForm = () => {
           offset: 0,
           search: inputSearch,
         });
+        const responseResult = response.body?.results;
+        if (sortName === 'Price: High to Low' && responseResult) {
+          console.log(responseResult, 'неправильно');
+          responseResult.sort((a, b) => {
+            const aPrice = a?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
+            const bPrice = b?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
+            return bPrice - aPrice;
+          });
+        }
         setProducts(response.body?.results);
       } catch (error) {
         // console.error('Error fetching products:', error);
