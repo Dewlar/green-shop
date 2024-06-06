@@ -365,9 +365,21 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
 
       <div className="mt-8 flex justify-between items-center">
         <ButtonEditUpdate isEdit={isEdit} isNew={address.isNew} setIsEdit={setIsEdit} />
-        {address.isNew ? (
-          <></>
-        ) : (
+        {address.isNew && !isEdit && (
+          <button
+            className="flex gap-1.5 justify-center items-center bg-amber-400 hover:bg-amber-500 min-w-36 py-2 col-span-1 rounded-md px-3 text-sm font-semibold text-white shadow-sm focus-visible:outline-none"
+            onClick={(e) => {
+              e.preventDefault();
+              setCustomerData((prev) => ({
+                ...prev,
+                addresses: prev.addresses.filter((existingAddress) => existingAddress.id !== address.id),
+              }));
+            }}
+          >
+            Cancel
+          </button>
+        )}
+        {!address.isNew && (
           <button onClick={handleAddressDelete}>
             <TrashIcon className="text-green-500 w-7 h-7" />
           </button>
