@@ -33,7 +33,7 @@ const CatalogForm = () => {
   const [sortName, setSortName] = useState<string>('');
   const [sortMethod, setSortMethod] = useState<string>('name.en asc');
   const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionForCTP);
-  const [priceRange, setPriceRange] = useState([0, 200000]);
+  const [priceRange, setPriceRange] = useState([0, 100000]);
   const [inputSearch, setInputSearch] = useState('');
 
   const handleInputSearch = (value: string) => {
@@ -64,7 +64,7 @@ const CatalogForm = () => {
   const handleResetFilters = () => {
     handleCategoryClick('', '');
     handleSizeClick('', '');
-    setPriceRange([0, 200000]);
+    setPriceRange([0, 100000]);
   };
 
   const { setCategories } = useStateContext();
@@ -99,14 +99,18 @@ const CatalogForm = () => {
         });
         const responseResult = response.body?.results;
         if (sortName === 'Price: High to Low' && responseResult) {
-          console.log(responseResult, 'неправильно');
           responseResult.sort((a, b) => {
             const aPrice = a?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
             const bPrice = b?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
             return bPrice - aPrice;
           });
         }
-        setProducts(response.body?.results);
+        setProducts(
+          responseResult?.filter((product) => {
+            const masterVariantPrice = product?.masterVariant?.prices?.[0]?.value.centAmount ?? null;
+            return masterVariantPrice !== null && masterVariantPrice >= priceRange[0];
+          })
+        );
       } catch (error) {
         // console.error('Error fetching products:', error);
         toast.error('Error fetching products.');
@@ -201,11 +205,11 @@ const CatalogForm = () => {
 
                     <div className="price border-t border-gray-200 px-4 py-6">
                       <h3 className="text-sm font-medium text-gray-900">Price</h3>
-                      <div className="mt-6">
+                      <div className="mt-6 flex flex-col gap-2.5">
                         <Range
                           step={100}
                           min={0}
-                          max={200000}
+                          max={100000}
                           values={priceRange}
                           onChange={(values) => setPriceRange(values)}
                           renderTrack={({ props, children }) => (
@@ -364,11 +368,11 @@ const CatalogForm = () => {
 
                 <div className="price border-t border-gray-200 py-6">
                   <h3 className="text-sm font-medium text-gray-900">Price</h3>
-                  <div className="mt-6">
+                  <div className="mt-6 flex flex-col gap-2.5">
                     <Range
                       step={100}
                       min={0}
-                      max={200000}
+                      max={100000}
                       values={priceRange}
                       onChange={(values) => setPriceRange(values)}
                       renderTrack={({ props, children }) => (

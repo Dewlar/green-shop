@@ -14,7 +14,7 @@ const ButtonEditUpdate: FC<IEdit> = ({ isEdit, isNew, setIsEdit }) => {
   };
 
   const changeEditableStatus = () => {
-    console.log('changeEditableStatus');
+    // console.log('changeEditableStatus');
     if (isEdit) {
       setIsEdit(false);
     } else {
