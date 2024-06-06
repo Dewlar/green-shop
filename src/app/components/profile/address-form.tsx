@@ -185,7 +185,6 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
           });
 
           if (changeAddressResponse.body) {
-            console.log('П О Е Х А Л И');
             setCustomerData({
               addresses: changeAddressResponse.body.addresses,
               billingAddressIds: changeAddressResponse.body.billingAddressIds ?? [],
@@ -366,9 +365,13 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
 
       <div className="mt-8 flex justify-between items-center">
         <ButtonEditUpdate isEdit={isEdit} isNew={address.isNew} setIsEdit={setIsEdit} />
-        <button onClick={handleAddressDelete}>
-          <TrashIcon className="text-green-500 w-7 h-7" />
-        </button>
+        {address.isNew ? (
+          <></>
+        ) : (
+          <button onClick={handleAddressDelete}>
+            <TrashIcon className="text-green-500 w-7 h-7" />
+          </button>
+        )}
       </div>
     </form>
   );
