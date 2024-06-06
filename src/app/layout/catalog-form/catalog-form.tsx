@@ -20,6 +20,8 @@ import { classNames, formatPriceInEuro } from '../../api/helpers';
 import { ISortOption } from '../../api/types';
 import { categoryFilters, sizeFilters, sortOptionForCTP } from '../../constans';
 import getProductsFilter from '../../api/catalog/getProductsFilter';
+import { useStateContext } from '../../state/state-context';
+import getCategories from '../../api/catalog/getCategories';
 
 const CatalogForm = () => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -62,11 +64,24 @@ const CatalogForm = () => {
   const handleResetFilters = () => {
     handleCategoryClick('', '');
     handleSizeClick('', '');
+    setPriceRange([0, 200000]);
   };
 
-  // const filteredProducts = products?.filter((product) =>
-  //   product.name.en.toLowerCase().includes(inputSearch.toLowerCase())
-  // );
+  const { setCategories } = useStateContext();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await getCategories();
+        setCategories(response);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        toast.error('Error fetching categories.');
+      }
+    };
+
+    fetchCategories();
+  }, [selectedCategoryId]);
 
   useEffect(() => {
     const fetchProducts = async () => {
