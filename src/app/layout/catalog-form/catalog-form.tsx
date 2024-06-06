@@ -82,6 +82,15 @@ const CatalogForm = () => {
           offset: 0,
           search: inputSearch,
         });
+        const responseResult = response.body?.results;
+        if (sortName === 'Price: High to Low' && responseResult) {
+          console.log(responseResult, 'неправильно');
+          responseResult.sort((a, b) => {
+            const aPrice = a?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
+            const bPrice = b?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
+            return bPrice - aPrice;
+          });
+        }
         setProducts(response.body?.results);
       } catch (error) {
         // console.error('Error fetching products:', error);
@@ -425,7 +434,7 @@ const CatalogForm = () => {
                             {product.masterVariant?.images?.[0]?.url ? (
                               <img
                                 src={product.masterVariant.images[0].url}
-                                alt={typeof product.name === 'string' ? product.name : product.name.en}
+                                alt={product.name.en}
                                 className="h-full w-full object-cover object-center transition-transform duration-300 ease-in-out transform group-hover:scale-105"
                               />
                             ) : (
@@ -438,7 +447,7 @@ const CatalogForm = () => {
                             className="mt-4 mb-2 text-lg font-bold text-center text-gray-700"
                             style={{ height: '3.3rem', overflow: 'hidden' }}
                           >
-                            {typeof product.name === 'string' ? product.name : product.name.en}
+                            {product.name.en}
                           </h3>
 
                           <div className="mt-1 flex items-center justify-between px-4 py-2">
