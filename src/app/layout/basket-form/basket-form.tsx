@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { CheckIcon, ClockIcon, XMarkIcon as XMarkIconMini } from '@heroicons/react/20/solid';
+import createOrGetActiveBasket from '../../api/basket/BasketRepository';
 
 const products = [
   {
@@ -47,9 +48,8 @@ const BasketForm = () => {
   const handlePromoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     setPromoCode(input);
-    setIsApplied(false); // Сброс состояния применения при изменении промокода
+    setIsApplied(false);
 
-    // Проверка правильности промокода без учета регистра
     if (input.trim().toUpperCase() === 'CODE') {
       setIsPromoValid(true);
     } else {
@@ -60,10 +60,18 @@ const BasketForm = () => {
   const applyDiscount = () => {
     if (isPromoValid) {
       setIsApplied(true);
-      const promoDiscount = 8.32; // Пример суммы скидки по промокоду
-      setTotal(subtotal - discountFixed - promoDiscount); // Пересчет общей стоимости с учетом фиксированной и дополнительной скидки
+      const promoDiscount = 8.32;
+      setTotal(subtotal - discountFixed - promoDiscount);
     }
   };
+
+  createOrGetActiveBasket()
+    .then((cart) => {
+      console.log('Active or new cart:', cart);
+    })
+    .catch((error) => {
+      console.error('Error fetching or creating cart:', error);
+    });
 
   return (
     <div className="bg-white">
