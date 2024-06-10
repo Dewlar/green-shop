@@ -1,5 +1,5 @@
-import { Cart, ClientResponse } from '@commercetools/platform-sdk';
-import { ClientResult } from '@commercetools/sdk-client-v2';
+import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
+import { Cart, LineItem } from '@commercetools/platform-sdk';
 import RefreshTokenClient from '../RefreshTokenClient';
 import { getProjectKey } from '../helpers';
 
@@ -48,7 +48,7 @@ const createOrGetActiveBasket = async (): Promise<{
   }
 };
 
-const addProductToBasket = async ({
+export const addProductToBasket = async ({
   productId,
   quantity,
   variantId = 1,
@@ -87,4 +87,20 @@ const addProductToBasket = async ({
   }
 };
 
-export default addProductToBasket;
+export const getProductsFromBasket = async (): Promise<LineItem[]> => {
+  const client = new RefreshTokenClient();
+  const apiRoot = client.getApiRoot();
+  const { ID } = await createOrGetActiveBasket();
+
+  const result = await apiRoot
+    .withProjectKey({
+      projectKey,
+    })
+    .me()
+    .carts()
+    .withId({ ID })
+    .get()
+    .execute();
+
+  return result.body.lineItems;
+};

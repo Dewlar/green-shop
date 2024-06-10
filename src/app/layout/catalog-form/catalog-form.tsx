@@ -15,19 +15,14 @@ import { ChevronDownIcon, FunnelIcon, Squares2X2Icon } from '@heroicons/react/20
 import { toast } from 'react-toastify';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import { Link } from 'react-router-dom';
-import {
-  Cart,
-  ProductProjection,
-  ProductProjectionPagedQueryResponse,
-  ClientResponse as ClientResponse2,
-} from '@commercetools/platform-sdk';
+import { Cart, ProductProjection, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import { classNames, formatPriceInEuro } from '../../api/helpers';
 import { ISortOption } from '../../api/types';
 import { categoryFilters, sizeFilters, sortOptionForCTP } from '../../constans';
 import getProductsFilter from '../../api/catalog/getProductsFilter';
 import { useStateContext } from '../../state/state-context';
 import getCategories from '../../api/catalog/getCategories';
-import addProductToBasket from '../../api/basket/BasketRepository';
+import { addProductToBasket } from '../../api/basket/BasketRepository';
 
 const CatalogForm = () => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -138,7 +133,7 @@ const CatalogForm = () => {
 
     const fetchProducts = async () => {
       try {
-        const response: ClientResponse2<Cart | ClientResult> = await addProductToBasket({
+        const response: ClientResponse<Cart | ClientResult> = await addProductToBasket({
           productId,
           quantity: 1,
           variantId: 1,

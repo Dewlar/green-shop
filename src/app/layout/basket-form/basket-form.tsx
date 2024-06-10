@@ -1,46 +1,51 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CheckIcon, ClockIcon, XMarkIcon as XMarkIconMini } from '@heroicons/react/20/solid';
+import { LineItem } from '@commercetools/platform-sdk';
+import { toast } from 'react-toastify';
+import { getProductsFromBasket } from '../../api/basket/BasketRepository';
 
-const products = [
-  {
-    id: 1,
-    name: 'Basic Tee',
-    href: '#',
-    price: '$32.00',
-    color: 'Sienna',
-    inStock: true,
-    size: 'Large',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in sienna.",
-  },
-  {
-    id: 2,
-    name: 'Basic Tee',
-    href: '#',
-    price: '$32.00',
-    color: 'Black',
-    inStock: false,
-    leadTime: '3–4 weeks',
-    size: 'Large',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-02.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
-  },
-  {
-    id: 3,
-    name: 'Nomad Tumbler',
-    href: '#',
-    price: '$35.00',
-    color: 'White',
-    inStock: true,
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-03.jpg',
-    imageAlt: 'Insulated bottle with white base and black snap lid.',
-  },
-];
+// const products = [
+//   {
+//     id: 1,
+//     name: 'Basic Tee',
+//     href: '#',
+//     price: '$32.00',
+//     color: 'Sienna',
+//     inStock: true,
+//     size: 'Large',
+//     imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-01.jpg',
+//     imageAlt: "Front of men's Basic Tee in sienna.",
+//   },
+//   {
+//     id: 2,
+//     name: 'Basic Tee',
+//     href: '#',
+//     price: '$32.00',
+//     color: 'Black',
+//     inStock: false,
+//     leadTime: '3–4 weeks',
+//     size: 'Large',
+//     imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-02.jpg',
+//     imageAlt: "Front of men's Basic Tee in black.",
+//   },
+//   {
+//     id: 3,
+//     name: 'Nomad Tumbler',
+//     href: '#',
+//     price: '$35.00',
+//     color: 'White',
+//     inStock: true,
+//     imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-03.jpg',
+//     imageAlt: 'Insulated bottle with white base and black snap lid.',
+//   },
+// ];
 
 const BasketForm = () => {
   const [promoCode, setPromoCode] = useState('');
   const [isPromoValid, setIsPromoValid] = useState(false);
   const [isApplied, setIsApplied] = useState(false);
+  const [lineItems, setLineItems] = useState<LineItem[]>([]);
+  console.log('lineItems', lineItems);
   const subtotal = 99.0;
   const discountFixed = 5;
   const [total, setTotal] = useState(subtotal - discountFixed);
@@ -64,13 +69,31 @@ const BasketForm = () => {
     }
   };
 
-  // createOrGetActiveBasket()
-  //   .then((cart) => {
-  //     console.log('Active or new cart:', cart);
-  //   })
-  //   .catch((error) => {
-  //     console.error('Error fetching or creating cart:', error);
-  //   });
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response: LineItem[] = await getProductsFromBasket();
+
+        console.log(response);
+        setLineItems(response);
+      } catch (error) {
+        toast.error('Error adding product to cart.');
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const productsFromBasket = lineItems.map((item) => ({
+    id: item.id,
+    name: item.name.en,
+    href: `/product/${item?.productSlug?.en}`,
+    imageSrc: item.variant?.images?.[0]?.url || '',
+    imageAlt: item.name.en,
+    size: item.variant?.attributes?.find((attr) => attr.name === 'Size')?.value[0] || '',
+    price: `${(item.price.value.centAmount / 100).toFixed(2)} ${item.price.value.currencyCode}`,
+    inStock: true,
+  }));
 
   return (
     <div className="bg-white">
@@ -84,7 +107,7 @@ const BasketForm = () => {
             </h2>
 
             <ul role="list" className="divide-y divide-gray-200 border-b border-t border-gray-200">
-              {products.map((product, productIdx) => (
+              {productsFromBasket.map((product, productIdx) => (
                 <li key={product.id} className="flex py-6 sm:py-10">
                   <div className="flex-shrink-0">
                     <img
@@ -105,10 +128,9 @@ const BasketForm = () => {
                           </h3>
                         </div>
                         <div className="mt-1 flex text-sm">
-                          <p className="text-gray-500">{product.color}</p>
-                          {product.size ? (
+                          {product.size && (
                             <p className="ml-4 border-l border-gray-200 pl-4 text-gray-500">{product.size}</p>
-                          ) : null}
+                          )}
                         </div>
                         <p className="mt-1 text-sm font-medium text-gray-900">{product.price}</p>
                       </div>
@@ -122,14 +144,11 @@ const BasketForm = () => {
                           name={`quantity-${productIdx}`}
                           className="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
                         >
-                          <option value={1}>1</option>
-                          <option value={2}>2</option>
-                          <option value={3}>3</option>
-                          <option value={4}>4</option>
-                          <option value={5}>5</option>
-                          <option value={6}>6</option>
-                          <option value={7}>7</option>
-                          <option value={8}>8</option>
+                          {[...Array(12).keys()].map((n) => (
+                            <option key={n + 1} value={n + 1}>
+                              {n + 1}
+                            </option>
+                          ))}
                         </select>
 
                         <div className="absolute right-0 top-0">
@@ -148,7 +167,7 @@ const BasketForm = () => {
                         <ClockIcon className="h-5 w-5 flex-shrink-0 text-gray-300" aria-hidden="true" />
                       )}
 
-                      <span>{product.inStock ? 'In stock' : `Ships in ${product.leadTime}`}</span>
+                      <span>{product.inStock ? 'In stock' : 'Out of stock'}</span>
                     </p>
                   </div>
                 </li>
