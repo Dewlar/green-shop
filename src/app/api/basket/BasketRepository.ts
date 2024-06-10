@@ -1,3 +1,5 @@
+import { Cart, ClientResponse } from '@commercetools/platform-sdk';
+import { ClientResult } from '@commercetools/sdk-client-v2';
 import RefreshTokenClient from '../RefreshTokenClient';
 import { getProjectKey } from '../helpers';
 
@@ -46,4 +48,43 @@ const createOrGetActiveBasket = async (): Promise<{
   }
 };
 
-export default createOrGetActiveBasket;
+const addProductToBasket = async ({
+  productId,
+  quantity,
+  variantId = 1,
+  cartId,
+}: {
+  productId: string;
+  quantity: number;
+  variantId?: number;
+  cartId?: string;
+}): Promise<ClientResponse<Cart | ClientResult>> => {
+  try {
+    const client = new RefreshTokenClient();
+    const apiRoot = client.getApiRoot();
+    const { ID, version } = await createOrGetActiveBasket();
+
+    const activeCart = cartId ?? ID;
+
+    const result = await apiRoot
+      .withProjectKey({
+        projectKey,
+      })
+      .me()
+      .carts()
+      .withId({ ID: activeCart })
+      .post({
+        body: {
+          version,
+          actions: [{ action: 'addLineItem', productId, variantId, quantity }],
+        },
+      })
+      .execute();
+
+    return result as ClientResponse<Cart>;
+  } catch (error) {
+    return error as ClientResponse<ClientResult>;
+  }
+};
+
+export default addProductToBasket;

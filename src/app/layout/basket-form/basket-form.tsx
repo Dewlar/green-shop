@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { CheckIcon, ClockIcon, XMarkIcon as XMarkIconMini } from '@heroicons/react/20/solid';
-import createOrGetActiveBasket from '../../api/basket/BasketRepository';
 
 const products = [
   {
@@ -65,13 +64,13 @@ const BasketForm = () => {
     }
   };
 
-  createOrGetActiveBasket()
-    .then((cart) => {
-      console.log('Active or new cart:', cart);
-    })
-    .catch((error) => {
-      console.error('Error fetching or creating cart:', error);
-    });
+  // createOrGetActiveBasket()
+  //   .then((cart) => {
+  //     console.log('Active or new cart:', cart);
+  //   })
+  //   .catch((error) => {
+  //     console.error('Error fetching or creating cart:', error);
+  //   });
 
   return (
     <div className="bg-white">
