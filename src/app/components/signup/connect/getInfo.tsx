@@ -44,8 +44,8 @@ const getEndpoints = (allInputs: Array<string>) => {
     lastName: surname,
     dateOfBirth: birth,
     addresses: shippingCity ? [billing, shipping] : [billing],
-    billingAddresses: [0],
-    shippingAddresses: shippingCity ? [1] : [0],
+    billingAddresses: shippingCity ? [0, 1] : [0],
+    shippingAddresses: shippingCity ? [0, 1] : [0],
     email: mail,
     password: pass,
   };
