@@ -69,7 +69,7 @@ const CatalogForm = () => {
     setPriceRange([0, 100000]);
   };
 
-  const handleIconClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, id: string) => {
+  const handleIconBasketClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, id: string) => {
     e.stopPropagation();
     e.preventDefault();
     setProductId(id);
@@ -516,7 +516,7 @@ const CatalogForm = () => {
                                 </p>
                               )
                             )}
-                            <div onClick={(e) => handleIconClick(e, product.id)} className="cursor-pointer">
+                            <div onClick={(e) => handleIconBasketClick(e, product.id)} className="cursor-pointer">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"

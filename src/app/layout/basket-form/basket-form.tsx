@@ -1,54 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { CheckIcon, ClockIcon, XMarkIcon as XMarkIconMini } from '@heroicons/react/20/solid';
+import { XMarkIcon as XMarkIconMini } from '@heroicons/react/20/solid';
 import { LineItem } from '@commercetools/platform-sdk';
 import { toast } from 'react-toastify';
-import { getProductsFromBasket } from '../../api/basket/BasketRepository';
-
-// const products = [
-//   {
-//     id: 1,
-//     name: 'Basic Tee',
-//     href: '#',
-//     price: '$32.00',
-//     color: 'Sienna',
-//     inStock: true,
-//     size: 'Large',
-//     imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-01.jpg',
-//     imageAlt: "Front of men's Basic Tee in sienna.",
-//   },
-//   {
-//     id: 2,
-//     name: 'Basic Tee',
-//     href: '#',
-//     price: '$32.00',
-//     color: 'Black',
-//     inStock: false,
-//     leadTime: '3–4 weeks',
-//     size: 'Large',
-//     imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-02.jpg',
-//     imageAlt: "Front of men's Basic Tee in black.",
-//   },
-//   {
-//     id: 3,
-//     name: 'Nomad Tumbler',
-//     href: '#',
-//     price: '$35.00',
-//     color: 'White',
-//     inStock: true,
-//     imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-01-product-03.jpg',
-//     imageAlt: 'Insulated bottle with white base and black snap lid.',
-//   },
-// ];
+import { deleteProductInBasket, getLineItemsFromBasket } from '../../api/basket/BasketRepository';
 
 const BasketForm = () => {
   const [promoCode, setPromoCode] = useState('');
   const [isPromoValid, setIsPromoValid] = useState(false);
   const [isApplied, setIsApplied] = useState(false);
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
-  console.log('lineItems', lineItems);
   const subtotal = 99.0;
   const discountFixed = 5;
   const [total, setTotal] = useState(subtotal - discountFixed);
+
   const handlePromoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     setPromoCode(input);
@@ -72,9 +36,7 @@ const BasketForm = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response: LineItem[] = await getProductsFromBasket();
-
-        console.log(response);
+        const response: LineItem[] = await getLineItemsFromBasket();
         setLineItems(response);
       } catch (error) {
         toast.error('Error adding product to cart.');
@@ -92,8 +54,19 @@ const BasketForm = () => {
     imageAlt: item.name.en,
     size: item.variant?.attributes?.find((attr) => attr.name === 'Size')?.value[0] || '',
     price: `${(item.price.value.centAmount / 100).toFixed(2)} ${item.price.value.currencyCode}`,
+    quantity: item.quantity,
     inStock: true,
   }));
+
+  const handleRemoveProductClick = async (productId: string, quantity: number) => {
+    try {
+      await deleteProductInBasket({ productId, quantity });
+      const updatedLineItems = lineItems.filter((item) => item.id !== productId);
+      setLineItems(updatedLineItems);
+    } catch (error) {
+      toast.error('Error removing product from cart.');
+    }
+  };
 
   return (
     <div className="bg-white">
@@ -152,23 +125,17 @@ const BasketForm = () => {
                         </select>
 
                         <div className="absolute right-0 top-0">
-                          <button type="button" className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500">
+                          <button
+                            type="button"
+                            className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
+                            onClick={() => handleRemoveProductClick(product.id, product.quantity)}
+                          >
                             <span className="sr-only">Remove</span>
                             <XMarkIconMini className="h-5 w-5" aria-hidden="true" />
                           </button>
                         </div>
                       </div>
                     </div>
-
-                    <p className="mt-4 flex space-x-2 text-sm text-gray-700">
-                      {product.inStock ? (
-                        <CheckIcon className="h-5 w-5 flex-shrink-0 text-green-500" aria-hidden="true" />
-                      ) : (
-                        <ClockIcon className="h-5 w-5 flex-shrink-0 text-gray-300" aria-hidden="true" />
-                      )}
-
-                      <span>{product.inStock ? 'In stock' : 'Out of stock'}</span>
-                    </p>
                   </div>
                 </li>
               ))}

@@ -87,7 +87,7 @@ export const addProductToBasket = async ({
   }
 };
 
-export const getProductsFromBasket = async (): Promise<LineItem[]> => {
+export const getLineItemsFromBasket = async (): Promise<LineItem[]> => {
   const client = new RefreshTokenClient();
   const apiRoot = client.getApiRoot();
   const { ID } = await createOrGetActiveBasket();
@@ -103,4 +103,42 @@ export const getProductsFromBasket = async (): Promise<LineItem[]> => {
     .execute();
 
   return result.body.lineItems;
+};
+
+export const deleteProductInBasket = async ({
+  productId,
+  quantity,
+}: {
+  productId: string;
+  quantity: number;
+}): Promise<ClientResponse<Cart | ClientResult>> => {
+  try {
+    const client = new RefreshTokenClient();
+    const apiRoot = client.getApiRoot();
+    const { ID, version } = await createOrGetActiveBasket();
+
+    const result = await apiRoot
+      .withProjectKey({
+        projectKey,
+      })
+      .me()
+      .carts()
+      .withId({ ID })
+      .post({
+        body: {
+          version,
+          actions: [
+            {
+              action: 'removeLineItem',
+              lineItemId: productId,
+              quantity,
+            },
+          ],
+        },
+      })
+      .execute();
+    return result as ClientResponse<Cart>;
+  } catch (error) {
+    return error as ClientResponse<ClientResult>;
+  }
 };
