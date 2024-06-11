@@ -17,69 +17,22 @@ const AboutLayout = () => {
                 <span className="text-gray-500">Survivor</span> team.
               </h1>
               <div className="mt-6 max-w-xl lg:mt-0 xl:col-end-1 xl:row-start-1">
-                <p className="text-lg leading-8 text-gray-600">
+                <p className="text-xl leading-8 text-gray-600 text-justify">
                   We present a project created as part of the RSSchool coursework. The project is a web application for
                   an online store. The project was created using the React library and uses the eCommerce tools API.
+                  Successful implementation was influenced by such factors as: clear division of tasks among the team.
+                  Regular meetings to discuss current progress, possible problems and exchange ideas. Helping and
+                  supporting each other throughout the project.
                 </p>
               </div>
               <img
-                src="https://images.unsplash.com/photo-1567532900872-f4e906cbf06a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1280&q=80"
+                src="./assets/about/about.jpg"
                 alt=""
                 className="mt-10 aspect-[6/5] w-full max-w-lg rounded-2xl object-cover sm:mt-16 lg:mt-0 lg:max-w-none xl:row-span-2 xl:row-end-2 xl:mt-36"
               />
             </div>
           </div>
           <div className="absolute inset-x-0 bottom-0 -z-10 h-24 bg-gradient-to-t from-white sm:h-32" />
-        </div>
-
-        {/* Logo cloud */}
-        <div className="mx-auto mt-32 max-w-7xl sm:mt-40 sm:px-6 lg:px-8">
-          <div className="relative isolate overflow-hidden bg-gray-200 px-6 py-24 text-center shadow-2xl sm:rounded-3xl sm:px-16">
-            <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-tight text-gray-500 sm:text-4xl">
-              Our customers love us
-            </h2>
-            <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-900">
-              Aliquip reprehenderit incididunt amet quis fugiat ut velit. Sit occaecat labore proident cillum in nisi
-              adipisicing officia excepteur tempor deserunt.
-            </p>
-            <div className="mx-auto mt-20 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-12 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 sm:gap-y-14 lg:max-w-4xl lg:grid-cols-5">
-              <img
-                className="col-span-2 max-h-12 w-full object-contain lg:col-span-1"
-                src="https://tailwindui.com/img/logos/158x48/transistor-logo-white.svg"
-                alt="Transistor"
-                width={158}
-                height={48}
-              />
-              <img
-                className="col-span-2 max-h-12 w-full object-contain lg:col-span-1"
-                src="https://tailwindui.com/img/logos/158x48/reform-logo-white.svg"
-                alt="Reform"
-                width={158}
-                height={48}
-              />
-              <img
-                className="col-span-2 max-h-12 w-full object-contain lg:col-span-1"
-                src="https://tailwindui.com/img/logos/158x48/tuple-logo-white.svg"
-                alt="Tuple"
-                width={158}
-                height={48}
-              />
-              <img
-                className="col-span-2 max-h-12 w-full object-contain sm:col-start-2 lg:col-span-1"
-                src="https://tailwindui.com/img/logos/158x48/savvycal-logo-white.svg"
-                alt="SavvyCal"
-                width={158}
-                height={48}
-              />
-              <img
-                className="col-span-2 col-start-2 max-h-12 w-full object-contain sm:col-start-auto lg:col-span-1"
-                src="https://tailwindui.com/img/logos/158x48/statamic-logo-white.svg"
-                alt="Statamic"
-                width={158}
-                height={48}
-              />
-            </div>
-          </div>
         </div>
 
         {/* Content section */}
