@@ -17,7 +17,7 @@ import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import { Link } from 'react-router-dom';
 import { Cart, ProductProjection, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import { classNames, formatPriceInEuro } from '../../api/helpers';
-import { ISortOption } from '../../api/types';
+import { ClickedIconsState, ISortOption } from '../../api/types';
 import { categoryFilters, sizeFilters, sortOptionForCTP } from '../../constans';
 import getProductsFilter from '../../api/catalog/getProductsFilter';
 import { useStateContext } from '../../state/state-context';
@@ -37,6 +37,7 @@ const CatalogForm = () => {
   const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionForCTP);
   const [priceRange, setPriceRange] = useState([0, 100000]);
   const [inputSearch, setInputSearch] = useState('');
+  const [clickedIcons, setClickedIcons] = useState<ClickedIconsState>({});
 
   const handleInputSearch = (value: string) => {
     setInputSearch(value);
@@ -73,6 +74,10 @@ const CatalogForm = () => {
     e.stopPropagation();
     e.preventDefault();
     setProductId(id);
+    setClickedIcons((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id],
+    }));
   };
 
   const { setCategories } = useStateContext();
@@ -516,14 +521,17 @@ const CatalogForm = () => {
                                 </p>
                               )
                             )}
-                            <div onClick={(e) => handleIconBasketClick(e, product.id)} className="cursor-pointer">
+                            <div
+                              onClick={(e) => handleIconBasketClick(e, product.id)}
+                              className={`cursor-pointer ${clickedIcons[product.id] ? 'pointer-events-none text-red-400' : 'text-green-600'}`}
+                            >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 strokeWidth="1.5"
                                 stroke="currentColor"
-                                className="w-6 h-6 text-green-600"
+                                className="w-6 h-6"
                               >
                                 <path
                                   strokeLinecap="round"

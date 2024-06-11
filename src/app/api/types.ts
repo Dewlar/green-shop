@@ -196,4 +196,6 @@ export interface ISortOption {
   method: string;
 }
 
-export type FilterType = string | string[] | { id: { in: string } }[];
+export interface ClickedIconsState {
+  [key: string]: boolean;
+}
