@@ -2,48 +2,62 @@ import { showErrorModal } from '../showModal';
 import createApiRoot from './client';
 
 const getEndpoints = (allInputs: Array<string>) => {
-  const allInputValues = allInputs;
+  // const allInputValues = allInputs;
+  const [
+    name,
+    surname,
+    birth,
+    billingCountry,
+    billingCity,
+    billingStreet,
+    billingZip,
+    shippingCountry,
+    shippingCity,
+    shippingStreet,
+    shippingZip,
+    mail,
+    pass,
+    isDefault,
+  ] = allInputs;
   const billing = {
     key: 'bill',
-    firstName: allInputValues[0],
-    lastName: allInputValues[1],
-    streetName: allInputValues[5],
-    postalCode: allInputValues[6],
-    city: allInputValues[4],
-    country: allInputValues[3],
-    email: allInputValues[11],
+    firstName: name,
+    lastName: surname,
+    streetName: billingStreet,
+    postalCode: billingZip,
+    city: billingCity,
+    country: billingCountry,
+    email: mail,
   };
   const shipping = {
     key: 'shipp',
-    firstName: allInputValues[0],
-    lastName: allInputValues[1],
-    streetName: allInputValues[9] ? allInputValues[9] : allInputValues[5],
-    postalCode: allInputValues[10] ? allInputValues[10] : allInputValues[6],
-    city: allInputValues[8] ? allInputValues[8] : allInputValues[4],
-    country: allInputValues[7] ? allInputValues[7] : allInputValues[3],
-    email: allInputValues[11],
+    firstName: name,
+    lastName: surname,
+    streetName: shippingStreet || billingStreet,
+    postalCode: shippingZip || billingZip,
+    city: shippingCity || billingCity,
+    country: shippingCountry || billingCountry,
+    email: mail,
   };
   const body = {
-    firstName: allInputValues[0],
-    lastName: allInputValues[1],
-    dateOfBirth: allInputValues[2],
-    addresses: allInputValues[9] ? [billing, shipping] : [billing],
-    billingAddresses: allInputValues[9] ? [0, 1] : [0],
-    shippingAddresses: allInputValues[9] ? [0, 1] : [0],
-    email: allInputValues[11],
-    password: allInputValues[12],
+    firstName: name,
+    lastName: surname,
+    dateOfBirth: birth,
+    addresses: shippingCity ? [billing, shipping] : [billing],
+    billingAddresses: [0],
+    shippingAddresses: shippingCity ? [1] : [0],
+    email: mail,
+    password: pass,
   };
-
-  // showErrorModal(''); // clean previous error message
 
   return createApiRoot()
     .customers()
     .post({
-      body: allInputValues[13]
+      body: isDefault
         ? {
             ...body,
             defaultBillingAddress: 0,
-            defaultShippingAddress: allInputValues[9] ? 1 : 0,
+            defaultShippingAddress: shippingCity ? 1 : 0,
           }
         : body,
     })
