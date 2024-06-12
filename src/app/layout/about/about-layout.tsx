@@ -41,7 +41,7 @@ const AboutLayout = () => {
           <div className="bg-teal-900/70 pb-20 sm:pb-24 xl:pb-0">
             <div className="mx-auto flex max-w-7xl flex-col items-center gap-x-8 gap-y-10 px-6 sm:gap-y-8 lg:px-8 xl:flex-row xl:items-stretch">
               <div className="-mt-8 w-full max-w-2xl xl:-mb-8 xl:w-96 xl:flex-none">
-                <div className="relative aspect-[2/1] h-full md:-mx-8 xl:mx-0 xl:aspect-[2/3]">
+                <div className="relative aspect-[3/2] h-full md:-mx-8 xl:mx-0 xl:aspect-[2/3]">
                   <img
                     className="absolute inset-0 h-full w-full rounded-2xl bg-gray-800 object-cover object-top shadow-2xl"
                     src="assets/about/sword.png"
@@ -55,7 +55,7 @@ const AboutLayout = () => {
                     <div className="font-semibold text-white text-2xl">Andrei Markouski</div>
                     <div className="mt-1 text-gray-900">Frontend Developer</div>
                   </div>
-                  <div className="text-base font-semibold leading-8 text-white sm:text-xl sm:leading-9 text-justify">
+                  <div className="text-sm font-semibold leading-8 text-white sm:text-lg sm:leading-9 text-justify">
                     <p>
                       Gravida quam mi erat tortor neque molestie. Auctor aliquet at porttitor a enim nunc suscipit
                       tincidunt nunc. Et non lorem tortor posuere.{' '}
@@ -75,11 +75,13 @@ const AboutLayout = () => {
             </div>
           </div>
         </div>
+
+        {/* Anya */}
         <div className="bg-white pb-16 pt-24 sm:pb-24 sm:pt-32 xl:pb-32">
           <div className="bg-teal-900/70 pb-20 sm:pb-24 xl:pb-0">
             <div className="mx-auto flex max-w-7xl flex-col items-center gap-x-8 gap-y-10 px-6 sm:gap-y-8 lg:px-8 xl:flex-row-reverse xl:items-stretch">
               <div className="-mt-8 w-full max-w-2xl xl:-mb-8 xl:w-96 xl:flex-none">
-                <div className="relative aspect-[2/1] h-full md:-mx-8 xl:mx-0 xl:aspect-[2/3]">
+                <div className="relative aspect-[3/2] h-full md:-mx-8 xl:mx-0 xl:aspect-[2/3]">
                   <img
                     className="absolute inset-0 h-full w-full rounded-2xl bg-gray-800 object-cover object-top xl:object-cover xl:object-top shadow-2xl"
                     src="assets/about/anya4.jpg"
@@ -93,7 +95,7 @@ const AboutLayout = () => {
                     <div className="font-semibold text-white text-2xl">Anna Filenichik</div>
                     <div className="mt-1 text-gray-900">Frontend Developer</div>
                   </div>
-                  <div className="text-base font-semibold leading-8 text-white sm:text-xl sm:leading-9 text-justify">
+                  <div className="text-sm font-semibold leading-8 text-white sm:text-lg sm:leading-9 text-justify">
                     <p>
                       Gravida quam mi erat tortor neque molestie. Auctor aliquet at porttitor a enim nunc suscipit
                       tincidunt nunc. Et non lorem tortor posuere.{' '}
@@ -113,37 +115,41 @@ const AboutLayout = () => {
             </div>
           </div>
         </div>
+
+        {/* Tanya */}
         <div className="bg-white pb-16 pt-24 sm:pb-24 sm:pt-32 xl:pb-32">
           <div className="bg-teal-900/70 pb-20 sm:pb-24 xl:pb-0">
             <div className="mx-auto flex max-w-7xl flex-col items-center gap-x-8 gap-y-10 px-6 sm:gap-y-8 lg:px-8 xl:flex-row xl:items-stretch">
               <div className="-mt-8 w-full max-w-2xl xl:-mb-8 xl:w-96 xl:flex-none">
-                <div className="relative aspect-[2/1] h-full md:-mx-8 xl:mx-0 xl:aspect-[2/3]">
+                <div className="relative aspect-[3/2] h-full md:-mx-8 xl:mx-0 xl:aspect-[2/3]">
                   <img
                     className="absolute inset-0 h-full w-full rounded-2xl bg-gray-800 object-cover object-top shadow-2xl"
-                    src="assets/about/sword.png"
+                    src="assets/about/tanya4.jpg"
                     alt=""
                   />
                 </div>
               </div>
-              <div className="w-full max-w-2xl xl:max-w-none xl:flex-auto xl:p-12">
-                <div className="relative isolate pt-6">
+              <div className="w-full max-w-2xl xl:max-w-none xl:flex-auto xl:py-12 xl:px-8">
+                <div className="relative isolate">
                   <div className="mb-8">
-                    <div className="font-semibold text-white text-2xl">Andrei Markouski</div>
+                    <div className="font-semibold text-white text-2xl">Tatiana</div>
                     <div className="mt-1 text-gray-900">Frontend Developer</div>
                   </div>
-                  <div className="text-base font-semibold leading-8 text-white sm:text-xl sm:leading-9 text-justify">
+                  <div className="text-sm font-semibold leading-8 text-white sm:text-lg sm:leading-9 text-justify">
                     <p>
-                      Gravida quam mi erat tortor neque molestie. Auctor aliquet at porttitor a enim nunc suscipit
-                      tincidunt nunc. Et non lorem tortor posuere.{' '}
-                      <span className="m-1 h-44 w-60 float-right relative block text-center">
+                      10 years of experience in a manufacturing company. Expert knowledge in the field of organization
+                      of labor and wages, accounting, tax accounting. I have the skills of self-organization and
+                      self-discipline.
+                      <span className="m-1 h-56 w-60 float-right relative block text-center">
                         <img
-                          src="assets/about/pic/lead.png"
+                          src="assets/about/pic/dev2.png"
                           alt=""
-                          className="absolute h-auto w-56 sm:w-72 -top-8 left-1/2 transform -translate-x-1/2 max-w-none"
+                          className="absolute h-auto w-52 sm:w-60 top-8 left-1/2 transform -translate-x-1/2 max-w-none"
                         />
-                        <span className="text-sm text-gray-900">R.S.Survivor Lead</span>
+                        <span className="text-sm text-right text-gray-900">R.S.Survivor developer</span>
                       </span>
-                      Nunc eu scelerisque interdum eget tellus non nibh scelerisque bibendum.
+                      Web development and programming are very responsive and therefore ready to learn a lot and make
+                      maximum efforts. I came to the realization that I could do it. Dream will come true.
                     </p>
                   </div>
                 </div>
