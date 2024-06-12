@@ -92,4 +92,18 @@ export interface TypeSizesOrder {
   [key: string]: number;
 }
 
+export interface StorageType {
+  name: string;
+  surname: string;
+  birth: string;
+  addresses: {
+    billing: { country: string; city: string; street: string; zip: string };
+    shipping: { shippingCountry: string; shippingCity: string; shippingStreet: string; shippingZip: string };
+  };
+  email: string;
+  password: string;
+  isShipping: string;
+  isDefault: string;
+}
+
 export default { sample, sample2 };
