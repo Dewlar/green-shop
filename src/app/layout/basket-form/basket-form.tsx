@@ -8,6 +8,7 @@ import {
   deleteProductInBasket,
   getLineItemsFromBasket,
   getTotalPrice,
+  updateBasketQuantityProduct,
 } from '../../api/basket/BasketRepository';
 import { formatPriceInEuro } from '../../api/helpers';
 
@@ -21,6 +22,38 @@ const BasketForm = () => {
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
   const discountFixed = 0;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [quantityProduct, setQuantityProduct] = useState(1);
+
+  const handleQuantityChange = async (
+    productId: string,
+    currentQuantity: number,
+    operation: 'increment' | 'decrement'
+  ) => {
+    try {
+      if (currentQuantity === undefined) {
+        return;
+      }
+
+      let newQuantity;
+      if (operation === 'increment') {
+        newQuantity = currentQuantity + 1;
+      } else if (operation === 'decrement') {
+        newQuantity = Math.max(currentQuantity - 1, 1);
+      }
+
+      if (newQuantity) {
+        const response = await updateBasketQuantityProduct({
+          productId,
+          quantity: newQuantity,
+        });
+        setQuantityProduct(newQuantity);
+
+        console.log('Quantity updated successfully:', response);
+      }
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+    }
+  };
 
   const handleClearBasketClick = async () => {
     try {
@@ -71,7 +104,7 @@ const BasketForm = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [quantityProduct]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -85,7 +118,7 @@ const BasketForm = () => {
     };
 
     fetchProducts();
-  }, [lineItems, promoCodePrice]);
+  }, [lineItems, promoCodePrice, quantityProduct]);
 
   return (
     <div className="bg-white">
@@ -151,22 +184,25 @@ const BasketForm = () => {
                               </p>
                             )}
                           </div>
+
                           {product.variant?.prices?.[0]?.discounted?.discount ? (
                             <>
                               <p className="text-lg font-medium text-red-600">
-                                {formatPriceInEuro(product.variant.prices[0].discounted.value.centAmount)}
+                                {formatPriceInEuro(
+                                  product.variant.prices[0].discounted.value.centAmount * product.quantity
+                                )}
                               </p>
                               <p
                                 className="text-lg font-medium text-green-600"
                                 style={{ textDecoration: 'line-through' }}
                               >
-                                {formatPriceInEuro(product.variant.prices[0].value.centAmount)}
+                                {formatPriceInEuro(product.variant.prices[0].value.centAmount * product.quantity)}
                               </p>
                             </>
                           ) : (
                             product.variant?.prices?.[0]?.value?.centAmount && (
                               <p className="text-lg font-medium text-green-600">
-                                {formatPriceInEuro(product.variant.prices[0].value.centAmount)}
+                                {formatPriceInEuro(product.variant.prices[0].value.centAmount * product.quantity)}
                               </p>
                             )
                           )}
@@ -176,17 +212,32 @@ const BasketForm = () => {
                           <label htmlFor={`quantity-${productIdx}`} className="sr-only">
                             Quantity, {product.name.en}
                           </label>
-                          <select
-                            id={`quantity-${productIdx}`}
-                            name={`quantity-${productIdx}`}
-                            className="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-                          >
-                            {[...Array(12).keys()].map((n) => (
-                              <option key={n + 1} value={n + 1}>
-                                {n + 1}
-                              </option>
-                            ))}
-                          </select>
+                          <div className="flex items-center">
+                            <button
+                              type="button"
+                              className="px-3 py-1 border border-gray-300 rounded-l-md hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                              onClick={() => handleQuantityChange(product.id, product.quantity, 'decrement')}
+                              disabled={product.quantity === 1}
+                            >
+                              -
+                            </button>
+
+                            <input
+                              id={`quantity-${productIdx}`}
+                              name={`quantity-${productIdx}`}
+                              type="text"
+                              value={product.quantity}
+                              readOnly
+                              className="px-3 py-1 border-t border-b border-gray-300 w-12 text-center text-base font-medium text-gray-700"
+                            />
+                            <button
+                              type="button"
+                              className="px-3 py-1 border border-gray-300 rounded-r-md hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                              onClick={() => handleQuantityChange(product.id, product.quantity, 'increment')}
+                            >
+                              +
+                            </button>
+                          </div>
 
                           <div className="absolute right-0 top-0">
                             <button

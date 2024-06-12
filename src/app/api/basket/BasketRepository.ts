@@ -191,3 +191,43 @@ export const clearBasket = async (): Promise<ClientResponse<Cart | ClientResult>
     return error as ClientResponse<ClientResult>;
   }
 };
+
+export const updateBasketQuantityProduct = async ({
+  productId,
+  quantity,
+}: {
+  productId: string;
+  quantity: number;
+}): Promise<ClientResponse<Cart | ClientResult>> => {
+  try {
+    const client = new RefreshTokenClient();
+    const apiRoot = client.getApiRoot();
+    const { ID, version } = await createOrGetActiveBasket();
+    // const lineItem = await getLineItemFromBasketByID(productId);
+
+    const result = await apiRoot
+      .withProjectKey({
+        projectKey,
+      })
+      .me()
+      .carts()
+      .withId({ ID })
+      .post({
+        body: {
+          version,
+          actions: [
+            {
+              action: 'changeLineItemQuantity',
+              lineItemId: productId,
+              quantity,
+            },
+          ],
+        },
+      })
+      .execute();
+
+    return result as ClientResponse<Cart>;
+  } catch (error) {
+    return error as ClientResponse<ClientResult>;
+  }
+};
