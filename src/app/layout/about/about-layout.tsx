@@ -7,17 +7,17 @@ const AboutLayout = () => {
         {/* Hero section */}
         <div className="relative isolate -z-10 overflow-hidden bg-gradient-to-t from-teal-900/70 pt-14">
           <div
-            className="absolute inset-y-0 right-1/2 -z-10 -mr-96 w-[200%] origin-top-right skew-x-[-30deg] bg-white shadow-xl shadow-teal-300/40 ring-1 ring-teal-100 sm:-mr-80 lg:-mr-96"
+            className="absolute inset-y-0 right-1/2 -z-10 -mr-96 w-[200%] origin-top-right skew-x-[-30deg] bg-white shadow-xl shadow-teal-200/30 ring-1 ring-teal-100 sm:-mr-80 lg:-mr-96"
             aria-hidden="true"
           />
-          <div className="mx-auto max-w-7xl px-6 py-32 sm:py-32 lg:px-8">
+          <div className="mx-auto max-w-7xl px-6 py-32 sm:pt-28 sm:pb-40 lg:px-8">
             <div className="mx-auto lg:mx-0 grid lg:max-w-none lg:grid-cols-2 lg:gap-x-16 lg:gap-y-6 xl:grid-cols-1 xl:grid-rows-1 xl:gap-x-8">
-              <h1 className="max-w-2xl text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:col-span-2 xl:col-auto">
+              <h1 className="max-w-2xl text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:col-span-2 xl:col-auto">
                 We’re a <span className="text-green-500">R.S.</span>
                 <span className="text-gray-500">Survivor</span> team.
               </h1>
               <div className="mt-6 max-w-2xl lg:mt-0 xl:col-end-1 xl:row-start-1">
-                <p className="text-xl leading-8 text-gray-600 text-justify">
+                <p className="text-base sm:text-xl leading-8 text-gray-600 text-justify">
                   We present a project created as part of the RSSchool coursework. The project is a web application for
                   an online store. The project was created using the React library and uses the eCommerce tools API.
                   Successful implementation was influenced by such factors as: clear division of tasks among the team.
@@ -43,23 +43,31 @@ const AboutLayout = () => {
               <div className="-mt-8 w-full max-w-2xl xl:-mb-8 xl:w-96 xl:flex-none">
                 <div className="relative aspect-[2/1] h-full md:-mx-8 xl:mx-0 xl:aspect-[2/3]">
                   <img
-                    className="absolute inset-0 h-full w-full rounded-2xl bg-gray-800 object-contain xl:object-cover xl:object-top shadow-2xl"
-                    src="assets/about/was.png"
+                    className="absolute inset-0 h-full w-full rounded-2xl bg-gray-800 object-cover object-top shadow-2xl"
+                    src="assets/about/sword.png"
                     alt=""
                   />
                 </div>
               </div>
-              <div className="w-full max-w-2xl xl:max-w-none xl:flex-auto xl:px-16 xl:py-24">
-                <div className="relative isolate pt-6 sm:pt-12">
+              <div className="w-full max-w-2xl xl:max-w-none xl:flex-auto xl:p-12">
+                <div className="relative isolate pt-6">
                   <div className="mb-8">
                     <div className="font-semibold text-white text-2xl">Andrei Markouski</div>
                     <div className="mt-1 text-gray-900">Frontend Developer</div>
                   </div>
-                  <div className="text-xl font-semibold leading-8 text-white sm:text-2xl sm:leading-9">
+                  <div className="text-base font-semibold leading-8 text-white sm:text-xl sm:leading-9 text-justify">
                     <p>
                       Gravida quam mi erat tortor neque molestie. Auctor aliquet at porttitor a enim nunc suscipit
-                      tincidunt nunc. Et non lorem tortor posuere. Nunc eu scelerisque interdum eget tellus non nibh
-                      scelerisque bibendum.
+                      tincidunt nunc. Et non lorem tortor posuere.{' '}
+                      <span className="m-1 h-44 w-60 float-right relative block text-center">
+                        <img
+                          src="assets/about/pic/lead.png"
+                          alt=""
+                          className="absolute h-auto w-56 sm:w-72 -top-8 left-1/2 transform -translate-x-1/2 max-w-none"
+                        />
+                        <span className="text-sm text-gray-900">R.S.Survivor Lead</span>
+                      </span>
+                      Nunc eu scelerisque interdum eget tellus non nibh scelerisque bibendum.
                     </p>
                   </div>
                 </div>
@@ -73,23 +81,31 @@ const AboutLayout = () => {
               <div className="-mt-8 w-full max-w-2xl xl:-mb-8 xl:w-96 xl:flex-none">
                 <div className="relative aspect-[2/1] h-full md:-mx-8 xl:mx-0 xl:aspect-[2/3]">
                   <img
-                    className="absolute inset-0 h-full w-full rounded-2xl bg-gray-800 object-contain xl:object-cover xl:object-top shadow-2xl"
-                    src="assets/about/now.png"
+                    className="absolute inset-0 h-full w-full rounded-2xl bg-gray-800 object-cover object-top xl:object-cover xl:object-top shadow-2xl"
+                    src="assets/about/anya4.jpg"
                     alt=""
                   />
                 </div>
               </div>
-              <div className="w-full max-w-2xl xl:max-w-none xl:flex-auto xl:px-16 xl:py-24">
-                <div className="relative isolate pt-6 sm:pt-12 text-right">
+              <div className="w-full max-w-2xl xl:max-w-none xl:flex-auto xl:p-12">
+                <div className="relative isolate pt-6 text-right">
                   <div className="mb-8">
-                    <div className="font-semibold text-white text-2xl">Andrei Markouski</div>
+                    <div className="font-semibold text-white text-2xl">Anna Filenichik</div>
                     <div className="mt-1 text-gray-900">Frontend Developer</div>
                   </div>
-                  <div className="text-xl font-semibold leading-8 text-white sm:text-2xl sm:leading-9">
+                  <div className="text-base font-semibold leading-8 text-white sm:text-xl sm:leading-9 text-justify">
                     <p>
                       Gravida quam mi erat tortor neque molestie. Auctor aliquet at porttitor a enim nunc suscipit
-                      tincidunt nunc. Et non lorem tortor posuere. Nunc eu scelerisque interdum eget tellus non nibh
-                      scelerisque bibendum.
+                      tincidunt nunc. Et non lorem tortor posuere.{' '}
+                      <span className="m-1 h-44 w-56 float-left relative block text-center">
+                        <img
+                          src="assets/about/pic/commerce2.png"
+                          alt=""
+                          className="absolute h-auto w-52 sm:w-72 -top-4 left-1/2 transform -translate-x-1/2 max-w-none"
+                        />
+                        <span className="text-sm text-gray-900">R.S.Survivor developer</span>
+                      </span>
+                      Nunc eu scelerisque interdum eget tellus non nibh scelerisque bibendum.
                     </p>
                   </div>
                 </div>
@@ -109,13 +125,13 @@ const AboutLayout = () => {
                   />
                 </div>
               </div>
-              <div className="w-full max-w-2xl xl:max-w-none xl:flex-auto xl:px-16 xl:pb-16 xl:pt-16">
+              <div className="w-full max-w-2xl xl:max-w-none xl:flex-auto xl:p-12">
                 <div className="relative isolate pt-6">
                   <div className="mb-8">
                     <div className="font-semibold text-white text-2xl">Andrei Markouski</div>
                     <div className="mt-1 text-gray-900">Frontend Developer</div>
                   </div>
-                  <div className="text-lg font-semibold leading-8 text-white sm:text-2xl sm:leading-9 text-justify">
+                  <div className="text-base font-semibold leading-8 text-white sm:text-xl sm:leading-9 text-justify">
                     <p>
                       Gravida quam mi erat tortor neque molestie. Auctor aliquet at porttitor a enim nunc suscipit
                       tincidunt nunc. Et non lorem tortor posuere.{' '}
