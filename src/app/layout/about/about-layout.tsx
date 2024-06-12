@@ -36,14 +36,14 @@ const AboutLayout = () => {
         </div>
 
         {/* Team info section */}
-        <div className="bg-white pb-16 pt-24 sm:pb-24 sm:pt-32 xl:pb-32">
+        <div className="relative bg-white pb-16 pt-24 sm:pb-24 sm:pt-32 xl:pb-32">
           <div className="bg-teal-900/70 pb-20 sm:pb-24 xl:pb-0">
             <div className="mx-auto flex max-w-7xl flex-col items-center gap-x-8 gap-y-10 px-6 sm:gap-y-8 lg:px-8 xl:flex-row xl:items-stretch">
               <div className="-mt-8 w-full max-w-2xl xl:-mb-8 xl:w-96 xl:flex-none">
                 <div className="relative aspect-[2/1] h-full md:-mx-8 xl:mx-0 xl:aspect-[2/3]">
                   <img
-                    className="absolute inset-0 h-full w-full rounded-2xl bg-gray-800 object-cover shadow-2xl"
-                    src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2102&q=80"
+                    className="absolute inset-0 h-full w-full rounded-2xl bg-gray-800 object-cover object-top shadow-2xl"
+                    src="assets/about/was.png"
                     alt=""
                   />
                 </div>
@@ -72,8 +72,8 @@ const AboutLayout = () => {
               <div className="-mt-8 w-full max-w-2xl xl:-mb-8 xl:w-96 xl:flex-none">
                 <div className="relative aspect-[2/1] h-full md:-mx-8 xl:mx-0 xl:aspect-[2/3]">
                   <img
-                    className="absolute inset-0 h-full w-full rounded-2xl bg-gray-800 object-cover shadow-2xl"
-                    src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2102&q=80"
+                    className="absolute inset-0 h-full w-full rounded-2xl bg-gray-800 object-cover object-top shadow-2xl"
+                    src="assets/about/now.png"
                     alt=""
                   />
                 </div>
@@ -102,8 +102,8 @@ const AboutLayout = () => {
               <div className="-mt-8 w-full max-w-2xl xl:-mb-8 xl:w-96 xl:flex-none">
                 <div className="relative aspect-[2/1] h-full md:-mx-8 xl:mx-0 xl:aspect-[2/3]">
                   <img
-                    className="absolute inset-0 h-full w-full rounded-2xl bg-gray-800 object-cover shadow-2xl"
-                    src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2102&q=80"
+                    className="absolute inset-0 h-full w-full rounded-2xl bg-gray-800 object-cover object-top shadow-2xl"
+                    src="assets/about/sword.png"
                     alt=""
                   />
                 </div>
@@ -146,7 +146,7 @@ const AboutLayout = () => {
                 </p>
               </div>
               <img
-                src="./assets/about/tanya2.jpg"
+                src="./assets/about/moto1.jpg"
                 alt=""
                 className="mt-10 justify-self-end aspect-[6/5] w-full max-w-lg rounded-2xl object-cover sm:mt-16 lg:mt-0 lg:max-w-lg xl:mt-36"
               />
