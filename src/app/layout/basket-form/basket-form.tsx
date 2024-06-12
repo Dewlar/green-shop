@@ -1,35 +1,46 @@
 import React, { useEffect, useState } from 'react';
 import { XMarkIcon as XMarkIconMini } from '@heroicons/react/20/solid';
-import { LineItem } from '@commercetools/platform-sdk';
+import { Cart, CentPrecisionMoney, LineItem } from '@commercetools/platform-sdk';
 import { toast } from 'react-toastify';
-import { deleteProductInBasket, getLineItemsFromBasket } from '../../api/basket/BasketRepository';
+import { ClientResponse } from '@commercetools/sdk-client-v2';
+import { deleteProductInBasket, getLineItemsFromBasket, getTotalPrice } from '../../api/basket/BasketRepository';
+import { formatPriceInEuro } from '../../api/helpers';
 
 const BasketForm = () => {
+  const [totalPrice, setTotalPrice] = useState<CentPrecisionMoney | undefined>();
+  const [promoCodePrice, setPromoCodePrice] = useState<number>();
+  const [orderPrice, setOrderPrice] = useState<number>();
   const [promoCode, setPromoCode] = useState('');
   const [isPromoValid, setIsPromoValid] = useState(false);
-  const [isApplied, setIsApplied] = useState(false);
+  const [isAppliedPromoCode, setIsAppliedPromoCode] = useState(false);
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
-  const subtotal = 99.0;
-  const discountFixed = 5;
-  const [total, setTotal] = useState(subtotal - discountFixed);
+  const discountFixed = 0;
 
-  const handlePromoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRemoveProductClick = async (productId: string, quantity: number) => {
+    try {
+      const response = await deleteProductInBasket({ productId, quantity });
+      setLineItems((response as ClientResponse<Cart>).body?.lineItems ?? []);
+    } catch (error) {
+      toast.error('Error removing product from cart.');
+    }
+  };
+
+  const handlePromoCodeClick = () => {
+    if (isPromoValid) {
+      setIsAppliedPromoCode(true);
+      setPromoCodePrice(8.32);
+    }
+  };
+
+  const handlePromoChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     setPromoCode(input);
-    setIsApplied(false);
+    setIsAppliedPromoCode(false);
 
     if (input.trim().toUpperCase() === 'CODE') {
       setIsPromoValid(true);
     } else {
       setIsPromoValid(false);
-    }
-  };
-
-  const applyDiscount = () => {
-    if (isPromoValid) {
-      setIsApplied(true);
-      const promoDiscount = 8.32;
-      setTotal(subtotal - discountFixed - promoDiscount);
     }
   };
 
@@ -46,27 +57,19 @@ const BasketForm = () => {
     fetchProducts();
   }, []);
 
-  const productsFromBasket = lineItems.map((item) => ({
-    id: item.id,
-    name: item.name.en,
-    href: `/product/${item?.productSlug?.en}`,
-    imageSrc: item.variant?.images?.[0]?.url || '',
-    imageAlt: item.name.en,
-    size: item.variant?.attributes?.find((attr) => attr.name === 'Size')?.value[0] || '',
-    price: `${(item.price.value.centAmount / 100).toFixed(2)} ${item.price.value.currencyCode}`,
-    quantity: item.quantity,
-    inStock: true,
-  }));
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response: CentPrecisionMoney | undefined = await getTotalPrice();
+        setTotalPrice(response);
+        setOrderPrice((response?.centAmount ?? 0) - discountFixed - (promoCodePrice ?? 0));
+      } catch (error) {
+        toast.error('Error adding product to cart.');
+      }
+    };
 
-  const handleRemoveProductClick = async (productId: string, quantity: number) => {
-    try {
-      await deleteProductInBasket({ productId, quantity });
-      const updatedLineItems = lineItems.filter((item) => item.id !== productId);
-      setLineItems(updatedLineItems);
-    } catch (error) {
-      toast.error('Error removing product from cart.');
-    }
-  };
+    fetchProducts();
+  }, [lineItems, promoCodePrice]);
 
   return (
     <div className="bg-white">
@@ -80,12 +83,12 @@ const BasketForm = () => {
             </h2>
 
             <ul role="list" className="divide-y divide-gray-200 border-b border-t border-gray-200">
-              {productsFromBasket.map((product, productIdx) => (
+              {lineItems.map((product, productIdx) => (
                 <li key={product.id} className="flex py-6 sm:py-10">
                   <div className="flex-shrink-0">
                     <img
-                      src={product.imageSrc}
-                      alt={product.imageAlt}
+                      src={product.variant?.images?.[0]?.url || ''}
+                      alt={product.name.en}
                       className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
                     />
                   </div>
@@ -95,22 +98,45 @@ const BasketForm = () => {
                       <div>
                         <div className="flex justify-between">
                           <h3 className="text-sm">
-                            <a href={product.href} className="font-medium text-gray-700 hover:text-gray-800">
-                              {product.name}
+                            <a
+                              href={`/product/${product?.productSlug?.en}`}
+                              className="font-medium text-gray-700 hover:text-gray-800"
+                            >
+                              {product.name.en}
                             </a>
                           </h3>
                         </div>
                         <div className="mt-1 flex text-sm">
-                          {product.size && (
-                            <p className="ml-4 border-l border-gray-200 pl-4 text-gray-500">{product.size}</p>
+                          {(product.variant?.attributes?.find((attr) => attr.name === 'Size')?.value[0] || '') && (
+                            <p className="ml-4 border-l border-gray-200 pl-4 text-gray-500">
+                              {product.variant?.attributes?.find((attr) => attr.name === 'Size')?.value[0] || ''}
+                            </p>
                           )}
                         </div>
-                        <p className="mt-1 text-sm font-medium text-gray-900">{product.price}</p>
+                        {product.variant?.prices?.[0]?.discounted?.discount ? (
+                          <>
+                            <p className="text-lg font-medium text-red-600">
+                              {formatPriceInEuro(product.variant.prices[0].discounted.value.centAmount)}
+                            </p>
+                            <p
+                              className="text-lg font-medium text-green-600"
+                              style={{ textDecoration: 'line-through' }}
+                            >
+                              {formatPriceInEuro(product.variant.prices[0].value.centAmount)}
+                            </p>
+                          </>
+                        ) : (
+                          product.variant?.prices?.[0]?.value?.centAmount && (
+                            <p className="text-lg font-medium text-green-600">
+                              {formatPriceInEuro(product.variant.prices[0].value.centAmount)}
+                            </p>
+                          )
+                        )}
                       </div>
 
                       <div className="mt-4 sm:mt-0 sm:pr-9">
                         <label htmlFor={`quantity-${productIdx}`} className="sr-only">
-                          Quantity, {product.name}
+                          Quantity, {product.name.en}
                         </label>
                         <select
                           id={`quantity-${productIdx}`}
@@ -154,7 +180,7 @@ const BasketForm = () => {
             <dl className="mt-6 space-y-4">
               <div className="flex items-center justify-between">
                 <dt className="text-sm text-gray-600">Subtotal</dt>
-                <dd className="text-sm font-medium text-gray-900">${subtotal.toFixed(2)}</dd>
+                <dd className="text-sm font-medium text-gray-900">{formatPriceInEuro(totalPrice?.centAmount ?? 0)}</dd>
               </div>
               <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                 <dt className="flex items-center text-sm text-gray-600">
@@ -169,24 +195,24 @@ const BasketForm = () => {
                       id="promo-code"
                       type="text"
                       value={promoCode}
-                      onChange={handlePromoChange}
+                      onChange={handlePromoChangeInput}
                       placeholder="Enter promo code"
                       className="block disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
                     />
                   </div>
                   <button
-                    onClick={applyDiscount}
-                    disabled={isApplied}
-                    className={`ml-2 flex items-center justify-center w-8 h-8 rounded-full ${isPromoValid && !isApplied ? 'bg-green-500 text-white hover:bg-green-700' : 'bg-gray-400 text-gray-700'}`}
+                    onClick={handlePromoCodeClick}
+                    disabled={isAppliedPromoCode}
+                    className={`ml-2 flex items-center justify-center w-8 h-8 rounded-full ${isPromoValid && !isAppliedPromoCode ? 'bg-green-500 text-white hover:bg-green-700' : 'bg-gray-400 text-gray-700'}`}
                   >
                     ✔
                   </button>
                 </dt>
-                <dd className="text-sm font-medium text-gray-900">{isApplied ? '€8.32' : ''}</dd>
+                <dd className="text-sm font-medium text-gray-900">{isAppliedPromoCode ? promoCodePrice : ''}</dd>
               </div>
               <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                 <dt className="text-base font-medium text-gray-900">Order total</dt>
-                <dd className="text-base font-medium text-gray-900">${total.toFixed(2)}</dd>
+                <dd className="text-base font-medium text-gray-900">${formatPriceInEuro(orderPrice ?? 0)}</dd>
               </div>
             </dl>
 

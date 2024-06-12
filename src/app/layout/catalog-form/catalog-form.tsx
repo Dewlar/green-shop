@@ -17,7 +17,7 @@ import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import { Link } from 'react-router-dom';
 import { Cart, ProductProjection, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import { classNames, formatPriceInEuro } from '../../api/helpers';
-import { ClickedIconsState, ISortOption } from '../../api/types';
+import { IClickedIconsState, ISortOption } from '../../api/types';
 import { categoryFilters, sizeFilters, sortOptionForCTP } from '../../constans';
 import getProductsFilter from '../../api/catalog/getProductsFilter';
 import { useStateContext } from '../../state/state-context';
@@ -37,7 +37,7 @@ const CatalogForm = () => {
   const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionForCTP);
   const [priceRange, setPriceRange] = useState([0, 100000]);
   const [inputSearch, setInputSearch] = useState('');
-  const [clickedIcons, setClickedIcons] = useState<ClickedIconsState>({});
+  const [clickedIcons, setClickedIcons] = useState<IClickedIconsState>({});
 
   const handleInputSearch = (value: string) => {
     setInputSearch(value);

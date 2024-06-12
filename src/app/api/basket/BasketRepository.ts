@@ -1,7 +1,8 @@
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
-import { Cart, LineItem } from '@commercetools/platform-sdk';
+import { Cart, CentPrecisionMoney, LineItem } from '@commercetools/platform-sdk';
 import RefreshTokenClient from '../RefreshTokenClient';
 import { getProjectKey } from '../helpers';
+import { ICurrentBasket } from '../types';
 
 const projectKey = getProjectKey();
 
@@ -9,10 +10,7 @@ const isApiError = (error: unknown): error is { statusCode: number } => {
   return typeof error === 'object' && error !== null && 'statusCode' in error;
 };
 
-const createOrGetActiveBasket = async (): Promise<{
-  ID: string;
-  version: number;
-}> => {
+export const createOrGetActiveBasket = async (): Promise<ICurrentBasket> => {
   const client = new RefreshTokenClient();
   const apiRoot = client.getApiRoot();
 
@@ -46,6 +44,23 @@ const createOrGetActiveBasket = async (): Promise<{
     }
     throw error;
   }
+};
+
+export const getTotalPrice = async (): Promise<CentPrecisionMoney | undefined> => {
+  const client = new RefreshTokenClient();
+  const apiRoot = client.getApiRoot();
+  const { ID } = await createOrGetActiveBasket();
+  const result = await apiRoot
+    .withProjectKey({
+      projectKey,
+    })
+    .me()
+    .carts()
+    .withId({ ID })
+    .get()
+    .execute();
+
+  return (result as ClientResponse<Cart>).body?.totalPrice;
 };
 
 export const addProductToBasket = async ({

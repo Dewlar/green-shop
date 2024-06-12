@@ -196,6 +196,11 @@ export interface ISortOption {
   method: string;
 }
 
-export interface ClickedIconsState {
+export interface ICurrentBasket {
+  ID: string;
+  version: number;
+}
+
+export interface IClickedIconsState {
   [key: string]: boolean;
 }
