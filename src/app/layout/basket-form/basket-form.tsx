@@ -3,7 +3,12 @@ import { XMarkIcon as XMarkIconMini } from '@heroicons/react/20/solid';
 import { Cart, CentPrecisionMoney, LineItem } from '@commercetools/platform-sdk';
 import { toast } from 'react-toastify';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
-import { deleteProductInBasket, getLineItemsFromBasket, getTotalPrice } from '../../api/basket/BasketRepository';
+import {
+  clearBasket,
+  deleteProductInBasket,
+  getLineItemsFromBasket,
+  getTotalPrice,
+} from '../../api/basket/BasketRepository';
 import { formatPriceInEuro } from '../../api/helpers';
 
 const BasketForm = () => {
@@ -15,6 +20,17 @@ const BasketForm = () => {
   const [isAppliedPromoCode, setIsAppliedPromoCode] = useState(false);
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
   const discountFixed = 0;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleClearBasketClick = async () => {
+    try {
+      const response = await clearBasket();
+      setLineItems((response as ClientResponse<Cart>).body?.lineItems ?? []);
+    } catch (error) {
+      toast.error('Error removing product from cart.');
+    }
+    setIsModalOpen(false);
+  };
 
   const handleRemoveProductClick = async (productId: string, quantity: number) => {
     try {
@@ -74,7 +90,18 @@ const BasketForm = () => {
   return (
     <div className="bg-white">
       <main className="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Shopping Cart</h1>
+        <>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Shopping Cart</h1>
+          {lineItems.length > 0 && (
+            <button
+              type="button"
+              className="text-base font-medium text-white bg-green-600 hover:bg-green-700 px-4 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 float-right mb-4"
+              onClick={() => setIsModalOpen(true)}
+            >
+              Clear Cart
+            </button>
+          )}
+        </>
 
         <form className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
           <section aria-labelledby="cart-heading" className="lg:col-span-7">
@@ -244,6 +271,28 @@ const BasketForm = () => {
             </section>
           )}
         </form>
+
+        {isModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h2 className="text-lg font-medium text-gray-900">Are you sure you want to clear the cart?</h2>
+              <div className="mt-4 flex justify-end">
+                <button
+                  className="mr-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  onClick={handleClearBasketClick}
+                >
+                  Clear Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

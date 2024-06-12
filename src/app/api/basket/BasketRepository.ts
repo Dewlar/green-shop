@@ -1,5 +1,5 @@
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
-import { Cart, CentPrecisionMoney, LineItem } from '@commercetools/platform-sdk';
+import { Cart, CentPrecisionMoney, LineItem, MyCartUpdateAction } from '@commercetools/platform-sdk';
 import RefreshTokenClient from '../RefreshTokenClient';
 import { getProjectKey } from '../helpers';
 import { ICurrentBasket } from '../types';
@@ -152,6 +152,40 @@ export const deleteProductInBasket = async ({
         },
       })
       .execute();
+    return result as ClientResponse<Cart>;
+  } catch (error) {
+    return error as ClientResponse<ClientResult>;
+  }
+};
+
+export const clearBasket = async (): Promise<ClientResponse<Cart | ClientResult>> => {
+  try {
+    const client = new RefreshTokenClient();
+    const apiRoot = client.getApiRoot();
+    const { ID, version } = await createOrGetActiveBasket();
+    const lineItems = await getLineItemsFromBasket();
+
+    const actions: MyCartUpdateAction[] = lineItems.map((item) => ({
+      action: 'changeLineItemQuantity',
+      lineItemId: item.id,
+      quantity: 0,
+    }));
+
+    const result = await apiRoot
+      .withProjectKey({
+        projectKey,
+      })
+      .me()
+      .carts()
+      .withId({ ID })
+      .post({
+        body: {
+          version,
+          actions,
+        },
+      })
+      .execute();
+
     return result as ClientResponse<Cart>;
   } catch (error) {
     return error as ClientResponse<ClientResult>;
