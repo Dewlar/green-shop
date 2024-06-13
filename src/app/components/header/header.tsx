@@ -52,6 +52,12 @@ const Header: FC<HeaderProps> = ({ setOpen, depth = '1' }) => {
                   <span className="sr-only">Open menu</span>
                   <Bars3Icon className="h-6 w-6" aria-hidden="true" />
                 </button>
+                {/* Cart left */}
+                <div className="mx-4 flow-root lg:mx-8 sm:hidden">
+                  <Link to="/cart">
+                    <CartIcon></CartIcon>
+                  </Link>
+                </div>
               </div>
 
               {/* Logo (lg-) */}
@@ -61,24 +67,29 @@ const Header: FC<HeaderProps> = ({ setOpen, depth = '1' }) => {
               </Link>
 
               <div className="flex flex-1 items-center justify-end">
+                {/* Cart right */}
+                <div className="mr-4 hidden sm:flow-root">
+                  <Link to="/cart">
+                    <CartIcon></CartIcon>
+                  </Link>
+                </div>
                 {isAuth ? (
-                  <div className="flex items-center lg:ml-8">
+                  <div className="flex items-center mr-4">
                     {/* User icon dropdown menu */}
                     <UserIconDropdown></UserIconDropdown>
-
-                    {/* Cart */}
-                    <div className="ml-4 flow-root lg:ml-8">
-                      <Link to="/cart">
-                        <CartIcon></CartIcon>
-                      </Link>
-                    </div>
                   </div>
                 ) : (
                   <div className="flex items-center space-x-6">
-                    <Link to="/login" className="text-sm font-medium text-gray-500 hover:text-gray-700">
+                    <Link
+                      to="/login"
+                      className="text-sm whitespace-nowrap font-medium text-gray-500 hover:text-gray-700"
+                    >
                       Sign in
                     </Link>
-                    <Link to="/signup" className="text-sm font-medium text-gray-500 hover:text-gray-700">
+                    <Link
+                      to="/signup"
+                      className="text-sm whitespace-nowrap font-medium text-gray-500 hover:text-gray-700"
+                    >
                       Sign up
                     </Link>
                   </div>
