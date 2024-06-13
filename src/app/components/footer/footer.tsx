@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import mocks from '../mocks-data/mocks';
 import RsLogoSvg from '../svg/rs-logo-svg';
 import GithubLink from './github-link';
+import { useStateContext } from '../../state/state-context';
 
 const Footer = () => {
+  const { isAuth } = useStateContext();
   return (
     <footer aria-labelledby="footer-heading" className="bg-gray-50">
       <h2 id="footer-heading" className="sr-only">
@@ -45,13 +47,21 @@ const Footer = () => {
                 <div>
                   <h3 className="text-sm font-medium text-gray-900">Usefull Pages</h3>
                   <ul role="list" className="mt-6 space-y-6">
-                    {mocks.footerNavigation.pages.map((item) => (
-                      <li key={item.name} className="text-sm">
-                        <Link to={item.href} className="text-gray-500 hover:text-gray-600">
-                          {item.name}
-                        </Link>
-                      </li>
-                    ))}
+                    {mocks.footerNavigation.pages.map((item) => {
+                      const link = { ...item };
+
+                      if (item.name === 'Your account') {
+                        link.href = isAuth ? '/profile' : '/login';
+                      }
+
+                      return (
+                        <li key={link.name} className="text-sm">
+                          <Link to={link.href} className="text-gray-500 hover:text-gray-600">
+                            {link.name}
+                          </Link>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
                 <div>
