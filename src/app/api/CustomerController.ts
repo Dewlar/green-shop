@@ -29,6 +29,10 @@ class CustomerController {
   public async changeCustomerPassword(data: MyCustomerChangePassword): Promise<ClientResponse<Customer>> {
     return this.customerRepository.changeCustomerPassword(data);
   }
+
+  public async registerCustomer(data: Customer): Promise<ClientResponse<Customer>> {
+    return this.customerRepository.registerNewCustomer(data);
+  }
 }
 
 export default CustomerController;

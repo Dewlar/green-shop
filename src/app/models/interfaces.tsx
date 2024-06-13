@@ -93,17 +93,17 @@ export interface TypeSizesOrder {
 }
 
 export interface StorageType {
-  name: string;
-  surname: string;
-  birth: string;
-  addresses: {
-    billing: { country: string; city: string; street: string; zip: string };
-    shipping: { shippingCountry: string; shippingCity: string; shippingStreet: string; shippingZip: string };
-  };
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  addresses: [
+    { country: string; city: string; streetName: string; postalCode: string },
+    { country: string; city: string; streetName: string; postalCode: string },
+  ];
   email: string;
   password: string;
-  isShipping: string;
   isDefault: string;
+  isShippingDefault: string;
 }
 
 export default { sample, sample2 };
