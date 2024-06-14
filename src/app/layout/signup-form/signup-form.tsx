@@ -1,5 +1,5 @@
-import { Controller, FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import React, { useState } from 'react';
+import { Controller, FieldValues, SubmitHandler, useForm, useWatch } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Customer } from '@commercetools/platform-sdk';
 import { Switch } from '@headlessui/react';
@@ -13,31 +13,75 @@ import { showErrorModal, showSuccessModal } from '../../components/signup/showMo
 import MyBtn from '../../components/signup/btn';
 
 const SignupForm = () => {
-  const [storage] = useState({
+  const defaultFormValues: StorageType = {
     firstName: '',
     lastName: '',
     dateOfBirth: '',
     addresses: [
-      { country: '', city: '', streetName: '', postalCode: '' },
-      { country: '', city: '', streetName: '', postalCode: '' },
+      { country: 'DE', city: '', streetName: '', postalCode: '' },
+      { country: 'DE', city: '', streetName: '', postalCode: '' },
     ],
     email: '',
     password: '',
     isDefault: '',
     isShippingDefault: '',
-  });
+  };
 
   const [isDefaultBilling, setDefaultBilling] = useState(false);
   const [isDefaultShipping, setDefaultShipping] = useState(false);
   const [isShipping, setShipping] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState(false);
+  const [selectedShippingCountry, setSelectedShippingCountry] = useState(false);
+  const [modalData, setModalData] = useState({ login: '', pass: '' });
 
   const {
     handleSubmit,
     formState: { errors, isValid },
     control,
+    setValue,
   } = useForm<StorageType>({
     mode: 'onChange',
+    defaultValues: defaultFormValues,
   });
+
+  const watchCountryBilling = useWatch({ control, name: 'addresses.0.country' });
+  const watchCountryShipping = useWatch({ control, name: 'addresses.1.country' });
+  const watchCity = useWatch({ control, name: 'addresses.0.city' });
+  const watchStreet = useWatch({ control, name: 'addresses.0.streetName' });
+  const watchZip = useWatch({ control, name: 'addresses.0.postalCode' });
+
+  useEffect(() => {
+    if (selectedCountry) {
+      setValue('addresses.0.postalCode', '', { shouldValidate: true, shouldDirty: true, shouldTouch: true });
+      setSelectedCountry(false);
+    }
+  }, [watchCountryBilling, selectedCountry, setValue]);
+  useEffect(() => {
+    if (selectedShippingCountry) {
+      setValue('addresses.1.postalCode', '', { shouldValidate: true, shouldDirty: true, shouldTouch: true });
+      setSelectedShippingCountry(false);
+    }
+  }, [watchCountryShipping, selectedCountry, setValue]);
+  useEffect(() => {
+    if (!isShipping) {
+      setValue('addresses.1.country', watchCountryBilling);
+    }
+  }, [watchCountryBilling, setValue]);
+  useEffect(() => {
+    if (!isShipping) {
+      setValue('addresses.1.city', watchCity);
+    }
+  }, [watchCity, setValue]);
+  useEffect(() => {
+    if (!isShipping) {
+      setValue('addresses.1.streetName', watchStreet);
+    }
+  }, [watchStreet, setValue]);
+  useEffect(() => {
+    if (!isShipping) {
+      setValue('addresses.1.postalCode', watchZip);
+    }
+  }, [watchZip, setValue]);
 
   const pressSubmit: SubmitHandler<FieldValues> = (userData) => {
     const data = userData;
@@ -46,30 +90,18 @@ const SignupForm = () => {
     }
     if (isDefaultShipping && isShipping) {
       data.defaultShippingAddress = 1;
+    } else if (isDefaultShipping) {
+      data.defaultShippingAddress = 0;
     }
-    console.log(userData);
+    console.log(data);
+    setModalData({ login: data.email, pass: data.password });
     new CustomerController()
       .registerCustomer(data as Customer)
       .then(() => {
         showSuccessModal('Great! You are registered');
       })
       .catch((err) => showErrorModal(err));
-    // getEndpoints(storage).then(() => {
-    //   const modalText = document.getElementById('modalTextError');
-    //   if (modalText?.innerHTML === '') {
-    //     showSuccessModal('Great! You are registered');
-    //   }
-    // });
   };
-
-  // useEffect(() => {
-  //   const even = (element: string) => element.length !== 0;
-  //   if (dataError.some(even)) {
-  //     setFormValid(false);
-  //   } else {
-  //     setFormValid(true);
-  //   }
-  // }, [dataError]); // change dataError to [dataError]. So you need to specify an array of dependencies instead of passing values
 
   return (
     <div className="signUpFormWrapper items-center overflow-auto h-dvh min-h-full px-2">
@@ -300,7 +332,7 @@ const SignupForm = () => {
                   className="city city1"
                   name="city"
                   type="text"
-                  placeholder="City"
+                  placeholder="Town/city"
                   id="city"
                 />
               )}
@@ -337,7 +369,7 @@ const SignupForm = () => {
             <Controller
               name="addresses.0.postalCode"
               control={control}
-              rules={validationRules.zip}
+              rules={validationRules.postalCode(watchCountryBilling)}
               render={({ field }) => (
                 <input
                   {...field}
@@ -381,7 +413,7 @@ const SignupForm = () => {
                 </select>
               )}
             />
-            {errors.addresses?.[1]?.country && isShipping && (
+            {errors.addresses?.[1]?.country && (
               <div className="text-xs sm:text-sm text-red-500">{errors.addresses?.[1]?.country.message}</div>
             )}
           </div>
@@ -405,7 +437,7 @@ const SignupForm = () => {
                 />
               )}
             />
-            {errors.addresses?.[1]?.city && isShipping && (
+            {errors.addresses?.[1]?.city && (
               <div className="text-xs sm:text-sm text-red-500">{errors.addresses?.[1]?.city.message}</div>
             )}
           </div>
@@ -429,7 +461,7 @@ const SignupForm = () => {
                 />
               )}
             />
-            {errors.addresses?.[1]?.streetName && isShipping && (
+            {errors.addresses?.[1]?.streetName && (
               <div className="text-xs sm:text-sm text-red-500">{errors.addresses?.[1]?.streetName.message}</div>
             )}
           </div>
@@ -438,7 +470,7 @@ const SignupForm = () => {
             <Controller
               name="addresses.1.postalCode"
               control={control}
-              rules={validationRules.zip}
+              rules={validationRules.postalCode(watchCountryShipping)}
               render={({ field }) => (
                 <input
                   {...field}
@@ -453,7 +485,7 @@ const SignupForm = () => {
                 />
               )}
             />
-            {errors.addresses?.[1]?.postalCode && isShipping && (
+            {errors.addresses?.[1]?.postalCode && (
               <div className="text-xs sm:text-sm text-red-500">{errors.addresses?.[1]?.postalCode.message}</div>
             )}
           </div>
@@ -461,10 +493,9 @@ const SignupForm = () => {
 
         <div className="flex justify-center col-span-2">
           <MyBtn
-            disabled={!isValid}
             // onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => pressSubmit(e, storage)}
             type="submit"
-            className="submitRegistrationselect-none disabled:bg-green-200 rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-700"
+            className={`rounded-md bg-gray-200 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm ${isValid ? 'bg-green-600 hover:bg-green-700 cursor-pointer' : 'cursor-default'}`}
           >
             Registration
           </MyBtn>
@@ -475,16 +506,16 @@ const SignupForm = () => {
           classText="modalTextError"
           errorText=""
           type="Error"
-          login={storage.email}
-          password={storage.password}
+          login={modalData.login}
+          password={modalData.pass}
         ></MyModal>
         <MyModal
           className="modalSuccess"
           classText="modalTextSuccess"
           errorText=""
           type="Success"
-          login={storage.email}
-          password={storage.password}
+          login={modalData.login}
+          password={modalData.pass}
           // redirect={navigate}
         ></MyModal>
       </form>
