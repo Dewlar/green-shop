@@ -18,11 +18,15 @@ import { Link } from 'react-router-dom';
 import { Cart, ProductProjection, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import { classNames, formatPriceInEuro } from '../../api/helpers';
 import { IClickedIconsState, ISortOption } from '../../api/types';
-import { categoryFilters, sizeFilters, sortOptionForCTP } from '../../constans';
+import { IProductCategories, sizeFilters, sortOptionForCTP } from '../../constans';
 import getProductsFilter from '../../api/catalog/getProductsFilter';
-import { useStateContext } from '../../state/state-context';
 import getCategories from '../../api/catalog/getCategories';
 import { addProductToBasket } from '../../api/basket/BasketRepository';
+
+// const getCategoryValue = (category: string) => {
+//   // from: 'Outdoor plant',  to: 'outdoor-plant'
+//   return category.toLowerCase().replace(' ', '-');
+// };
 
 const CatalogForm = () => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -38,6 +42,7 @@ const CatalogForm = () => {
   const [priceRange, setPriceRange] = useState([0, 100000]);
   const [inputSearch, setInputSearch] = useState('');
   const [clickedIcons, setClickedIcons] = useState<IClickedIconsState>({});
+  const [categories, setCategories] = useState<IProductCategories[]>([]);
 
   const handleInputSearch = (value: string) => {
     setInputSearch(value);
@@ -80,57 +85,46 @@ const CatalogForm = () => {
     }));
   };
 
-  const { setCategories } = useStateContext();
-
   useEffect(() => {
     const fetchCategories = async () => {
-      try {
-        const response = await getCategories();
-        setCategories(response);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-        toast.error('Error fetching categories.');
-      }
+      const response = await getCategories();
+      setCategories(response);
     };
 
-    fetchCategories();
+    fetchCategories().catch(() => toast.error('Error fetching categories.'));
   }, [selectedCategoryId]);
 
   useEffect(() => {
     const fetchProducts = async () => {
-      try {
-        const response: ClientResponse<ProductProjectionPagedQueryResponse> = await getProductsFilter({
-          filter: [
-            selectedCategoryId,
-            selectedSizeValue,
-            `variants.price.centAmount:range (${priceRange[0]} to ${priceRange[1]})`,
-          ],
-          sort: [sortMethod],
-          limit: 12,
-          offset: 0,
-          search: inputSearch,
+      const response: ClientResponse<ProductProjectionPagedQueryResponse> = await getProductsFilter({
+        filter: [
+          selectedCategoryId,
+          selectedSizeValue,
+          `variants.price.centAmount:range (${priceRange[0]} to ${priceRange[1]})`,
+        ],
+        sort: [sortMethod],
+        limit: 12,
+        offset: 0,
+        search: inputSearch,
+      });
+      const responseResult = response.body?.results;
+      // console.log('actual response products:', responseResult);
+      if (sortName === 'Price: High to Low' && responseResult) {
+        responseResult.sort((a, b) => {
+          const aPrice = a?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
+          const bPrice = b?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
+          return bPrice - aPrice;
         });
-        const responseResult = response.body?.results;
-        console.log('actual response products:', responseResult);
-        if (sortName === 'Price: High to Low' && responseResult) {
-          responseResult.sort((a, b) => {
-            const aPrice = a?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
-            const bPrice = b?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
-            return bPrice - aPrice;
-          });
-        }
-        setProducts(
-          responseResult?.filter((product) => {
-            const masterVariantPrice = product?.masterVariant?.prices?.[0]?.value.centAmount ?? null;
-            return masterVariantPrice !== null && masterVariantPrice >= priceRange[0];
-          })
-        );
-      } catch (error) {
-        toast.error('Error fetching products.');
       }
+      setProducts(
+        responseResult?.filter((product) => {
+          const masterVariantPrice = product?.masterVariant?.prices?.[0]?.value.centAmount ?? null;
+          return masterVariantPrice !== null && masterVariantPrice >= priceRange[0];
+        })
+      );
     };
 
-    fetchProducts();
+    fetchProducts().catch(() => toast.error('Error fetching products.'));
   }, [selectedCategoryId, selectedSizeValue, sortMethod, priceRange, inputSearch]);
 
   useEffect(() => {
@@ -190,24 +184,24 @@ const CatalogForm = () => {
                     </button>
                   </div>
 
+                  {/* mobile menu */}
                   <form className="mobile-categories mt-4 border-t border-gray-200">
                     <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleCategoryClick('', '')}>
                       <div className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400">
                         <span className="font-medium text-gray-900">Categories</span>
                       </div>
                     </h3>
-                    {categoryFilters.map((category, categoryIdx) => (
+                    {categories.map((category) => (
                       <div
-                        key={category.value}
-                        className={`border-b border-gray-200 py-6 ${selectedCategoryValue === category.value ? 'bg-gray-100' : ''}`}
-                        onClick={() => handleCategoryClick(category.id, category.value)}
+                        key={category.name}
+                        className={`border-b border-gray-200 py-6 ${selectedCategoryValue === category.name ? 'bg-gray-100' : ''}`}
+                        onClick={() => handleCategoryClick(category.id, category.name)}
                       >
                         <div className="flex items-center">
                           <label
-                            htmlFor={`filter-${category.value}-${categoryIdx}`}
-                            className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryValue === category.value ? 'text-green-600' : ''}`}
+                            className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryValue === category.name ? 'text-green-600' : ''}`}
                           >
-                            {category.label}
+                            {category.name}
                           </label>
                         </div>
                       </div>
@@ -269,6 +263,7 @@ const CatalogForm = () => {
           </Dialog>
         </Transition>
 
+        {/* desktop main section */}
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-baseline justify-end border-b border-gray-200 pb-6 pt-4">
             <div className="flex items-center">
@@ -359,18 +354,17 @@ const CatalogForm = () => {
                     <span className="font-medium text-gray-900">Categories</span>
                   </div>
                 </h3>
-                {categoryFilters.map((category, categoryIdx) => (
+                {categories.map((category) => (
                   <div
-                    key={category.value}
-                    className={`border-b border-gray-200 py-6 cursor-pointer ${selectedCategoryValue === category.value ? 'bg-gray-100' : ''}`}
-                    onClick={() => handleCategoryClick(category.id, category.value)}
+                    key={category.name}
+                    className={`border-b border-gray-200 py-6 cursor-pointer ${selectedCategoryValue === category.name ? 'bg-gray-100' : ''}`}
+                    onClick={() => handleCategoryClick(category.id, category.name)}
                   >
                     <div className="flex items-center">
                       <label
-                        htmlFor={`filter-${category.value}-${categoryIdx}`}
-                        className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryValue === category.value ? 'text-green-600' : ''}`}
+                        className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryValue === category.name ? 'text-green-600' : ''}`}
                       >
-                        {category.label}
+                        {category.name}
                       </label>
                     </div>
                   </div>
@@ -450,7 +444,7 @@ const CatalogForm = () => {
                       {selectedCategoryValue && (
                         <li className="flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer text-blue-gray-900 hover:text-light-blue-500">
                           <a href="#" onClick={() => handleSizeClick('', '')}>
-                            {selectedCategoryValue.charAt(0).toUpperCase() + selectedCategoryValue.slice(1)}
+                            {selectedCategoryValue}
                           </a>
                           {selectedSizeLabel && (
                             <span className="mx-2 font-sans text-sm antialiased font-normal leading-normal pointer-events-none select-none text-blue-gray-500">
