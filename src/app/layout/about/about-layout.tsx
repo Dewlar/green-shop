@@ -5,90 +5,168 @@ const AboutLayout = () => {
     <div className="bg-white">
       <main className="isolate">
         {/* Hero section */}
-        <div className="relative isolate -z-10 overflow-hidden bg-gradient-to-b from-green-100/30 pt-14">
+        <div className="relative isolate -z-10 overflow-hidden bg-gradient-to-t from-teal-900/70 pt-14">
           <div
-            className="absolute inset-y-0 right-1/2 -z-10 -mr-96 w-[200%] origin-top-right skew-x-[-30deg] bg-white shadow-xl shadow-green-600/10 ring-1 ring-green-100 sm:-mr-80 lg:-mr-96"
+            className="absolute inset-y-0 right-1/2 -z-10 -mr-96 w-[200%] origin-top-right skew-x-[-30deg] bg-white shadow-xl shadow-teal-200/30 ring-1 ring-teal-100 sm:-mr-80 lg:-mr-96"
             aria-hidden="true"
           />
-          <div className="mx-auto max-w-7xl px-6 py-32 sm:py-40 lg:px-8">
-            <div className="mx-auto max-w-2xl lg:mx-0 lg:grid lg:max-w-none lg:grid-cols-2 lg:gap-x-16 lg:gap-y-6 xl:grid-cols-1 xl:grid-rows-1 xl:gap-x-8">
-              <h1 className="max-w-2xl text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:col-span-2 xl:col-auto">
+          <div className="mx-auto max-w-7xl px-6 py-32 sm:pt-28 sm:pb-40 lg:px-8">
+            <div className="mx-auto lg:mx-0 grid lg:max-w-none lg:grid-cols-2 lg:gap-x-16 lg:gap-y-6 xl:grid-cols-1 xl:grid-rows-1 xl:gap-x-8">
+              <h1 className="max-w-2xl text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:col-span-2 xl:col-auto">
                 We’re a <span className="text-green-500">R.S.</span>
                 <span className="text-gray-500">Survivor</span> team.
               </h1>
-              <div className="mt-6 max-w-xl lg:mt-0 xl:col-end-1 xl:row-start-1">
-                <p className="text-lg leading-8 text-gray-600">
+              <div className="mt-6 max-w-2xl lg:mt-0 xl:col-end-1 xl:row-start-1">
+                <p className="text-base sm:text-xl leading-8 text-gray-600 text-justify">
                   We present a project created as part of the RSSchool coursework. The project is a web application for
                   an online store. The project was created using the React library and uses the eCommerce tools API.
+                  Successful implementation was influenced by such factors as: clear division of tasks among the team.
+                  Regular meetings to discuss current progress, possible problems and exchange ideas. Helping and
+                  supporting each other throughout the project.
                 </p>
               </div>
               <img
-                src="https://images.unsplash.com/photo-1567532900872-f4e906cbf06a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1280&q=80"
+                src="./assets/about/about.jpg"
                 alt=""
-                className="mt-10 aspect-[6/5] w-full max-w-lg rounded-2xl object-cover sm:mt-16 lg:mt-0 lg:max-w-none xl:row-span-2 xl:row-end-2 xl:mt-36"
+                className="mt-10 aspect-[16/9] w-full max-w-none rounded-2xl object-cover sm:mt-16 lg:aspect-[6/5] lg:mt-0 lg:max-w-none xl:row-span-2 xl:row-end-2 xl:mt-36"
               />
             </div>
           </div>
-          <div className="absolute inset-x-0 bottom-0 -z-10 h-24 bg-gradient-to-t from-white sm:h-32" />
+          {/* <div className="absolute inset-x-0 bottom-0 -z-10 h-24 bg-gradient-to-t from-teal-900/50 sm:h-32" /> */}
         </div>
 
-        {/* Logo cloud */}
-        <div className="mx-auto mt-32 max-w-7xl sm:mt-40 sm:px-6 lg:px-8">
-          <div className="relative isolate overflow-hidden bg-gray-200 px-6 py-24 text-center shadow-2xl sm:rounded-3xl sm:px-16">
-            <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-tight text-gray-500 sm:text-4xl">
-              Our customers love us
-            </h2>
-            <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-900">
-              Aliquip reprehenderit incididunt amet quis fugiat ut velit. Sit occaecat labore proident cillum in nisi
-              adipisicing officia excepteur tempor deserunt.
-            </p>
-            <div className="mx-auto mt-20 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-12 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 sm:gap-y-14 lg:max-w-4xl lg:grid-cols-5">
-              <img
-                className="col-span-2 max-h-12 w-full object-contain lg:col-span-1"
-                src="https://tailwindui.com/img/logos/158x48/transistor-logo-white.svg"
-                alt="Transistor"
-                width={158}
-                height={48}
-              />
-              <img
-                className="col-span-2 max-h-12 w-full object-contain lg:col-span-1"
-                src="https://tailwindui.com/img/logos/158x48/reform-logo-white.svg"
-                alt="Reform"
-                width={158}
-                height={48}
-              />
-              <img
-                className="col-span-2 max-h-12 w-full object-contain lg:col-span-1"
-                src="https://tailwindui.com/img/logos/158x48/tuple-logo-white.svg"
-                alt="Tuple"
-                width={158}
-                height={48}
-              />
-              <img
-                className="col-span-2 max-h-12 w-full object-contain sm:col-start-2 lg:col-span-1"
-                src="https://tailwindui.com/img/logos/158x48/savvycal-logo-white.svg"
-                alt="SavvyCal"
-                width={158}
-                height={48}
-              />
-              <img
-                className="col-span-2 col-start-2 max-h-12 w-full object-contain sm:col-start-auto lg:col-span-1"
-                src="https://tailwindui.com/img/logos/158x48/statamic-logo-white.svg"
-                alt="Statamic"
-                width={158}
-                height={48}
-              />
+        {/* Team info section */}
+        <div className="relative bg-white pb-16 sm:pb-24 xl:pb-32">
+          {/* <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-t from-teal-900/70 sm:h-32" /> */}
+          <div className="bg-teal-900/70 pb-20 sm:pb-24 xl:pb-0">
+            <div className="mx-auto flex max-w-7xl flex-col items-center gap-x-8 gap-y-10 px-6 sm:gap-y-8 lg:px-8 xl:flex-row xl:items-stretch">
+              <div className="-mt-8 w-full max-w-2xl xl:-mb-8 xl:w-96 xl:flex-none">
+                <div className="relative aspect-[3/2] h-full md:-mx-8 xl:mx-0 xl:aspect-[2/3]">
+                  <img
+                    className="absolute inset-0 h-full w-full rounded-2xl bg-gray-800 object-cover object-top shadow-2xl"
+                    src="assets/about/sword.png"
+                    alt=""
+                  />
+                </div>
+              </div>
+              <div className="w-full max-w-2xl xl:max-w-none xl:flex-auto xl:p-12">
+                <div className="relative isolate pt-6">
+                  <div className="mb-8">
+                    <div className="font-semibold text-white text-2xl">Andrei Markouski</div>
+                    <div className="mt-1 text-gray-900">Frontend Developer</div>
+                  </div>
+                  <div className="text-sm font-semibold leading-8 text-white sm:text-lg sm:leading-9 text-justify">
+                    <p>
+                      Gravida quam mi erat tortor neque molestie. Auctor aliquet at porttitor a enim nunc suscipit
+                      tincidunt nunc. Et non lorem tortor posuere.{' '}
+                      <span className="m-1 h-44 w-60 float-right relative block text-center">
+                        <img
+                          src="assets/about/pic/lead.png"
+                          alt=""
+                          className="absolute h-auto w-56 sm:w-72 -top-8 left-1/2 transform -translate-x-1/2 max-w-none"
+                        />
+                        <span className="text-sm text-gray-900">R.S.Survivor Lead</span>
+                      </span>
+                      Nunc eu scelerisque interdum eget tellus non nibh scelerisque bibendum.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Content section */}
-        <div className="my-32 overflow-hidden sm:mt-40">
-          <div className="mx-auto max-w-7xl px-6 lg:flex lg:px-8">
-            <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-12 gap-y-16 lg:mx-0 lg:min-w-full lg:max-w-none lg:flex-none lg:gap-y-8">
-              <div className="lg:col-end-1 lg:w-full lg:max-w-lg lg:pb-8">
-                <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Our team</h2>
-                <p className="mt-6 text-xl leading-8 text-gray-600">
+        {/* Anya */}
+        <div className="bg-white pb-16 pt-24 sm:pb-24 sm:pt-32 xl:pb-32">
+          <div className="bg-teal-900/70 pb-20 sm:pb-24 xl:pb-0">
+            <div className="mx-auto flex max-w-7xl flex-col items-center gap-x-8 gap-y-10 px-6 sm:gap-y-8 lg:px-8 xl:flex-row-reverse xl:items-stretch">
+              <div className="-mt-8 w-full max-w-2xl xl:-mb-8 xl:w-96 xl:flex-none">
+                <div className="relative aspect-[3/2] h-full md:-mx-8 xl:mx-0 xl:aspect-[2/3]">
+                  <img
+                    className="absolute inset-0 h-full w-full rounded-2xl bg-gray-800 object-cover object-top xl:object-cover xl:object-top shadow-2xl"
+                    src="assets/about/anya4.jpg"
+                    alt=""
+                  />
+                </div>
+              </div>
+              <div className="w-full max-w-2xl xl:max-w-none xl:flex-auto xl:p-12">
+                <div className="relative isolate pt-6 text-right">
+                  <div className="mb-8">
+                    <div className="font-semibold text-white text-2xl">Anna Filenichik</div>
+                    <div className="mt-1 text-gray-900">Frontend Developer</div>
+                  </div>
+                  <div className="text-sm font-semibold leading-8 text-white sm:text-lg sm:leading-9 text-justify">
+                    <p>
+                      Gravida quam mi erat tortor neque molestie. Auctor aliquet at porttitor a enim nunc suscipit
+                      tincidunt nunc. Et non lorem tortor posuere.{' '}
+                      <span className="m-1 h-44 w-56 float-left relative block text-center">
+                        <img
+                          src="assets/about/pic/commerce2.png"
+                          alt=""
+                          className="absolute h-auto w-52 sm:w-72 -top-4 left-1/2 transform -translate-x-1/2 max-w-none"
+                        />
+                        <span className="text-sm text-gray-900">R.S.Survivor developer</span>
+                      </span>
+                      Nunc eu scelerisque interdum eget tellus non nibh scelerisque bibendum.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tanya */}
+        <div className="bg-white pb-16 pt-24 sm:pb-24 sm:pt-32 xl:pb-32">
+          <div className="bg-teal-900/70 pb-20 sm:pb-24 xl:pb-0">
+            <div className="mx-auto flex max-w-7xl flex-col items-center gap-x-8 gap-y-10 px-6 sm:gap-y-8 lg:px-8 xl:flex-row xl:items-stretch">
+              <div className="-mt-8 w-full max-w-2xl xl:-mb-8 xl:w-96 xl:flex-none">
+                <div className="relative aspect-[3/2] h-full md:-mx-8 xl:mx-0 xl:aspect-[2/3]">
+                  <img
+                    className="absolute inset-0 h-full w-full rounded-2xl bg-gray-800 object-cover object-top shadow-2xl"
+                    src="assets/about/tanya4.jpg"
+                    alt=""
+                  />
+                </div>
+              </div>
+              <div className="w-full max-w-2xl xl:max-w-none xl:flex-auto xl:py-12 xl:px-8">
+                <div className="relative isolate">
+                  <div className="mb-8">
+                    <div className="font-semibold text-white text-2xl">Tatiana</div>
+                    <div className="mt-1 text-gray-900">Frontend Developer</div>
+                  </div>
+                  <div className="text-sm font-semibold leading-8 text-white sm:text-lg sm:leading-9 text-justify">
+                    <p>
+                      10 years of experience in a manufacturing company. Expert knowledge in the field of organization
+                      of labor and wages, accounting, tax accounting. I have the skills of self-organization and
+                      self-discipline.
+                      <span className="m-1 h-56 w-60 float-right relative block text-center">
+                        <img
+                          src="assets/about/pic/dev2.png"
+                          alt=""
+                          className="absolute h-auto w-52 sm:w-60 top-8 left-1/2 transform -translate-x-1/2 max-w-none"
+                        />
+                        <span className="text-sm text-right text-gray-900">R.S.Survivor developer</span>
+                      </span>
+                      Web development and programming are very responsive and therefore ready to learn a lot and make
+                      maximum efforts. I came to the realization that I could do it. Dream will come true.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Team section */}
+        <div className="my-24 overflow-hidden sm:mt-24">
+          <div className="mx-auto max-w-7xl px-6 lg:flex lg:px-8 justify-center">
+            <div className="mx-auto max-w-2xl lg:mx-0 grid lg:max-w-none lg:grid-cols-2 lg:gap-x-16 lg:gap-y-6 xl:grid-cols-2 xl:gap-x-0">
+              <h1 className="max-w-2xl text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:col-span-2">
+                Our team.
+              </h1>
+              <div className="mt-6 max-w-xl lg:mt-0">
+                <p className="text-xl leading-8 text-gray-600 text-justify">
                   All members of our team are very friendly and sociable. The team&apos;s positive mood and support for
                   each other help to overcome any difficulties. As a team, we are very different. But we are united by
                   one common goal.
@@ -98,38 +176,21 @@ const AboutLayout = () => {
                   <span className="text-gray-500">Survivor!</span>
                 </p>
               </div>
-              <div className="flex flex-wrap items-start justify-end gap-6 sm:gap-8 lg:contents">
-                <div className="w-0 flex-auto lg:ml-auto lg:w-auto lg:flex-none lg:self-end">
-                  <img
-                    src="https://images.unsplash.com/photo-1670272502246-768d249768ca?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1152&q=80"
-                    alt=""
-                    className="aspect-[7/5] w-[37rem] max-w-none rounded-2xl bg-gray-50 object-cover"
-                  />
-                </div>
-                <div className="contents lg:col-span-2 lg:col-end-2 lg:ml-auto lg:flex lg:w-[37rem] lg:items-start lg:justify-end lg:gap-x-8">
-                  <div className="order-first flex w-64 flex-none justify-end self-end lg:w-auto">
-                    <img
-                      src="https://images.unsplash.com/photo-1605656816944-971cd5c1407f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=768&h=604&q=80"
-                      alt=""
-                      className="aspect-[4/3] w-[24rem] max-w-none flex-none rounded-2xl bg-gray-50 object-cover"
-                    />
-                  </div>
-                  <div className="flex w-96 flex-auto justify-end lg:w-auto lg:flex-none">
-                    <img
-                      src="https://images.unsplash.com/photo-1568992687947-868a62a9f521?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1152&h=842&q=80"
-                      alt=""
-                      className="aspect-[7/5] w-[37rem] max-w-none flex-none rounded-2xl bg-gray-50 object-cover"
-                    />
-                  </div>
-                  <div className="hidden sm:block sm:w-0 sm:flex-auto lg:w-auto lg:flex-none">
-                    <img
-                      src="https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=768&h=604&q=80"
-                      alt=""
-                      className="aspect-[4/3] w-[24rem] max-w-none rounded-2xl bg-gray-50 object-cover"
-                    />
-                  </div>
-                </div>
-              </div>
+              <img
+                src="./assets/about/moto1.jpg"
+                alt=""
+                className="mt-10 justify-self-end aspect-[6/5] w-full max-w-lg rounded-2xl object-cover sm:mt-16 lg:mt-0 lg:max-w-lg xl:mt-36"
+              />
+              <img
+                src="./assets/about/anna41.jpg"
+                alt=""
+                className="mt-10 aspect-[4/6] w-full max-w-lg rounded-2xl object-cover sm:mt-16 lg:-mt-32 lg:max-w-lg xl:-mt-40"
+              />
+              <img
+                src="./assets/about/tanya1.jpg"
+                alt=""
+                className="mt-10 justify-self-end aspect-[6/5] w-full max-w-lg rounded-2xl object-cover object-top sm:mt-16 lg:mt-28 lg:max-w-lg xl:mt-36"
+              />
             </div>
           </div>
         </div>
