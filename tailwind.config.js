@@ -11,6 +11,9 @@ module.exports = {
       fontFamily: {
         sans: ['Inter var', ...fontFamily.sans],
       },
+      backgroundImage: {
+        'about-team-card-gradient': 'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(19,78,74,0.6) 50%, rgba(255,255,255,1) 100%)',
+      },
     },
   },
   plugins: [
