@@ -39,6 +39,7 @@ const Footer = () => {
                     {categories.map((category) => (
                       <li key={category.name} className="text-sm">
                         <Link
+                          state={{ isExternal: true }}
                           to={`/catalog/${getCategoryValue(category.name)}`}
                           className="text-gray-500 hover:text-gray-600"
                         >
