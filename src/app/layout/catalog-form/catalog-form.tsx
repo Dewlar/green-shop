@@ -18,7 +18,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Cart, ProductProjection, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import { classNames, formatPriceInEuro } from '../../api/helpers';
 import { ICategoryData, IClickedIconsState, ISortOption } from '../../api/types';
-import { IProductCategories, sizeFilters, sortOptionForCTP } from '../../constans';
+import { sizeFilters, sortOptionForCTP } from '../../constans';
 import getProductsFilter from '../../api/catalog/getProductsFilter';
 import getCategories from '../../api/catalog/getCategories';
 import { addProductToBasket } from '../../api/basket/BasketRepository';
@@ -38,7 +38,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   const [priceRange, setPriceRange] = useState([0, 100000]);
   const [inputSearch, setInputSearch] = useState('');
   const [clickedIcons, setClickedIcons] = useState<IClickedIconsState>({});
-  const [categories, setCategories] = useState<IProductCategories[]>([]);
+  const [categories, setCategories] = useState<ICategoryData[]>([]);
   const navigate = useNavigate();
   const location = useLocation();
 
