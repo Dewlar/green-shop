@@ -513,7 +513,11 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                       {products?.map((product) => (
                         <Link
                           key={product.id}
-                          to={`/catalog/${categories}/${product.id}`}
+                          to={
+                            selectedCategoryValue
+                              ? `/catalog/${getCategoryValue(selectedCategoryValue)}/${product.id}`
+                              : `/product/${product.id}`
+                          }
                           className="group block border border-gray-100 rounded-lg shadow transition-transform hover:shadow-md"
                         >
                           <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
