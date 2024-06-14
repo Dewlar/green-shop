@@ -6,6 +6,7 @@ import CustomerController from '../api/CustomerController';
 import TokenService from '../api/TokenService';
 import { LocalStorageKeysEnum, storageGet, storageSet } from '../api/helpers';
 import { ICategoryData } from '../api/types';
+import { clearBasket } from '../api/basket/BasketRepository';
 
 export interface IAuthData {
   token: string;
@@ -85,6 +86,7 @@ export const StateProvider: FC<Props> = ({ children }) => {
     setIsAuth(false);
     // setAuthData - example of using the set function in useState, if the new state depends on the previous state, to avoid side effects
     setAuthData((prev) => ({ ...prev, ...savedToken.get() }));
+    clearBasket();
     navigate('/', { replace: true });
   };
 

@@ -196,4 +196,11 @@ export interface ISortOption {
   method: string;
 }
 
-export type FilterType = string | string[] | { id: { in: string } }[];
+export interface ICurrentBasket {
+  ID: string;
+  version: number;
+}
+
+export interface IClickedIconsState {
+  [key: string]: boolean;
+}
