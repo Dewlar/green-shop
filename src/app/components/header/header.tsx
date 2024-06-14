@@ -5,14 +5,13 @@ import mocks from '../mocks-data/mocks';
 import { useStateContext } from '../../state/state-context';
 import CartIcon from './cart-icon';
 import UserIconDropdown from './user-icon-dropdown';
-import DepthImg from './enumDepth';
+import logoIconLink from '../../../assets/logo/logo.png';
 
 interface HeaderProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  depth?: string;
 }
-const Header: FC<HeaderProps> = ({ setOpen, depth = '1' }) => {
+const Header: FC<HeaderProps> = ({ setOpen }) => {
   const { isAuth } = useStateContext();
 
   return (
@@ -26,7 +25,7 @@ const Header: FC<HeaderProps> = ({ setOpen, depth = '1' }) => {
               <div className="hidden lg:flex lg:flex-1 lg:items-center">
                 <Link to="/">
                   <span className="sr-only">Green shop</span>
-                  <img className="h-8 w-auto" src={`${DepthImg[depth]}assets/logo/logo.png`} alt="logo" />
+                  <img className="h-8 w-auto" src={logoIconLink} alt="logo" />
                 </Link>
               </div>
 
@@ -68,7 +67,7 @@ const Header: FC<HeaderProps> = ({ setOpen, depth = '1' }) => {
               {/* Logo (lg-) */}
               <Link to="/" className="lg:hidden">
                 <span className="sr-only">Green shop</span>
-                <img src={`${DepthImg[depth]}assets/logo/logo.png`} alt="logo" className="h-8 w-auto" />
+                <img src={logoIconLink} alt="logo" className="h-8 w-auto" />
               </Link>
 
               <div className="flex flex-1 items-center justify-end">

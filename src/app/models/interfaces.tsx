@@ -1,6 +1,7 @@
 import { Product } from '@commercetools/platform-sdk';
 import { LoadingType } from 'react-loading';
 import { NavigateFunction } from 'react-router-dom';
+import React from 'react';
 
 const sample = () => 1;
 const sample2 = () => 1;
