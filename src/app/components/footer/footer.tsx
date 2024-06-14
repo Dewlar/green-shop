@@ -1,12 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import mocks from '../mocks-data/mocks';
 import RsLogoSvg from '../svg/rs-logo-svg';
 import GithubLink from './github-link';
 import { useStateContext } from '../../state/state-context';
+import { IProductCategories } from '../../constans';
+import getCategories from '../../api/catalog/getCategories';
+import { getCategoryValue } from '../../models';
 
 const Footer = () => {
   const { isAuth } = useStateContext();
+  const [categories, setCategories] = useState<IProductCategories[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await getCategories();
+      setCategories(response);
+    };
+
+    fetchCategories().catch(() => toast.error('Error fetching categories.'));
+  }, []);
+
   return (
     <footer aria-labelledby="footer-heading" className="bg-gray-50">
       <h2 id="footer-heading" className="sr-only">
@@ -21,11 +36,14 @@ const Footer = () => {
                 <div>
                   <h3 className="text-sm font-medium text-gray-900">Main Categories</h3>
                   <ul role="list" className="mt-6 space-y-6">
-                    {mocks.footerNavigation.categories.map((item) => (
-                      <li key={item.name} className="text-sm">
-                        <a href={item.href} className="text-gray-500 hover:text-gray-600">
-                          {item.name}
-                        </a>
+                    {categories.map((category) => (
+                      <li key={category.name} className="text-sm">
+                        <Link
+                          to={`/catalog/${getCategoryValue(category.name)}`}
+                          className="text-gray-500 hover:text-gray-600"
+                        >
+                          {category.name}
+                        </Link>
                       </li>
                     ))}
                   </ul>

@@ -23,11 +23,6 @@ import getProductsFilter from '../../api/catalog/getProductsFilter';
 import getCategories from '../../api/catalog/getCategories';
 import { addProductToBasket } from '../../api/basket/BasketRepository';
 
-// const getCategoryValue = (category: string) => {
-//   // from: 'Outdoor plant',  to: 'outdoor-plant'
-//   return category.toLowerCase().replace(' ', '-');
-// };
-
 const CatalogForm = () => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [products, setProducts] = useState<ProductProjection[] | undefined>(undefined);
