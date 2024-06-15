@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Range } from 'react-range';
 import {
   Dialog,
@@ -14,16 +14,17 @@ import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon, FunnelIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
 import { toast } from 'react-toastify';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Cart, ProductProjection, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import { classNames, formatPriceInEuro } from '../../api/helpers';
-import { IClickedIconsState, ISortOption } from '../../api/types';
-import { IProductCategories, sizeFilters, sortOptionForCTP } from '../../constans';
+import { ICategoryData, IClickedIconsState, ISortOption } from '../../api/types';
+import { sizeFilters, sortOptionForCTP } from '../../constans';
 import getProductsFilter from '../../api/catalog/getProductsFilter';
 import getCategories from '../../api/catalog/getCategories';
 import { addProductToBasket } from '../../api/basket/BasketRepository';
+import { getCategoryValue } from '../../models';
 
-const CatalogForm = () => {
+const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [products, setProducts] = useState<ProductProjection[] | undefined>(undefined);
   const [productId, setProductId] = useState('');
@@ -37,20 +38,34 @@ const CatalogForm = () => {
   const [priceRange, setPriceRange] = useState([0, 100000]);
   const [inputSearch, setInputSearch] = useState('');
   const [clickedIcons, setClickedIcons] = useState<IClickedIconsState>({});
-  const [categories, setCategories] = useState<IProductCategories[]>([]);
+  const [categories, setCategories] = useState<ICategoryData[]>([]);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleInputSearch = (value: string) => {
     setInputSearch(value);
   };
 
-  const handleCategoryClick = (categoryId: string, categoryValue: string) => {
-    setSelectedCategoryId(categoryId === '' ? '' : `categories.id:subtree("${categoryId}")`);
-    setSelectedCategoryValue(categoryValue === '' ? '' : categoryValue);
-  };
-
   const handleSizeClick = (sizeValue: string, sizeLabel: string) => {
     setSelectedSizeValue(sizeValue === '' ? '' : `variants.attributes.Size:"${sizeValue}"`);
     setSelectedSizeLabel(sizeLabel === '' ? '' : sizeLabel);
+  };
+
+  const handleCategoryClick = (categoryId: string, categoryValue: string) => {
+    // console.log('rrrrrr---->, ', movedCategory, categoryValue);
+    // setSelectedCategoryId(categoryId === '' ? '' : `categories.id:subtree("${categoryId}")`);
+    if (categoryValue) navigate(`/catalog/${getCategoryValue(categoryValue)}`);
+    else navigate(`/catalog`);
+    // else {
+    //   handleCategoryClick('', '');
+    //   handleSizeClick('', '');
+    //   setPriceRange([0, 100000]);
+    // }
+    // if (location.state?.isExternal) {
+    //   handleSizeClick('', '');
+    //   setPriceRange([0, 100000]);
+    // }
+    setSelectedCategoryValue(categoryValue === '' ? '' : categoryValue);
   };
 
   const handleSortClick = (sortOption: ISortOption) => {
@@ -84,10 +99,37 @@ const CatalogForm = () => {
     const fetchCategories = async () => {
       const response = await getCategories();
       setCategories(response);
+
+      // response.some((category) => getCategoryValue(category.name) === movedCategory);
+      // if (response.some((category) => getCategoryValue(category.name) === movedCategory))
+      //   console.log('aaaaaaaaaaaaaaa');
+      // console.log('movedCategory', movedCategory);
+      // setSelectedCategoryId('');
+
+      let currentCategory: ICategoryData = {
+        id: '',
+        name: '',
+      };
+      response.forEach((category) => {
+        if (getCategoryValue(category.name) === movedCategory) {
+          // console.log('categoryID -> ', category, movedCategory);
+          currentCategory = { ...category };
+        }
+      });
+      if (currentCategory.id) setSelectedCategoryId(`categories.id:subtree("${currentCategory.id}")`);
+      else setSelectedCategoryId('');
+      setSelectedCategoryValue(currentCategory.name === '' ? '' : currentCategory.name);
+      // console.log('useFfect start catalog', currentCategory, 'a', selectedCategoryValue);
+      //
+      // console.log('location -------- ', location.state?.isExternal);
+      if (location.state?.isExternal) {
+        handleSizeClick('', '');
+        setPriceRange([0, 100000]);
+      }
     };
 
     fetchCategories().catch(() => toast.error('Error fetching categories.'));
-  }, [selectedCategoryId]);
+  }, [selectedCategoryId, movedCategory]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -181,7 +223,7 @@ const CatalogForm = () => {
 
                   {/* mobile menu */}
                   <form className="mobile-categories mt-4 border-t border-gray-200">
-                    <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleCategoryClick('', '')}>
+                    <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleResetFilters()}>
                       <div className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400">
                         <span className="font-medium text-gray-900">Categories</span>
                       </div>
@@ -207,7 +249,7 @@ const CatalogForm = () => {
                         <span className="font-medium text-gray-900">Size</span>
                       </div>
                     </h3>
-                    {sizeFilters.map((size, sizeIdx) => (
+                    {sizeFilters.map((size) => (
                       <div
                         key={size.label}
                         className={`border-b border-gray-200 py-6 cursor-pointer ${selectedSizeLabel === size.label ? 'bg-gray-100' : ''}`}
@@ -215,7 +257,6 @@ const CatalogForm = () => {
                       >
                         <div className="flex items-center">
                           <label
-                            htmlFor={`filter-${size.value}-${sizeIdx}`}
                             className={`text-sm text-gray-600 cursor-pointer ${selectedSizeValue === size.value ? 'text-green-600' : ''}`}
                           >
                             {size.label}
@@ -341,10 +382,11 @@ const CatalogForm = () => {
             </div>
           </div>
 
+          {/* desktop */}
           <section aria-labelledby="products-heading" className="pb-24 pt-6">
             <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
               <form className="hidden lg:block">
-                <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleCategoryClick('', '')}>
+                <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleResetFilters()}>
                   <div className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400">
                     <span className="font-medium text-gray-900">Categories</span>
                   </div>
@@ -370,7 +412,7 @@ const CatalogForm = () => {
                     <span className="font-medium text-gray-900">Size</span>
                   </div>
                 </h3>
-                {sizeFilters.map((size, sizeIdx) => (
+                {sizeFilters.map((size) => (
                   <div
                     key={size.label}
                     className={`border-b border-gray-200 py-6 cursor-pointer ${selectedSizeLabel === size.label ? 'bg-gray-100' : ''}`}
@@ -378,7 +420,6 @@ const CatalogForm = () => {
                   >
                     <div className="flex items-center">
                       <label
-                        htmlFor={`filter-${size.value}-${sizeIdx}`}
                         className={`text-sm text-gray-600 cursor-pointer ${selectedSizeValue === size.value ? 'text-green-600' : ''}`}
                       >
                         {size.label}
@@ -423,13 +464,14 @@ const CatalogForm = () => {
                       <li
                         className={`flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer hover:text-light-blue-500 ${!selectedCategoryValue && !selectedSizeLabel ? 'text-green-600' : 'text-gray-500'}`}
                       >
-                        <a
-                          href="#"
+                        <Link
+                          to="/catalog"
                           className={`${!selectedCategoryValue && !selectedSizeLabel ? 'text-green-600' : ''}`}
-                          onClick={handleResetFilters}
+                          // onClick={() => navigate('/catalog')}
+                          onClick={() => handleResetFilters()}
                         >
                           Category
-                        </a>
+                        </Link>
                         {(selectedCategoryValue || selectedSizeLabel) && (
                           <span className="mx-2 font-sans text-sm antialiased font-normal leading-normal pointer-events-none select-none text-blue-gray-500">
                             /
@@ -437,37 +479,43 @@ const CatalogForm = () => {
                         )}
                       </li>
                       {selectedCategoryValue && (
-                        <li className="flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer text-blue-gray-900 hover:text-light-blue-500">
-                          <a href="#" onClick={() => handleSizeClick('', '')}>
-                            {selectedCategoryValue}
-                          </a>
-                          {selectedSizeLabel && (
-                            <span className="mx-2 font-sans text-sm antialiased font-normal leading-normal pointer-events-none select-none text-blue-gray-500">
-                              /
-                            </span>
-                          )}
+                        <li className="select-none flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 text-blue-gray-900 hover:text-light-blue-500">
+                          {selectedCategoryValue}
+                          {/* <a href="#" onClick={() => handleSizeClick('', '')}> */}
+                          {/*  {selectedCategoryValue} */}
+                          {/* </a> */}
+                          {/* {selectedSizeLabel && ( */}
+                          {/*  <span className="mx-2 font-sans text-sm antialiased font-normal leading-normal pointer-events-none select-none text-blue-gray-500"> */}
+                          {/*    / */}
+                          {/*  </span> */}
+                          {/* )} */}
                         </li>
                       )}
-                      {selectedSizeLabel && (
-                        <li className="flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer text-blue-gray-900 hover:text-light-blue-500">
-                          <a
-                            href="#"
-                            // onClick={() => handleCategoryClick('', '')}
-                          >
-                            {selectedSizeLabel}
-                          </a>
-                        </li>
-                      )}
+                      {/* {selectedSizeLabel && ( */}
+                      {/*  <li className="flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer text-blue-gray-900 hover:text-light-blue-500"> */}
+                      {/*    <a */}
+                      {/*      href="#" */}
+                      {/*      // onClick={() => handleCategoryClick('', '')} */}
+                      {/*    > */}
+                      {/*      {selectedSizeLabel} */}
+                      {/*    </a> */}
+                      {/*  </li> */}
+                      {/* )} */}
                     </ol>
                   </nav>
 
+                  {/* product card */}
                   <div className="mx-auto max-w-2xl px-4 pt-8 pb-16 sm:px-6 sm:pt-12 sm:pb-24 lg:max-w-7xl lg:px-8">
                     <h2 className="sr-only">Products</h2>
                     <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                       {products?.map((product) => (
                         <Link
                           key={product.id}
-                          to={`/catalog/${product.id}`}
+                          to={
+                            selectedCategoryValue
+                              ? `/catalog/${getCategoryValue(selectedCategoryValue)}/${product.id}`
+                              : `/product/${product.id}`
+                          }
                           className="group block border border-gray-100 rounded-lg shadow transition-transform hover:shadow-md"
                         >
                           <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">

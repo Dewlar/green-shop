@@ -55,6 +55,12 @@ export interface ICategoryData {
   name: string;
 }
 
+export interface IProductData {
+  id: string;
+  name: string;
+  description?: string;
+}
+
 export interface IProductResultsData {
   id: string;
   version: number;

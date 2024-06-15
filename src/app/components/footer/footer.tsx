@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { ClientResponse } from '@commercetools/sdk-client-v2';
+import { ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import mocks from '../mocks-data/mocks';
 import RsLogoSvg from '../svg/rs-logo-svg';
 import GithubLink from './github-link';
 import { useStateContext } from '../../state/state-context';
-import { IProductCategories } from '../../constans';
 import getCategories from '../../api/catalog/getCategories';
 import { getCategoryValue } from '../../models';
+import { ICategoryData, IProductData } from '../../api/types';
+import getProductsFilter from '../../api/catalog/getProductsFilter';
 
 const Footer = () => {
   const { isAuth } = useStateContext();
-  const [categories, setCategories] = useState<IProductCategories[]>([]);
+  const [categories, setCategories] = useState<ICategoryData[]>([]);
+  const [favoriteProducts, setFavoriteProducts] = useState<IProductData[]>([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -20,6 +24,27 @@ const Footer = () => {
     };
 
     fetchCategories().catch(() => toast.error('Error fetching categories.'));
+  }, []);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const response: ClientResponse<ProductProjectionPagedQueryResponse> = await getProductsFilter({
+        filter: [`variants.attributes.Favorite:"true"`],
+        limit: 4,
+      });
+      const responseResult = response.body?.results;
+      if (responseResult) {
+        const products = responseResult.map((product) => {
+          return {
+            id: product.id,
+            name: product.name.en,
+          };
+        });
+        setFavoriteProducts(products);
+      }
+    };
+
+    fetchProducts().catch(() => toast.error('Error fetching products.'));
   }, []);
 
   return (
@@ -39,6 +64,7 @@ const Footer = () => {
                     {categories.map((category) => (
                       <li key={category.name} className="text-sm">
                         <Link
+                          state={{ isExternal: true }}
                           to={`/catalog/${getCategoryValue(category.name)}`}
                           className="text-gray-500 hover:text-gray-600"
                         >
@@ -51,10 +77,10 @@ const Footer = () => {
                 <div>
                   <h3 className="text-sm font-medium text-gray-900">Products</h3>
                   <ul role="list" className="mt-6 space-y-6">
-                    {mocks.footerNavigation.products.map((item) => (
-                      <li key={item.name} className="text-sm">
-                        <a href={item.href} className="text-gray-500 hover:text-gray-600">
-                          {item.name}
+                    {favoriteProducts.map((product) => (
+                      <li key={product.name} className="text-sm">
+                        <a href={`/product/${product.id}`} className="text-gray-500 hover:text-gray-600">
+                          {product.name}
                         </a>
                       </li>
                     ))}
