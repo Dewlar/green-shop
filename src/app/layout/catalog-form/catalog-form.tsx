@@ -249,7 +249,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                         <span className="font-medium text-gray-900">Size</span>
                       </div>
                     </h3>
-                    {sizeFilters.map((size, sizeIdx) => (
+                    {sizeFilters.map((size) => (
                       <div
                         key={size.label}
                         className={`border-b border-gray-200 py-6 cursor-pointer ${selectedSizeLabel === size.label ? 'bg-gray-100' : ''}`}
@@ -257,7 +257,6 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                       >
                         <div className="flex items-center">
                           <label
-                            htmlFor={`filter-${size.value}-${sizeIdx}`}
                             className={`text-sm text-gray-600 cursor-pointer ${selectedSizeValue === size.value ? 'text-green-600' : ''}`}
                           >
                             {size.label}
@@ -413,7 +412,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                     <span className="font-medium text-gray-900">Size</span>
                   </div>
                 </h3>
-                {sizeFilters.map((size, sizeIdx) => (
+                {sizeFilters.map((size) => (
                   <div
                     key={size.label}
                     className={`border-b border-gray-200 py-6 cursor-pointer ${selectedSizeLabel === size.label ? 'bg-gray-100' : ''}`}
@@ -421,7 +420,6 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                   >
                     <div className="flex items-center">
                       <label
-                        htmlFor={`filter-${size.value}-${sizeIdx}`}
                         className={`text-sm text-gray-600 cursor-pointer ${selectedSizeValue === size.value ? 'text-green-600' : ''}`}
                       >
                         {size.label}
