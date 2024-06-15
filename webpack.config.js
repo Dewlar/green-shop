@@ -66,6 +66,8 @@ const baseConfig = {
       template: path.resolve(__dirname, './src/index.html'),
       filename: 'index.html',
       title: 'Caching',
+      inject: true,
+      favicon: path.resolve(__dirname, './src/assets/favicons/favicon.ico'),
     }),
     new CopyPlugin({
       patterns: [
