@@ -48,7 +48,7 @@ const MyModal = ({ className, classText, errorText, type, login, password }: Mod
       id={className}
     >
       <div
-        className="relative flex flex-col justify-center modalWindow space-y-2.5 transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6 z-11"
+        className="relative flex flex-col justify-center modalWindow space-y-2.5 transform overflow-y: hidden; rounded-lg bg-white px-4 pb-4 pt-5 shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6 z-11"
         role="alert"
       >
         <img
