@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import ProductMain from '../../components/product/mainLayout';
 import HeaderWidthMobile from '../../components/header/header-width-mobile';
 import Footer from '../../components/footer/footer';
-import { getOneProduct, getProductData } from '../../components/product/getProduct/getDataProduct';
+import { getOneProduct } from '../../api/catalog/getProductsAll';
 
 const ProductForm = () => {
   const { id } = useParams();
@@ -14,7 +14,6 @@ const ProductForm = () => {
   useEffect(() => {
     async function response() {
       if (!id) return;
-      await getProductData();
       await getOneProduct(id).then(({ body }) => {
         setProduct(body);
       });

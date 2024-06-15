@@ -1,0 +1,85 @@
+.signUpForm {
+    width: 60vw;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem 1.5vw;
+  }
+  
+  .inputWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 90px;
+  }
+  
+  #modal,
+  #modalSuccess {
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  @media screen and (max-width: 800px) {
+    .signUpForm {
+      width: 80vw;
+    }
+  }
+  
+  @media screen and (max-width: 650px) {
+    .signUpForm {
+      width: 90vw;
+  
+      label {
+        font-size: 0.7rem;
+      }
+  
+      .switch-btn {
+        margin-right: 7px;
+      }
+  
+      input,
+      select {
+        font-size: 12px;
+      }
+    }
+    .modalWindow {
+      width: 70vw;
+    }
+  }
+  
+  @media screen and (max-width: 490px) {
+    html {
+      font-size: 15px;
+    }
+    .signUpForm {
+      width: 95vw;
+  
+      label {
+        font-size: 12px;
+      }
+  
+      .switch-btn {
+        font-size: 8px;
+      }
+  
+      input,
+      select {
+        font-size: 10px;
+      }
+    }
+    .modalWindow {
+      width: 90vw;
+    }
+  }
+  
+  @media screen and (max-height: 900px) {
+    .signUpFormWrapper {
+      align-items: start;
+    }
+  }
+  

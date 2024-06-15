@@ -8,7 +8,7 @@ import { useStateContext } from '../../state/state-context';
 import CustomerController from '../../api/CustomerController';
 import TokenService from '../../api/TokenService';
 
-const MyModal = ({ className, classText, errorText, type, login, password /* , redirect */ }: ModalError) => {
+const MyModal = ({ className, classText, errorText, type, login, password }: ModalError) => {
   const { setIsAuth, setAuthData } = useStateContext();
   const navigate = useNavigate();
   const tokenService = new TokenService();
@@ -19,8 +19,6 @@ const MyModal = ({ className, classText, errorText, type, login, password /* , r
     modal!.style.display = 'none';
     modalText!.innerHTML = '';
     if (type === 'Success') {
-      // redirect!('/');
-
       tokenService.removeToken();
       storageSet(LocalStorageKeysEnum.IS_AUTH, false);
       const customerController = new CustomerController();
@@ -39,17 +37,34 @@ const MyModal = ({ className, classText, errorText, type, login, password /* , r
 
             toast((response.apiResult as HttpErrorType).message);
           })
-          .catch(); // todo: you need to add a toast modal window with error text
+          .catch();
       });
     }
   };
 
   return (
-    <div className={className}>
-      <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert" id={className}>
-        <p className="font-bold">{type}</p>
-        <p id={classText}>{errorText}</p>
-        <button className="ok" onClick={(e) => handleClose(e)}>
+    <div
+      className={`fixed inset-0 z-10 h-screen w-screen bg backdrop-blur-sm bg-slate-700 bg-opacity-50 ${className}`}
+      id={className}
+    >
+      <div
+        className="relative flex flex-col justify-center modalWindow space-y-2.5 transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6 z-11"
+        role="alert"
+      >
+        <img
+          className="w-20 h-20 m-auto"
+          src={type === 'Success' ? 'assets/budding-pop-pictures/hello.gif' : 'assets/budding-pop-pictures/no.gif'}
+          alt="modalPicture"
+        />
+        <p className="text-base font-semibold leading-6 text-gray-900">{type}</p>
+        <p className="text-sm text-gray-500" id={classText}>
+          {errorText}
+        </p>
+        <button
+          type="button"
+          className="inline-flex w-50 justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          onClick={(e) => handleClose(e)}
+        >
           OK
         </button>
       </div>

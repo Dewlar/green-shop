@@ -4,29 +4,14 @@ import { Link } from 'react-router-dom';
 import { Customer } from '@commercetools/platform-sdk';
 import { Switch } from '@headlessui/react';
 import { validationRules } from '../../components/signup/regExp';
-import MyLabel from '../../components/signup/label';
 import MyModal from '../../components/signup/modal';
 import { CountryEnum, StorageType } from '../../models';
 import CustomerController from '../../api/CustomerController';
 import { classNames } from '../../api/helpers';
 import { showErrorModal, showSuccessModal } from '../../components/signup/showModal';
-import MyBtn from '../../components/signup/btn';
+import defaultFormValues from '../../components/signup/defaultFormValues';
 
 const SignupForm = () => {
-  const defaultFormValues: StorageType = {
-    firstName: '',
-    lastName: '',
-    dateOfBirth: '',
-    addresses: [
-      { country: 'DE', city: '', streetName: '', postalCode: '' },
-      { country: 'DE', city: '', streetName: '', postalCode: '' },
-    ],
-    email: '',
-    password: '',
-    isDefault: '',
-    isShippingDefault: '',
-  };
-
   const [isDefaultBilling, setDefaultBilling] = useState(false);
   const [isDefaultShipping, setDefaultShipping] = useState(false);
   const [isShipping, setShipping] = useState(false);
@@ -61,7 +46,7 @@ const SignupForm = () => {
       setValue('addresses.1.postalCode', '', { shouldValidate: true, shouldDirty: true, shouldTouch: true });
       setSelectedShippingCountry(false);
     }
-  }, [watchCountryShipping, selectedCountry, setValue]);
+  }, [watchCountryShipping, selectedShippingCountry, setValue]);
   useEffect(() => {
     if (!isShipping) {
       setValue('addresses.1.country', watchCountryBilling);
@@ -85,18 +70,49 @@ const SignupForm = () => {
 
   const pressSubmit: SubmitHandler<FieldValues> = (userData) => {
     const data = userData;
+    const body: StorageType = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      dateOfBirth: data.dateOfBirth,
+      addresses: isShipping
+        ? [
+            {
+              country: data.addresses[0].country,
+              city: data.addresses[0].city,
+              streetName: data.addresses[0].streetName,
+              postalCode: data.addresses[0].postalCode,
+            },
+            {
+              country: data.addresses[1].country,
+              city: data.addresses[1].city,
+              streetName: data.addresses[1].streetName,
+              postalCode: data.addresses[1].postalCode,
+            },
+          ]
+        : [
+            {
+              country: data.addresses[0].country,
+              city: data.addresses[0].city,
+              streetName: data.addresses[0].streetName,
+              postalCode: data.addresses[0].postalCode,
+            },
+          ],
+      billingAddresses: isShipping ? [0, 1] : [0],
+      shippingAddresses: isShipping ? [0, 1] : [0],
+      email: data.email,
+      password: data.password,
+    };
     if (isDefaultBilling) {
-      data.defaultBillingAddress = 0;
+      body.defaultBillingAddress = 0;
     }
     if (isDefaultShipping && isShipping) {
-      data.defaultShippingAddress = 1;
+      body.defaultShippingAddress = 1;
     } else if (isDefaultShipping) {
-      data.defaultShippingAddress = 0;
+      body.defaultShippingAddress = 0;
     }
-    console.log(data);
-    setModalData({ login: data.email, pass: data.password });
+    setModalData({ login: body.email, pass: body.password });
     new CustomerController()
-      .registerCustomer(data as Customer)
+      .registerCustomer(body as unknown as Customer)
       .then(() => {
         showSuccessModal('Great! You are registered');
       })
@@ -104,8 +120,8 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="signUpFormWrapper items-center overflow-auto h-dvh min-h-full px-2">
-      <form className="signUpForm my-8 grid grid-cols-2" onSubmit={handleSubmit(pressSubmit)}>
+    <div className="signUpFormWrapper flex relative justify-center items-center overflow-auto h-dvh min-h-full px-2">
+      <form className="signUpForm w-60vw my-8 grid grid-cols-2" onSubmit={handleSubmit(pressSubmit)}>
         <div className="col-span-2 flex justify-between">
           <div className="flex w-20">
             <Link to="/">
@@ -124,106 +140,53 @@ const SignupForm = () => {
 
         <div className="sectionRegister col-span-2 grid grid-cols-2 gap-x-4 gap-y-0">
           <div className="inputWrapper">
-            <MyLabel htmlFor="name">Name</MyLabel>
+            <label htmlFor="name">Name</label>
             <Controller
               name="firstName"
               control={control}
               rules={validationRules.name}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  // onBlur={(e) => blurHandler(e, regulars, dataDirty, setDataDirty, dataError)}
-                  // onChange={(e) => set}
-                  className="name name1"
-                  name="name"
-                  type="text"
-                  placeholder="Name"
-                  id="name"
-                />
-              )}
+              render={({ field }) => <input {...field} name="name" type="text" placeholder="Name" id="name" />}
             />
             {errors.firstName && <div className="text-xs sm:text-sm text-red-500">{errors.firstName.message}</div>}
           </div>
           <div className="inputWrapper">
-            <MyLabel htmlFor="surname">Surname</MyLabel>
+            <label htmlFor="surname">Surname</label>
             <Controller
               name="lastName"
               control={control}
               rules={validationRules.surname}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  // onBlur={(e) => blurHandler(e, regulars, dataDirty, setDataDirty, dataError)}
-                  // onChange={(e: React.ChangeEvent<HTMLInputElement>) => handler(e, storage, setStorage)}
-                  className="surname surname1"
-                  name="surname"
-                  type="text"
-                  placeholder="Surname"
-                  id="surname"
-                />
-              )}
+              render={({ field }) => <input {...field} name="surname" type="text" placeholder="Surname" id="surname" />}
             />
             {errors.lastName && <div className="text-xs sm:text-sm text-red-500">{errors.lastName.message}</div>}
           </div>
           <div className="inputWrapper">
-            <MyLabel htmlFor="birth">Birth</MyLabel>
+            <label htmlFor="birth">Birth</label>
             <Controller
               name="dateOfBirth"
               control={control}
               rules={validationRules.dateOfBirth}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  // onBlur={(e) => blurHandler(e, regulars, dataDirty, setDataDirty, dataError)}
-                  // onChange={(e: React.ChangeEvent<HTMLInputElement>) => handler(e, storage, setStorage)}
-                  className="birth birth1"
-                  name="birth"
-                  type="date"
-                  placeholder="Birth"
-                  id="birth"
-                />
-              )}
+              render={({ field }) => <input {...field} name="birth" type="date" placeholder="Birth" id="birth" />}
             />
             {errors.dateOfBirth && <div className="text-xs sm:text-sm text-red-500">{errors.dateOfBirth.message}</div>}
           </div>
           <div className="inputWrapper">
-            <MyLabel htmlFor="email">Email</MyLabel>
+            <label htmlFor="email">Email</label>
             <Controller
               name="email"
               control={control}
               rules={validationRules.email}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  // onBlur={(e) => blurHandler(e, regulars, dataDirty, setDataDirty, dataError)}
-                  // onChange={(e: React.ChangeEvent<HTMLInputElement>) => handler(e, storage, setStorage)}
-                  className="email email1"
-                  name="email"
-                  type="text"
-                  placeholder="Email"
-                  id="email"
-                />
-              )}
+              render={({ field }) => <input {...field} name="email" type="text" placeholder="Email" id="email" />}
             />
             {errors.email && <div className="text-xs sm:text-sm text-red-500">{errors.email.message}</div>}
           </div>
           <div className="inputWrapper">
-            <MyLabel htmlFor="password">Password</MyLabel>
+            <label htmlFor="password">Password</label>
             <Controller
               name="password"
               control={control}
               rules={validationRules.password}
               render={({ field }) => (
-                <input
-                  {...field}
-                  // onBlur={(e) => blurHandler(e, regulars, dataDirty, setDataDirty, dataError)}
-                  // onChange={(e: React.ChangeEvent<HTMLInputElement>) => handler(e, storage, setStorage)}
-                  className="password password1"
-                  name="password"
-                  type="text"
-                  placeholder="Password"
-                  id="password"
-                />
+                <input {...field} name="password" type="password" placeholder="Password" id="password" />
               )}
             />
             {errors.password && <div className="text-xs sm:text-sm text-red-500">{errors.password.message}</div>}
@@ -231,7 +194,7 @@ const SignupForm = () => {
           <div className="inputWrapper">
             <div className="flex flex-col items-end justify-center gap-2 mt-auto mb-auto">
               <div className="flex justify-between h-fit w-fit right-0 bottom-36">
-                <MyLabel className="text-xs w-fit mr-5 h-fit">Add Shipping address</MyLabel>
+                <label className="switch-btn text-xs w-fit mr-5 h-fit">Add Shipping address</label>
                 <Switch
                   checked={isShipping}
                   onChange={setShipping}
@@ -250,7 +213,7 @@ const SignupForm = () => {
                 </Switch>
               </div>
               <div className="flex justify-between h-fit w-fit right-0 bottom-36">
-                <MyLabel className="text-xs w-fit mr-5 h-fit">Set Address as default</MyLabel>
+                <label className="switch-btn text-xs w-fit mr-5 h-fit">Set Address as default</label>
                 <Switch
                   checked={isDefaultBilling}
                   onChange={setDefaultBilling}
@@ -269,7 +232,7 @@ const SignupForm = () => {
                 </Switch>
               </div>
               <div className="flex  justify-between w-fit h-fit right-0 bottom-28">
-                <MyLabel className="text-xs w-fit mr-5 h-fit">Set Shipping Address as default</MyLabel>
+                <label className="switch-btn text-xs w-fit mr-5 h-fit">Set Shipping Address as default</label>
                 <Switch
                   checked={isDefaultShipping}
                   onChange={setDefaultShipping}
@@ -292,7 +255,7 @@ const SignupForm = () => {
         </div>
         <div className="sectionRegister">
           <div className="inputWrapper">
-            <MyLabel htmlFor="country">Country</MyLabel>
+            <label htmlFor="country">Country</label>
             <Controller
               name="addresses.0.country"
               control={control}
@@ -304,6 +267,7 @@ const SignupForm = () => {
                   className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:max-w-xs sm:text-sm sm:leading-6"
                   onChange={(e) => {
                     field.onChange(e);
+                    setSelectedCountry(true);
                   }}
                 >
                   {Object.entries(CountryEnum).map(([code, name]) => (
@@ -319,69 +283,36 @@ const SignupForm = () => {
             )}
           </div>
           <div className="inputWrapper">
-            <MyLabel htmlFor="city">Town/city</MyLabel>
+            <label htmlFor="city">Town/city</label>
             <Controller
               name="addresses.0.city"
               control={control}
               rules={validationRules.city}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  // onBlur={(e) => blurHandler(e, regulars, dataDirty, setDataDirty, dataError)}
-                  // onChange={(e: React.ChangeEvent<HTMLInputElement>) => handler(e, storage, setStorage)}
-                  className="city city1"
-                  name="city"
-                  type="text"
-                  placeholder="Town/city"
-                  id="city"
-                />
-              )}
+              render={({ field }) => <input {...field} name="city" type="text" placeholder="Town/city" id="city" />}
             />
             {errors.addresses?.[0]?.city && (
               <div className="text-xs sm:text-sm text-red-500">{errors.addresses?.[0]?.city.message}</div>
             )}
           </div>
           <div className="inputWrapper">
-            <MyLabel htmlFor="street">Street</MyLabel>
+            <label htmlFor="street">Street</label>
             <Controller
               name="addresses.0.streetName"
               control={control}
               rules={validationRules.streetName}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  // onBlur={(e) => blurHandler(e, regulars, dataDirty, setDataDirty, dataError)}
-                  // onChange={(e: React.ChangeEvent<HTMLInputElement>) => handler(e, storage, setStorage)}
-                  className="street street1"
-                  name="street"
-                  type="text"
-                  placeholder="Street"
-                  id="street"
-                />
-              )}
+              render={({ field }) => <input {...field} name="street" type="text" placeholder="Street" id="street" />}
             />
             {errors.addresses?.[0]?.streetName && (
               <div className="text-xs sm:text-sm text-red-500">{errors.addresses?.[0]?.streetName.message}</div>
             )}
           </div>
           <div className="inputWrapper">
-            <MyLabel htmlFor="zip">Zip</MyLabel>
+            <label htmlFor="zip">Zip</label>
             <Controller
               name="addresses.0.postalCode"
               control={control}
               rules={validationRules.postalCode(watchCountryBilling)}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  // onBlur={(e) => blurHandler(e, regulars, dataDirty, setDataDirty, dataError)}
-                  // onChange={(e: React.ChangeEvent<HTMLInputElement>) => handler(e, storage, setStorage)}
-                  className="zip zip1"
-                  name="zip"
-                  type="text"
-                  placeholder="Zip"
-                  id="zip"
-                />
-              )}
+              render={({ field }) => <input {...field} name="zip" type="text" placeholder="Zip" id="zip" />}
             />
             {errors.addresses?.[0]?.postalCode && (
               <div className="text-xs sm:text-sm text-red-500">{errors.addresses?.[0]?.postalCode.message}</div>
@@ -390,7 +321,7 @@ const SignupForm = () => {
         </div>
         <div className="sectionRegister">
           <div className="inputWrapper">
-            <MyLabel htmlFor="shippingCountry">Shipping Country</MyLabel>
+            <label htmlFor="shippingCountry">Shipping Country</label>
             <Controller
               name="addresses.1.country"
               control={control}
@@ -403,6 +334,7 @@ const SignupForm = () => {
                   className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:max-w-xs sm:text-sm sm:leading-6"
                   onChange={(e) => {
                     field.onChange(e);
+                    setSelectedShippingCountry(true);
                   }}
                 >
                   {Object.entries(CountryEnum).map(([code, name]) => (
@@ -418,7 +350,7 @@ const SignupForm = () => {
             )}
           </div>
           <div className="inputWrapper">
-            <MyLabel htmlFor="shippingCity">Shipping City</MyLabel>
+            <label htmlFor="shippingCity">Shipping City</label>
             <Controller
               name="addresses.1.city"
               control={control}
@@ -426,8 +358,6 @@ const SignupForm = () => {
               render={({ field }) => (
                 <input
                   {...field}
-                  // onBlur={(e) => blurHandler(e, regulars, dataDirty, setDataDirty, dataError)}
-                  // onChange={(e: React.ChangeEvent<HTMLInputElement>) => handler(e, storage, setStorage)}
                   className={classNames(!isShipping ? 'bg-gray-200' : '', 'shippingCity')}
                   disabled={!isShipping}
                   name="shippingCity"
@@ -442,7 +372,7 @@ const SignupForm = () => {
             )}
           </div>
           <div className="inputWrapper">
-            <MyLabel htmlFor="shippingStreet">Shipping Street</MyLabel>
+            <label htmlFor="shippingStreet">Shipping Street</label>
             <Controller
               name="addresses.1.streetName"
               control={control}
@@ -450,8 +380,6 @@ const SignupForm = () => {
               render={({ field }) => (
                 <input
                   {...field}
-                  // onBlur={(e) => blurHandler(e, regulars, dataDirty, setDataDirty, dataError)}
-                  // onChange={(e: React.ChangeEvent<HTMLInputElement>) => handler(e, storage, setStorage)}
                   className={classNames(!isShipping ? 'bg-gray-200' : '', 'shippingStreet')}
                   disabled={!isShipping}
                   name="shippingStreet"
@@ -466,7 +394,7 @@ const SignupForm = () => {
             )}
           </div>
           <div className="inputWrapper">
-            <MyLabel htmlFor="shippingZip">Shipping Zip</MyLabel>
+            <label htmlFor="shippingZip">Shipping Zip</label>
             <Controller
               name="addresses.1.postalCode"
               control={control}
@@ -474,8 +402,6 @@ const SignupForm = () => {
               render={({ field }) => (
                 <input
                   {...field}
-                  // onBlur={(e) => blurHandler(e, regulars, dataDirty, setDataDirty, dataError)}
-                  // onChange={(e: React.ChangeEvent<HTMLInputElement>) => handler(e, storage, setStorage)}
                   className={classNames(!isShipping ? 'bg-gray-200' : '', 'shippingZip')}
                   disabled={!isShipping}
                   name="shippingZip"
@@ -492,14 +418,12 @@ const SignupForm = () => {
         </div>
 
         <div className="flex justify-center col-span-2">
-          <MyBtn
-            // onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => pressSubmit(e, storage)}
+          <button
             type="submit"
-            className={`rounded-md bg-gray-200 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm ${isValid ? 'bg-green-600 hover:bg-green-700 cursor-pointer' : 'cursor-default'}`}
+            className={`rounded-md bg-gray-200 px-3.5 py-2.5 text-sm font-semibold text-white ${isValid ? 'bg-green-600 hover:bg-green-700 cursor-pointer' : 'cursor-default'}`}
           >
             Registration
-          </MyBtn>
-          {/* <input type="submit" /> */}
+          </button>
         </div>
         <MyModal
           className="modal"
@@ -516,7 +440,6 @@ const SignupForm = () => {
           type="Success"
           login={modalData.login}
           password={modalData.pass}
-          // redirect={navigate}
         ></MyModal>
       </form>
     </div>
