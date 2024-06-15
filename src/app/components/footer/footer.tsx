@@ -9,13 +9,13 @@ import GithubLink from './github-link';
 import { useStateContext } from '../../state/state-context';
 import getCategories from '../../api/catalog/getCategories';
 import { getCategoryValue } from '../../models';
-import { ICategoryData } from '../../api/types';
+import { ICategoryData, IProductData } from '../../api/types';
 import getProductsFilter from '../../api/catalog/getProductsFilter';
 
 const Footer = () => {
   const { isAuth } = useStateContext();
   const [categories, setCategories] = useState<ICategoryData[]>([]);
-  const [favoriteProducts, setFavoriteProducts] = useState<ICategoryData[]>([]);
+  const [favoriteProducts, setFavoriteProducts] = useState<IProductData[]>([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -36,14 +36,12 @@ const Footer = () => {
       if (responseResult) {
         const products = responseResult.map((product) => {
           return {
-            name: product.name.en,
             id: product.id,
+            name: product.name.en,
           };
         });
-        console.log(products);
         setFavoriteProducts(products);
       }
-      console.log('actual favorite products:', responseResult, favoriteProducts);
     };
 
     fetchProducts().catch(() => toast.error('Error fetching products.'));
