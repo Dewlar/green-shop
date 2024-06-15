@@ -5,13 +5,13 @@ import mocks from '../mocks-data/mocks';
 import RsLogoSvg from '../svg/rs-logo-svg';
 import GithubLink from './github-link';
 import { useStateContext } from '../../state/state-context';
-import { IProductCategories } from '../../constans';
 import getCategories from '../../api/catalog/getCategories';
 import { getCategoryValue } from '../../models';
+import { ICategoryData } from '../../api/types';
 
 const Footer = () => {
   const { isAuth } = useStateContext();
-  const [categories, setCategories] = useState<IProductCategories[]>([]);
+  const [categories, setCategories] = useState<ICategoryData[]>([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -39,6 +39,7 @@ const Footer = () => {
                     {categories.map((category) => (
                       <li key={category.name} className="text-sm">
                         <Link
+                          state={{ isExternal: true }}
                           to={`/catalog/${getCategoryValue(category.name)}`}
                           className="text-gray-500 hover:text-gray-600"
                         >

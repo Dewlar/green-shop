@@ -9,8 +9,6 @@ import { getOneProduct, getProductData } from '../../components/product/getProdu
 const ProductForm = () => {
   const { id } = useParams();
   const [productStorage, setProduct] = useState({} as Product);
-  const depth = '2';
-
   useEffect(() => {
     async function response() {
       if (!id) return;
@@ -24,7 +22,7 @@ const ProductForm = () => {
 
   return (
     <div>
-      <HeaderWidthMobile depth={depth}></HeaderWidthMobile>
+      <HeaderWidthMobile></HeaderWidthMobile>
       <ProductMain {...productStorage}></ProductMain>
       <Footer></Footer>
     </div>
