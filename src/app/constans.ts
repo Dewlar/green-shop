@@ -1,5 +1,10 @@
 import { ISortOption } from './api/types';
 
+export interface IProductCategories {
+  id: string;
+  name: string;
+}
+
 export const categoryFilters = [
   {
     name: 'Category',

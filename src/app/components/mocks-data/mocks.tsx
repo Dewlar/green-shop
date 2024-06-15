@@ -9,19 +9,19 @@ const collections = [
   {
     name: 'Indoor plants',
     href: '/catalog',
-    imageSrc: './assets/products/indoor.jpg',
+    imageSrc: './assets/products/indoor-plants.jpg',
     imageAlt: 'Indoor plants',
   },
   {
     name: 'Outdoor plants',
     href: '/catalog',
-    imageSrc: './assets/products/outdoor.jpg',
+    imageSrc: './assets/products/outdoor-plants.jpg',
     imageAlt: 'Outdoor plants',
   },
   {
     name: 'Fantasy plants',
     href: '/catalog',
-    imageSrc: './assets/products/fantasy.jpg',
+    imageSrc: './assets/products/fantasy-plants.jpg',
     imageAlt: 'Fantasy plants',
   },
 ];
@@ -40,7 +40,7 @@ const footerNavigation = {
     { name: 'Catalog', href: '/catalog' },
     { name: 'About us', href: '/about' },
     { name: 'Registration', href: '/signup' },
-    { name: 'Your account', href: '/profile' },
+    { name: 'Your account', href: '' },
   ],
   follow: [
     { name: 'Dewlar', href: 'https://github.com/Dewlar' },

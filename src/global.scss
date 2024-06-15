@@ -80,13 +80,11 @@ button {
   min-height: 90px;
 }
 
-.submitRegistration {
-  //position: absolute;
-  //bottom: 20px;
-  //left: 50%;
-  //transform: translate(-50%, -50%);
-  //font-size: 18px;
-  //font-style: italic;
+.threeLineTextClamp{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
 }
 
 .shippingCountry7,
