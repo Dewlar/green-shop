@@ -1,28 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { XMarkIcon as XMarkIconMini } from '@heroicons/react/20/solid';
-import { Cart, CentPrecisionMoney, LineItem } from '@commercetools/platform-sdk';
+import { Cart, CentPrecisionMoney, LineItem, ClientResponse as ClientResponse2 } from '@commercetools/platform-sdk';
 import { toast } from 'react-toastify';
-import { ClientResponse } from '@commercetools/sdk-client-v2';
+import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import {
+  addDiscountCode,
   clearBasket,
   deleteProductInBasket,
   getLineItemsFromBasket,
   getTotalPrice,
+  removeDiscountCode,
   updateBasketQuantityProduct,
 } from '../../api/basket/BasketRepository';
 import { formatPriceInEuro } from '../../api/helpers';
 
 const BasketForm = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [lineItems, setLineItems] = useState<LineItem[]>([]);
   const [totalPrice, setTotalPrice] = useState<CentPrecisionMoney | undefined>();
-  const [promoCodePrice, setPromoCodePrice] = useState<number>();
   const [orderPrice, setOrderPrice] = useState<number>();
+  const [quantityProduct, setQuantityProduct] = useState(1);
+  const [inputPromoCode, setInputPromoCode] = useState('');
   const [promoCode, setPromoCode] = useState('');
   const [isPromoValid, setIsPromoValid] = useState(false);
-  const [isAppliedPromoCode, setIsAppliedPromoCode] = useState(false);
-  const [lineItems, setLineItems] = useState<LineItem[]>([]);
+  const [isDisabledButtonPromoCode, setIsDisabledButtonPromoCode] = useState(false);
+  const [discountId, setDiscountId] = useState<string | null>(null);
   const discountFixed = 0;
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [quantityProduct, setQuantityProduct] = useState(1);
 
   const handleQuantityChange = async (
     productId: string,
@@ -42,13 +45,17 @@ const BasketForm = () => {
       }
 
       if (newQuantity) {
-        const response = await updateBasketQuantityProduct({
-          productId,
-          quantity: newQuantity,
-        });
-        setQuantityProduct(newQuantity);
+        try {
+          const response = await updateBasketQuantityProduct({
+            productId,
+            quantity: newQuantity,
+          });
 
-        console.log('Quantity updated successfully:', response);
+          setQuantityProduct(newQuantity);
+          console.log('Quantity updated successfully:', response);
+        } catch (error) {
+          console.error('Error updating quantity:', error);
+        }
       }
     } catch (error) {
       console.error('Error updating quantity:', error);
@@ -59,10 +66,14 @@ const BasketForm = () => {
     try {
       const response = await clearBasket();
       setLineItems((response as ClientResponse<Cart>).body?.lineItems ?? []);
+      setIsModalOpen(false);
     } catch (error) {
       toast.error('Error removing product from cart.');
     }
-    setIsModalOpen(false);
+    removeDiscountCode('plant-coupon').then(() => {
+      setPromoCode('');
+      setDiscountId('');
+    });
   };
 
   const handleRemoveProductClick = async (productId: string, quantity: number) => {
@@ -76,21 +87,29 @@ const BasketForm = () => {
 
   const handlePromoCodeClick = () => {
     if (isPromoValid) {
-      setIsAppliedPromoCode(true);
-      setPromoCodePrice(8.32);
+      setIsDisabledButtonPromoCode(true);
+      setPromoCode('plant-coupon');
     }
   };
 
   const handlePromoChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
-    setPromoCode(input);
-    setIsAppliedPromoCode(false);
+    setInputPromoCode(input);
+    setIsDisabledButtonPromoCode(false);
 
-    if (input.trim().toUpperCase() === 'CODE') {
+    if (input.trim() === 'plant-coupon') {
       setIsPromoValid(true);
     } else {
       setIsPromoValid(false);
     }
+  };
+
+  const handleRemovePromoCodeClick = () => {
+    setIsDisabledButtonPromoCode(false);
+    removeDiscountCode(promoCode).then(() => {
+      setPromoCode('');
+      setDiscountId('');
+    });
   };
 
   useEffect(() => {
@@ -111,14 +130,36 @@ const BasketForm = () => {
       try {
         const response: CentPrecisionMoney | undefined = await getTotalPrice();
         setTotalPrice(response);
-        setOrderPrice((response?.centAmount ?? 0) - discountFixed - (promoCodePrice ?? 0));
+        setOrderPrice((response?.centAmount ?? 0) - discountFixed);
       } catch (error) {
         toast.error('Error adding product to cart.');
       }
     };
 
     fetchProducts();
-  }, [lineItems, promoCodePrice, quantityProduct]);
+  }, [lineItems, quantityProduct, promoCode, discountId, isDisabledButtonPromoCode]);
+
+  useEffect(() => {
+    if (!promoCode) return;
+
+    const fetchProducts = async () => {
+      try {
+        const response: ClientResponse2<Cart> | ClientResult = await addDiscountCode(promoCode);
+
+        const { discountCodes } = response.body as Cart;
+        if (discountCodes.length > 0) {
+          const discountCodeId = discountCodes[0].discountCode.id;
+          setDiscountId(discountCodeId);
+        } else {
+          setDiscountId(null);
+        }
+      } catch (error) {
+        toast.error('Error fetching categories.');
+      }
+    };
+
+    fetchProducts();
+  }, [promoCode]);
 
   return (
     <div className="bg-white">
@@ -281,7 +322,7 @@ const BasketForm = () => {
                   <dt className="flex items-center text-sm text-gray-600">
                     <span>Discount</span>
                   </dt>
-                  <dd className="text-sm font-medium text-gray-900">€{discountFixed.toFixed(2)}</dd>
+                  <dd className="text-sm font-medium text-gray-900">{discountFixed.toFixed(2)} €</dd>
                 </div>
                 <div className="promo-code flex items-center justify-between border-t border-gray-200 pt-4">
                   <dt className="flex text-sm text-gray-600 items-center justify-center">
@@ -289,25 +330,34 @@ const BasketForm = () => {
                       <input
                         id="promo-code"
                         type="text"
-                        value={promoCode}
+                        value={inputPromoCode}
                         onChange={handlePromoChangeInput}
                         placeholder="Enter promo code"
                         className="block disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
                       />
                     </div>
-                    <button
-                      onClick={handlePromoCodeClick}
-                      disabled={isAppliedPromoCode}
-                      className={`ml-2 flex items-center justify-center w-8 h-8 rounded-full ${isPromoValid && !isAppliedPromoCode ? 'bg-green-500 text-white hover:bg-green-700' : 'bg-gray-400 text-gray-700'}`}
-                    >
-                      ✔
-                    </button>
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={handlePromoCodeClick}
+                        disabled={isDisabledButtonPromoCode}
+                        className={`ml-2 flex items-center justify-center w-8 h-8 rounded-full ${isPromoValid && !isDisabledButtonPromoCode ? 'bg-green-500 text-white hover:bg-green-700' : 'bg-gray-400 text-gray-700'}`}
+                      >
+                        ✔
+                      </button>
+                      <button
+                        onClick={handleRemovePromoCodeClick}
+                        disabled={!isDisabledButtonPromoCode}
+                        className={`ml-2 flex items-center justify-center w-8 h-8 rounded-full ${isDisabledButtonPromoCode ? 'bg-red-500 text-white hover:bg-red-700' : 'bg-gray-400 text-gray-700'}`}
+                      >
+                        ✖
+                      </button>
+                    </div>
                   </dt>
-                  <dd className="text-sm font-medium text-gray-900">{isAppliedPromoCode ? promoCodePrice : ''}</dd>
+                  <dd className="text-sm font-medium text-gray-900">{isDisabledButtonPromoCode ? 5 : ''}</dd>
                 </div>
                 <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                   <dt className="text-base font-medium text-gray-900">Order total</dt>
-                  <dd className="text-base font-medium text-gray-900">${formatPriceInEuro(orderPrice ?? 0)}</dd>
+                  <dd className="text-base font-medium text-gray-900">{formatPriceInEuro(orderPrice ?? 0)}</dd>
                 </div>
               </dl>
 

@@ -1,5 +1,11 @@
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
-import { Cart, CentPrecisionMoney, LineItem, MyCartUpdateAction } from '@commercetools/platform-sdk';
+import {
+  Cart,
+  CentPrecisionMoney,
+  LineItem,
+  MyCartUpdateAction,
+  ClientResponse as ClientResponse2,
+} from '@commercetools/platform-sdk';
 import RefreshTokenClient from '../RefreshTokenClient';
 import { getProjectKey } from '../helpers';
 import { ICurrentBasket } from '../types';
@@ -229,5 +235,120 @@ export const updateBasketQuantityProduct = async ({
     return result as ClientResponse<Cart>;
   } catch (error) {
     return error as ClientResponse<ClientResult>;
+  }
+};
+
+export const addDiscountCode = async (code: string): Promise<ClientResponse2<Cart> | ClientResult> => {
+  try {
+    const client = new RefreshTokenClient();
+    const apiRoot = client.getApiRoot();
+    const { ID, version } = await createOrGetActiveBasket();
+
+    const result: ClientResponse2<Cart> = await apiRoot
+      .withProjectKey({
+        projectKey,
+      })
+      .me()
+      .carts()
+      .withId({ ID })
+      .post({
+        body: {
+          version,
+          actions: [{ action: 'addDiscountCode', code }],
+        },
+      })
+      .execute();
+
+    return result;
+  } catch (error) {
+    return error as ClientResult;
+  }
+};
+
+const isDiscountsApplied = async (): Promise<boolean> => {
+  const client = new RefreshTokenClient();
+  const apiRoot = client.getApiRoot();
+
+  const result = await apiRoot
+    .withProjectKey({
+      projectKey,
+    })
+    .me()
+    .activeCart()
+    .get()
+    .execute();
+
+  if (result.body.discountCodes.length === 0) {
+    throw new Error('No promo codes applied');
+  }
+  return true;
+};
+
+const getPromocodeID = async (code: string): Promise<string> => {
+  const client = new RefreshTokenClient();
+  const apiRoot = client.getApiRoot();
+  const result = await apiRoot
+    .withProjectKey({
+      projectKey,
+    })
+    .discountCodes()
+    .get()
+    .execute();
+
+  const { results } = result.body;
+  const promocode = results.find((item) => item.code === code);
+
+  if (!promocode) {
+    throw new Error('No specified promo code in the cart');
+  }
+
+  return promocode.id;
+};
+
+export const removeDiscountCode = async (code: string): Promise<ClientResponse<Cart | ClientResult>> => {
+  try {
+    const client = new RefreshTokenClient();
+    const apiRoot = client.getApiRoot();
+    const { ID, version } = await createOrGetActiveBasket();
+
+    const isApplied = await isDiscountsApplied();
+    if (!isApplied) {
+      console.log('No discounts applied, skipping removal.');
+      return {
+        statusCode: 200,
+        message: 'No discounts applied, skipping removal.',
+      } as ClientResponse<ClientResult>;
+    }
+
+    const promocodeID = await getPromocodeID(code);
+    const result = await apiRoot
+      .withProjectKey({
+        projectKey,
+      })
+      .me()
+      .carts()
+      .withId({ ID })
+      .post({
+        body: {
+          version,
+          actions: [
+            {
+              action: 'removeDiscountCode',
+              discountCode: { typeId: 'discount-code', id: promocodeID },
+            },
+          ],
+        },
+      })
+      .execute();
+
+    console.log('Discount code removed successfully');
+
+    return result as ClientResponse<Cart>;
+  } catch (error) {
+    console.error('Error removing discount code:', error);
+    return {
+      statusCode: 500,
+      message: (error as Error).message,
+    } as ClientResponse<ClientResult>;
   }
 };
