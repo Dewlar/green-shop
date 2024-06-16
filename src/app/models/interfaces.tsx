@@ -1,65 +1,12 @@
-import { Product } from '@commercetools/platform-sdk';
-import { LoadingType } from 'react-loading';
+import { Address, Product } from '@commercetools/platform-sdk';
 import { NavigateFunction } from 'react-router-dom';
 import React from 'react';
 
 const sample = () => 1;
 const sample2 = () => 1;
 
-export interface TypeOfInputs {
-  name: RegExp;
-  surname: RegExp;
-  birth: RegExp;
-  country: RegExp;
-  city: RegExp;
-  street: RegExp;
-  zip: RegExp;
-  shippingCountry: RegExp;
-  shippingCity: RegExp;
-  shippingStreet: RegExp;
-  shippingZip: RegExp;
-  email: RegExp;
-  password: RegExp;
-}
-
-export interface TypeItem {
-  prop: string;
-  type: string;
-  index: number;
-  dataD: Array<boolean>;
-  dataE: Array<string>;
-  stor: Array<string>;
-  setData: React.Dispatch<React.SetStateAction<boolean[]>>;
-  setStor: React.Dispatch<React.SetStateAction<string[]>>;
-  setDataE: React.Dispatch<React.SetStateAction<string[]>>;
-  onB: (
-    e: React.FocusEvent<HTMLInputElement, Element> | React.FocusEvent<HTMLSelectElement, Element>,
-    reg: TypeOfInputs,
-    dataD: Array<boolean>,
-    setData: React.Dispatch<React.SetStateAction<boolean[]>>,
-    dataE: Array<string>
-  ) => void;
-  onC: (
-    e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>,
-    stor: Array<string>,
-    setStor: React.Dispatch<React.SetStateAction<string[]>>,
-    dataE: Array<string>,
-    setDataE: React.Dispatch<React.SetStateAction<string[]>>
-  ) => void;
-}
-export interface BlurType {
-  e: React.FocusEvent<HTMLInputElement, Element>;
-  reg: TypeOfInputs;
-  dataD: Array<boolean>;
-  setData: React.Dispatch<React.SetStateAction<boolean[]>>;
-  dataE: Array<string>;
-}
-
 export interface StringObject {
   [key: string]: string;
-}
-export interface SelectHtml {
-  e: React.ChangeEvent<HTMLInputElement> | React.SelectHTMLAttributes<HTMLSelectElement>;
 }
 export interface ModalError {
   className: string;
@@ -71,14 +18,6 @@ export interface ModalError {
   redirect?: NavigateFunction;
 }
 
-export interface TypeOfZip {
-  [key: string]: RegExp;
-}
-
-export interface TypeLoading {
-  type: LoadingType;
-  color: string;
-}
 export interface ModalSlider {
   data: Product;
   setModalSlider?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -91,6 +30,21 @@ export interface TypeSizeBtn {
 }
 export interface TypeSizesOrder {
   [key: string]: number;
+}
+
+export interface StorageType {
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  addresses: Address[];
+  email: string;
+  password: string;
+  isDefault?: string;
+  isShippingDefault?: string;
+  billingAddresses?: number[];
+  shippingAddresses?: number[];
+  defaultBillingAddress?: number;
+  defaultShippingAddress?: number;
 }
 
 export default { sample, sample2 };

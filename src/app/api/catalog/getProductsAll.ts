@@ -48,3 +48,16 @@ export const getQueryProducts = async (
     .execute();
   return result as ClientResponse<ProductProjectionPagedQueryResponse>;
 };
+export const getOneProduct = async (product: string) => {
+  const client = new AnonymousClient();
+  const apiRoot = client.getApiRoot();
+  const result = await apiRoot
+    .withProjectKey({
+      projectKey,
+    })
+    .products()
+    .withId({ ID: product })
+    .get()
+    .execute();
+  return result;
+};
