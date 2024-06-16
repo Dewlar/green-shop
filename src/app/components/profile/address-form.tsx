@@ -18,6 +18,7 @@ import DefaultAddressSwitch from './default-address-switch';
 import ButtonEditUpdate from './button-edit-update';
 import CustomerController from '../../api/CustomerController';
 import { validationRules } from '../signup/regExp';
+import BubblingSideImage from './bubblingSideImage';
 
 interface IProps {
   address: Address & { isNew?: boolean };
@@ -238,7 +239,15 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
   };
 
   return (
-    <div className="relative z-10 md:col-span-2 md:col-start-2 ">
+    <div className="relative z-0 md:col-span-2 md:col-start-2 ">
+      <img
+        className={classNames(
+          isEdit ? ' opacity-0' : ' opacity-100',
+          'md:hidden absolute bottom-0 right-12 w-24 sm:w-32 h-auto transform transition-opacity duration-500 ease-in-out'
+        )}
+        src="./assets/budding-pop-pictures/waiter.gif"
+        alt=""
+      />
       <form key={address.id} className="border rounded-md p-3 bg-white" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 gap-x-6 gap-y-7 sm:grid-cols-6">
           <div className="sm:col-span-3">
@@ -383,14 +392,8 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
           )}
         </div>
       </form>
-      <img
-        className={classNames(
-          isEdit ? ' rotate-90' : '',
-          'hidden md:block absolute -z-10 bottom-0 -left-24 w-24 h-auto transform origin-bottom-right transition-all duration-500'
-        )}
-        src="./assets/budding-pop-pictures/whats-going-on2.png"
-        alt=""
-      />
+
+      <BubblingSideImage isEdit={isEdit} />
     </div>
   );
 };
