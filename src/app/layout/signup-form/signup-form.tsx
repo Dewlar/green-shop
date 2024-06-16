@@ -117,7 +117,7 @@ const SignupForm = () => {
             disabled={!formValid}
             onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => pressSubmit(e, storage)}
             type="submit"
-            className="select-none disabled:bg-green-200 rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-700"
+            className="submitRegistrationselect-none disabled:bg-green-200 rounded-md bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-700"
           >
             Registration
           </MyBtn>

@@ -48,6 +48,13 @@ body {
   }
 }
 
+.threeLineTextClamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+}
+
 button {
   user-select: none;
 }
@@ -80,7 +87,7 @@ button {
   min-height: 90px;
 }
 
-.threeLineTextClamp{
+.threeLineTextClamp2{
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 5;
