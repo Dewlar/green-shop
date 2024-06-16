@@ -98,8 +98,8 @@ const AboutLayout = () => {
                   </div>
                   <div className="text-sm font-semibold leading-8 text-white sm:text-lg sm:leading-9 text-justify">
                     <p>
-                      Gravida quam mi erat tortor neque molestie. Auctor aliquet at porttitor a enim nunc suscipit
-                      tincidunt nunc. Et non lorem tortor posuere.{' '}
+                      I have completed a five-year higher education. I graduated from the Faculty of Biology of the
+                      Belarusian State University. Currently I work in my specialty, but I decided to change my
                       <span className="m-1 h-44 w-56 float-left relative block text-center">
                         <img
                           src="assets/about/pic/commerce2.png"
@@ -108,7 +108,8 @@ const AboutLayout = () => {
                         />
                         <span className="text-sm text-gray-900">R.S.Survivor developer</span>
                       </span>
-                      Nunc eu scelerisque interdum eget tellus non nibh scelerisque bibendum.
+                      profession and become a web developer. Despite all the difficulties that arise, I like to solve
+                      all these problems, find my own solutions, and simply - constantly learn something new.
                     </p>
                   </div>
                 </div>
