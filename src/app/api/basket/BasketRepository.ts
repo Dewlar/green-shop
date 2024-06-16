@@ -52,6 +52,26 @@ export const createOrGetActiveBasket = async (): Promise<ICurrentBasket> => {
   }
 };
 
+export const getBasket = async (): Promise<ClientResponse<Cart | ClientResult>> => {
+  try {
+    const client = new RefreshTokenClient();
+    const apiRoot = client.getApiRoot();
+
+    const result = await apiRoot
+      .withProjectKey({
+        projectKey,
+      })
+      .me()
+      .activeCart()
+      .get()
+      .execute();
+
+    return result as ClientResponse<Cart>;
+  } catch (error) {
+    return error as ClientResponse<ClientResult>;
+  }
+};
+
 export const getTotalPrice = async (): Promise<CentPrecisionMoney | undefined> => {
   const client = new RefreshTokenClient();
   const apiRoot = client.getApiRoot();
