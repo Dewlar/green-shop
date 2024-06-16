@@ -45,7 +45,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   const [pageCounter, setPageCounter] = useState<IPageCounter>({
     totalProducts: 0,
     offset: 0,
-    itemsPerPage: 2,
+    itemsPerPage: 12,
   });
 
   const handleInputSearch = (value: string) => {
@@ -132,7 +132,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
         search: inputSearch,
       });
       const responseResult = response.body?.results;
-      // console.log(response.body?.total, response.body?.count);
+
       setPageCounter((prev) => {
         return {
           ...prev,

@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
-import { classNames, IPageCounter } from '../../models';
+import { classNames, getArrayWithPaginationNumber, IPageCounter } from '../../models';
 
 interface Props {
   pageCounter: IPageCounter;
@@ -10,14 +10,16 @@ interface Props {
 const CatalogPagination: FC<Props> = ({ pageCounter, setPageCounter }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [paginationPageNumbers, setPaginationPageNumbers] = useState<number[]>([]);
 
   useEffect(() => {
     const totalPageCount = Math.ceil(pageCounter.totalProducts / pageCounter.itemsPerPage);
     setTotalPages(totalPageCount);
-  }, [pageCounter.totalProducts]);
+
+    setPaginationPageNumbers(getArrayWithPaginationNumber(currentPage, totalPageCount));
+  }, [pageCounter.totalProducts, currentPage]);
 
   useEffect(() => {
-    // console.log('useffect - currentpage : ', currentPage);
     setPageCounter((prev) => {
       return {
         ...prev,
@@ -83,20 +85,31 @@ const CatalogPagination: FC<Props> = ({ pageCounter, setPageCounter }) => {
               <span className="sr-only">Previous</span>
               <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
             </button>
-            {[...Array(totalPages)].map((_, i) => (
-              <button
-                key={i + 1}
-                onClick={() => setCurrentPage(i + 1)}
-                className={classNames(
-                  'relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0',
-                  currentPage === i + 1
-                    ? 'bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
-                    : ''
-                )}
-              >
-                {i + 1}
-              </button>
-            ))}
+            {paginationPageNumbers.map((pageNumber, i) => {
+              if (pageNumber === 0)
+                return (
+                  <div
+                    key={Math.random().toString().slice(2, 7)}
+                    className="relative inline-flex items-center px-2.5 cursor-default select-none py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0"
+                  >
+                    ...
+                  </div>
+                );
+              return (
+                <button
+                  key={pageNumber + i}
+                  onClick={() => setCurrentPage(pageNumber)}
+                  className={classNames(
+                    'relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-green-600 focus:z-20 focus:outline-offset-0',
+                    currentPage === pageNumber
+                      ? 'bg-green-500 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500'
+                      : ''
+                  )}
+                >
+                  {pageNumber}
+                </button>
+              );
+            })}
             <button
               onClick={handleNext}
               disabled={currentPage === totalPages}
