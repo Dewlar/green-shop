@@ -13,9 +13,9 @@ import {
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon, FunnelIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
 import { toast } from 'react-toastify';
-import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
+import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Cart, ProductProjection, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
+import { ProductProjection, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import { classNames, formatPriceInEuro } from '../../api/helpers';
 import { ICategoryData, IClickedIconsState, ISortOption } from '../../api/types';
 import { sizeFilters, sortOptionForCTP } from '../../constans';
@@ -52,19 +52,8 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   };
 
   const handleCategoryClick = (categoryId: string, categoryValue: string) => {
-    // console.log('rrrrrr---->, ', movedCategory, categoryValue);
-    // setSelectedCategoryId(categoryId === '' ? '' : `categories.id:subtree("${categoryId}")`);
     if (categoryValue) navigate(`/catalog/${getCategoryValue(categoryValue)}`);
     else navigate(`/catalog`);
-    // else {
-    //   handleCategoryClick('', '');
-    //   handleSizeClick('', '');
-    //   setPriceRange([0, 100000]);
-    // }
-    // if (location.state?.isExternal) {
-    //   handleSizeClick('', '');
-    //   setPriceRange([0, 100000]);
-    // }
     setSelectedCategoryValue(categoryValue === '' ? '' : categoryValue);
   };
 
@@ -100,28 +89,20 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
       const response = await getCategories();
       setCategories(response);
 
-      // response.some((category) => getCategoryValue(category.name) === movedCategory);
-      // if (response.some((category) => getCategoryValue(category.name) === movedCategory))
-      //   console.log('aaaaaaaaaaaaaaa');
-      // console.log('movedCategory', movedCategory);
-      // setSelectedCategoryId('');
-
       let currentCategory: ICategoryData = {
         id: '',
         name: '',
       };
       response.forEach((category) => {
         if (getCategoryValue(category.name) === movedCategory) {
-          // console.log('categoryID -> ', category, movedCategory);
           currentCategory = { ...category };
         }
       });
+
       if (currentCategory.id) setSelectedCategoryId(`categories.id:subtree("${currentCategory.id}")`);
       else setSelectedCategoryId('');
       setSelectedCategoryValue(currentCategory.name === '' ? '' : currentCategory.name);
-      // console.log('useFfect start catalog', currentCategory, 'a', selectedCategoryValue);
-      //
-      // console.log('location -------- ', location.state?.isExternal);
+
       if (location.state?.isExternal) {
         handleSizeClick('', '');
         setPriceRange([0, 100000]);
@@ -141,11 +122,10 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
         ],
         sort: [sortMethod],
         limit: 12,
-        offset: 0,
+        offset: 2,
         search: inputSearch,
       });
       const responseResult = response.body?.results;
-      // console.log('actual response products:', responseResult);
       if (sortName === 'Price: High to Low' && responseResult) {
         responseResult.sort((a, b) => {
           const aPrice = a?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
@@ -169,12 +149,11 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
 
     const fetchProducts = async () => {
       try {
-        const response: ClientResponse<Cart | ClientResult> = await addProductToBasket({
+        await addProductToBasket({
           productId,
           quantity: 1,
           variantId: 1,
         });
-        console.log(response);
       } catch (error) {
         toast.error('Error adding product to cart.');
       }
@@ -467,12 +446,11 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                         <Link
                           to="/catalog"
                           className={`${!selectedCategoryValue && !selectedSizeLabel ? 'text-green-600' : ''}`}
-                          // onClick={() => navigate('/catalog')}
                           onClick={() => handleResetFilters()}
                         >
                           Category
                         </Link>
-                        {(selectedCategoryValue || selectedSizeLabel) && (
+                        {selectedCategoryValue && (
                           <span className="mx-2 font-sans text-sm antialiased font-normal leading-normal pointer-events-none select-none text-blue-gray-500">
                             /
                           </span>
@@ -481,26 +459,8 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                       {selectedCategoryValue && (
                         <li className="select-none flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 text-blue-gray-900 hover:text-light-blue-500">
                           {selectedCategoryValue}
-                          {/* <a href="#" onClick={() => handleSizeClick('', '')}> */}
-                          {/*  {selectedCategoryValue} */}
-                          {/* </a> */}
-                          {/* {selectedSizeLabel && ( */}
-                          {/*  <span className="mx-2 font-sans text-sm antialiased font-normal leading-normal pointer-events-none select-none text-blue-gray-500"> */}
-                          {/*    / */}
-                          {/*  </span> */}
-                          {/* )} */}
                         </li>
                       )}
-                      {/* {selectedSizeLabel && ( */}
-                      {/*  <li className="flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer text-blue-gray-900 hover:text-light-blue-500"> */}
-                      {/*    <a */}
-                      {/*      href="#" */}
-                      {/*      // onClick={() => handleCategoryClick('', '')} */}
-                      {/*    > */}
-                      {/*      {selectedSizeLabel} */}
-                      {/*    </a> */}
-                      {/*  </li> */}
-                      {/* )} */}
                     </ol>
                   </nav>
 
