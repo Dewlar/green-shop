@@ -7,14 +7,18 @@ import {
   addDiscountCode,
   clearBasket,
   deleteProductInBasket,
+  getBasket,
   getLineItemsFromBasket,
   getTotalPrice,
   removeDiscountCode,
   updateBasketQuantityProduct,
 } from '../../api/basket/BasketRepository';
 import { formatPriceInEuro } from '../../api/helpers';
+import { useStateContext } from '../../state/state-context';
 
 const BasketForm = () => {
+  const [currentBasket, setCurrentBasket] = useState<ClientResponse<Cart | ClientResult> | undefined>(undefined);
+  console.log('currentBasket', currentBasket);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
   const [totalPrice, setTotalPrice] = useState<CentPrecisionMoney | undefined>();
@@ -26,6 +30,8 @@ const BasketForm = () => {
   const [isDisabledButtonPromoCode, setIsDisabledButtonPromoCode] = useState(false);
   const [discountId, setDiscountId] = useState<string | null>(null);
   const discountFixed = 0;
+
+  const { setTotalLineItemQuantity } = useStateContext();
 
   const handleQuantityChange = async (
     productId: string,
@@ -67,6 +73,7 @@ const BasketForm = () => {
       const response = await clearBasket();
       setLineItems((response as ClientResponse<Cart>).body?.lineItems ?? []);
       setIsModalOpen(false);
+      setTotalLineItemQuantity(0);
     } catch (error) {
       toast.error('Error removing product from cart.');
     }
@@ -111,6 +118,32 @@ const BasketForm = () => {
       setDiscountId('');
     });
   };
+
+  useEffect(() => {
+    const fetchBasket = async () => {
+      try {
+        const response: ClientResponse<Cart | ClientResult> = await getBasket();
+        setCurrentBasket(response);
+
+        if ('body' in response && response.body && 'totalPrice' in response.body) {
+          const totalPriceNew = response.body.totalPrice as CentPrecisionMoney;
+          setTotalPrice(totalPriceNew);
+        } else {
+          setTotalPrice(undefined);
+        }
+
+        if ('body' in response && response.body && 'totalLineItemQuantity' in response.body) {
+          setTotalLineItemQuantity(response.body.totalLineItemQuantity ?? 0);
+        } else {
+          setTotalLineItemQuantity(0);
+        }
+      } catch (error) {
+        console.error('Failed to fetch basket:', error);
+      }
+    };
+
+    fetchBasket();
+  }, [quantityProduct, lineItems]);
 
   useEffect(() => {
     const fetchProducts = async () => {
