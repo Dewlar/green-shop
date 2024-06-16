@@ -22,7 +22,8 @@ import { sizeFilters, sortOptionForCTP } from '../../constans';
 import getProductsFilter from '../../api/catalog/getProductsFilter';
 import getCategories from '../../api/catalog/getCategories';
 import { addProductToBasket } from '../../api/basket/BasketRepository';
-import { getCategoryValue } from '../../models';
+import { getCategoryValue, IPageCounter } from '../../models';
+import CatalogPagination from './catalog-pagination';
 
 const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -41,6 +42,11 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   const [categories, setCategories] = useState<ICategoryData[]>([]);
   const navigate = useNavigate();
   const location = useLocation();
+  const [pageCounter, setPageCounter] = useState<IPageCounter>({
+    totalProducts: 0,
+    offset: 0,
+    itemsPerPage: 2,
+  });
 
   const handleInputSearch = (value: string) => {
     setInputSearch(value);
@@ -121,11 +127,19 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
           `variants.price.centAmount:range (${priceRange[0]} to ${priceRange[1]})`,
         ],
         sort: [sortMethod],
-        limit: 12,
-        offset: 2,
+        limit: pageCounter.itemsPerPage,
+        offset: pageCounter.offset,
         search: inputSearch,
       });
       const responseResult = response.body?.results;
+      // console.log(response.body?.total, response.body?.count);
+      setPageCounter((prev) => {
+        return {
+          ...prev,
+          totalProducts: response.body?.total || 0,
+        };
+      });
+
       if (sortName === 'Price: High to Low' && responseResult) {
         responseResult.sort((a, b) => {
           const aPrice = a?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
@@ -142,7 +156,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
     };
 
     fetchProducts().catch(() => toast.error('Error fetching products.'));
-  }, [selectedCategoryId, selectedSizeValue, sortMethod, priceRange, inputSearch]);
+  }, [selectedCategoryId, selectedSizeValue, sortMethod, priceRange, inputSearch, pageCounter.offset]);
 
   useEffect(() => {
     if (!productId) return;
@@ -544,23 +558,8 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-                  <div className="flex flex-1 justify-between sm:hidden">
-                    <a
-                      href="#"
-                      className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                    >
-                      Previous
-                    </a>
-                    <a
-                      href="#"
-                      className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                    >
-                      Next
-                    </a>
-                  </div>
-                  {/* Pagination code here */}
-                </div>
+                {/* Pagination code here */}
+                <CatalogPagination pageCounter={pageCounter} setPageCounter={setPageCounter} />
               </div>
             </div>
           </section>
