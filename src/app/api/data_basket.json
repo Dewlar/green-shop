@@ -1,0 +1,1451 @@
+{
+    "body": {
+        "type": "Cart",
+        "id": "de01028f-10fc-4d30-a191-7002118a4d04",
+        "version": 182,
+        "versionModifiedAt": "2024-06-10T14:08:56.418Z",
+        "lastMessageSequenceNumber": 1,
+        "createdAt": "2024-06-10T12:10:27.141Z",
+        "lastModifiedAt": "2024-06-10T14:08:56.418Z",
+        "lastModifiedBy": {
+            "clientId": "z7wOaxnQxzxn43JHrM-0VY3g",
+            "isPlatformClient": false,
+            "customer": {
+                "typeId": "customer",
+                "id": "c66bd553-80d8-4a32-ae5d-7b97c094812d"
+            }
+        },
+        "createdBy": {
+            "clientId": "z7wOaxnQxzxn43JHrM-0VY3g",
+            "isPlatformClient": false,
+            "anonymousId": "af82924b-040e-4c00-a06f-b53546923dd4"
+        },
+        "customerId": "c66bd553-80d8-4a32-ae5d-7b97c094812d",
+        "anonymousId": "af82924b-040e-4c00-a06f-b53546923dd4",
+        "lineItems": [
+            {
+                "id": "b08afc1c-b613-4b6d-86c1-1c2df62ed3f0",
+                "productId": "c11e32d8-6913-40a2-b845-431faefec786",
+                "productKey": "artocarpus-heterophyllus",
+                "name": {
+                    "en": " Artocarpus heterophyllus"
+                },
+                "productType": {
+                    "typeId": "product-type",
+                    "id": "629e71c5-e141-4cc5-adbc-476da923ccf4",
+                    "version": 17
+                },
+                "productSlug": {
+                    "en": "artocarpus-heterophyllus"
+                },
+                "variant": {
+                    "id": 1,
+                    "sku": "artocarpus-heterophyllus_variant1",
+                    "key": "artocarpus-heterophyllus_variant1",
+                    "prices": [
+                        {
+                            "id": "69d70f5e-9883-4fca-a1c3-7fb888127d55",
+                            "value": {
+                                "type": "centPrecision",
+                                "currencyCode": "EUR",
+                                "centAmount": 2100,
+                                "fractionDigits": 2
+                            },
+                            "key": "artocarpus-heterophyllus_price1"
+                        }
+                    ],
+                    "images": [
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/25galartocarpusheter-7wwqE0Mi.png",
+                            "dimensions": {
+                                "w": 1000,
+                                "h": 1014
+                            }
+                        },
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/3948639404-UI6yP3Nq.jpg",
+                            "dimensions": {
+                                "w": 1025,
+                                "h": 1287
+                            }
+                        }
+                    ],
+                    "attributes": [
+                        {
+                            "name": "Moisture-loving",
+                            "value": false
+                        },
+                        {
+                            "name": "Sun-loving",
+                            "value": true
+                        },
+                        {
+                            "name": "Pet-friendly",
+                            "value": true
+                        },
+                        {
+                            "name": "Easy-care",
+                            "value": false
+                        },
+                        {
+                            "name": "Air-purifier",
+                            "value": true
+                        },
+                        {
+                            "name": "Favorite",
+                            "value": false
+                        },
+                        {
+                            "name": "Size",
+                            "value": [
+                                "S"
+                            ]
+                        }
+                    ],
+                    "assets": []
+                },
+                "price": {
+                    "id": "69d70f5e-9883-4fca-a1c3-7fb888127d55",
+                    "value": {
+                        "type": "centPrecision",
+                        "currencyCode": "EUR",
+                        "centAmount": 2100,
+                        "fractionDigits": 2
+                    },
+                    "key": "artocarpus-heterophyllus_price1"
+                },
+                "quantity": 12,
+                "discountedPricePerQuantity": [],
+                "perMethodTaxRate": [],
+                "addedAt": "2024-06-10T12:49:54.711Z",
+                "lastModifiedAt": "2024-06-10T14:07:42.667Z",
+                "state": [
+                    {
+                        "quantity": 12,
+                        "state": {
+                            "typeId": "state",
+                            "id": "e95dfdb9-d081-41be-8060-36d972feb5e5"
+                        }
+                    }
+                ],
+                "priceMode": "Platform",
+                "lineItemMode": "Standard",
+                "totalPrice": {
+                    "type": "centPrecision",
+                    "currencyCode": "EUR",
+                    "centAmount": 25200,
+                    "fractionDigits": 2
+                },
+                "taxedPricePortions": []
+            },
+            {
+                "id": "ffa63dd5-ad43-4557-9452-830ede625a3f",
+                "productId": "292a51c1-1774-4a15-b8ef-e9f6033ab1dc",
+                "productKey": "alocasia-rider",
+                "name": {
+                    "en": "Alocasia Low Rider"
+                },
+                "productType": {
+                    "typeId": "product-type",
+                    "id": "629e71c5-e141-4cc5-adbc-476da923ccf4",
+                    "version": 17
+                },
+                "productSlug": {
+                    "en": "alocasia-low-rider"
+                },
+                "variant": {
+                    "id": 1,
+                    "sku": "alocasia-rider_variant1",
+                    "key": "alocasia-rider_variant1",
+                    "prices": [
+                        {
+                            "id": "49cdff4d-dcbc-4979-bf8e-1a2b4c929e92",
+                            "value": {
+                                "type": "centPrecision",
+                                "currencyCode": "EUR",
+                                "centAmount": 3700,
+                                "fractionDigits": 2
+                            },
+                            "key": "alocasia-rider_price1"
+                        }
+                    ],
+                    "images": [
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/alocasia-low-rider-bbvYwGO3.jpg",
+                            "dimensions": {
+                                "w": 700,
+                                "h": 700
+                            }
+                        },
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/medium_exceptionnel_-Iq8XrMuj.jpg",
+                            "dimensions": {
+                                "w": 750,
+                                "h": 750
+                            }
+                        },
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/ec2ac4cced4283ea99ef-EWl1Im31.jpg",
+                            "dimensions": {
+                                "w": 1080,
+                                "h": 1350
+                            }
+                        }
+                    ],
+                    "attributes": [
+                        {
+                            "name": "Moisture-loving",
+                            "value": true
+                        },
+                        {
+                            "name": "Sun-loving",
+                            "value": true
+                        },
+                        {
+                            "name": "Pet-friendly",
+                            "value": true
+                        },
+                        {
+                            "name": "Easy-care",
+                            "value": true
+                        },
+                        {
+                            "name": "Air-purifier",
+                            "value": true
+                        },
+                        {
+                            "name": "Favorite",
+                            "value": false
+                        },
+                        {
+                            "name": "Size",
+                            "value": [
+                                "S"
+                            ]
+                        }
+                    ],
+                    "assets": []
+                },
+                "price": {
+                    "id": "49cdff4d-dcbc-4979-bf8e-1a2b4c929e92",
+                    "value": {
+                        "type": "centPrecision",
+                        "currencyCode": "EUR",
+                        "centAmount": 3700,
+                        "fractionDigits": 2
+                    },
+                    "key": "alocasia-rider_price1"
+                },
+                "quantity": 4,
+                "discountedPricePerQuantity": [],
+                "perMethodTaxRate": [],
+                "addedAt": "2024-06-10T12:49:54.800Z",
+                "lastModifiedAt": "2024-06-10T14:08:56.407Z",
+                "state": [
+                    {
+                        "quantity": 4,
+                        "state": {
+                            "typeId": "state",
+                            "id": "e95dfdb9-d081-41be-8060-36d972feb5e5"
+                        }
+                    }
+                ],
+                "priceMode": "Platform",
+                "lineItemMode": "Standard",
+                "totalPrice": {
+                    "type": "centPrecision",
+                    "currencyCode": "EUR",
+                    "centAmount": 14800,
+                    "fractionDigits": 2
+                },
+                "taxedPricePortions": []
+            },
+            {
+                "id": "419c7b62-8846-44ad-8272-ba9410e934d9",
+                "productId": "6c8573c9-c67c-4e7c-92ca-faef67822b83",
+                "productKey": "alocasia-dragon",
+                "name": {
+                    "en": "Alocasia Green Dragon"
+                },
+                "productType": {
+                    "typeId": "product-type",
+                    "id": "629e71c5-e141-4cc5-adbc-476da923ccf4",
+                    "version": 17
+                },
+                "productSlug": {
+                    "en": "alocasia-green-dragon"
+                },
+                "variant": {
+                    "id": 1,
+                    "sku": "alocasia-dragon_variant1",
+                    "key": "alocasia-dragon_variant1",
+                    "prices": [
+                        {
+                            "id": "e5ae5f4b-58db-4613-9de2-53fae99b2085",
+                            "value": {
+                                "type": "centPrecision",
+                                "currencyCode": "EUR",
+                                "centAmount": 1910,
+                                "fractionDigits": 2
+                            },
+                            "key": "alocasia-dragon_price1"
+                        }
+                    ],
+                    "images": [
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/alocasia-baginda-dra-FdSyTUrL.jpeg",
+                            "dimensions": {
+                                "w": 1080,
+                                "h": 1080
+                            }
+                        },
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/Alocasia-Dragon-Scal-sPdjV0T6.jpg",
+                            "dimensions": {
+                                "w": 731,
+                                "h": 760
+                            }
+                        }
+                    ],
+                    "attributes": [
+                        {
+                            "name": "Moisture-loving",
+                            "value": true
+                        },
+                        {
+                            "name": "Sun-loving",
+                            "value": true
+                        },
+                        {
+                            "name": "Pet-friendly",
+                            "value": false
+                        },
+                        {
+                            "name": "Easy-care",
+                            "value": true
+                        },
+                        {
+                            "name": "Air-purifier",
+                            "value": true
+                        },
+                        {
+                            "name": "Favorite",
+                            "value": false
+                        },
+                        {
+                            "name": "Size",
+                            "value": [
+                                "S"
+                            ]
+                        }
+                    ],
+                    "assets": []
+                },
+                "price": {
+                    "id": "e5ae5f4b-58db-4613-9de2-53fae99b2085",
+                    "value": {
+                        "type": "centPrecision",
+                        "currencyCode": "EUR",
+                        "centAmount": 1910,
+                        "fractionDigits": 2
+                    },
+                    "key": "alocasia-dragon_price1"
+                },
+                "quantity": 3,
+                "discountedPricePerQuantity": [],
+                "perMethodTaxRate": [],
+                "addedAt": "2024-06-10T12:49:54.920Z",
+                "lastModifiedAt": "2024-06-10T14:08:54.612Z",
+                "state": [
+                    {
+                        "quantity": 3,
+                        "state": {
+                            "typeId": "state",
+                            "id": "e95dfdb9-d081-41be-8060-36d972feb5e5"
+                        }
+                    }
+                ],
+                "priceMode": "Platform",
+                "lineItemMode": "Standard",
+                "totalPrice": {
+                    "type": "centPrecision",
+                    "currencyCode": "EUR",
+                    "centAmount": 5730,
+                    "fractionDigits": 2
+                },
+                "taxedPricePortions": []
+            },
+            {
+                "id": "115aab81-2617-452a-bd05-ee6f0f07a6ea",
+                "productId": "6508b384-7f02-43c6-be57-e1cc14afd9df",
+                "productKey": "ant-orchid",
+                "name": {
+                    "en": "Ant Orchid"
+                },
+                "productType": {
+                    "typeId": "product-type",
+                    "id": "629e71c5-e141-4cc5-adbc-476da923ccf4",
+                    "version": 17
+                },
+                "productSlug": {
+                    "en": "ant-orchid"
+                },
+                "variant": {
+                    "id": 1,
+                    "sku": "ant_orchid_variant1",
+                    "key": "ant_orchid_variant1",
+                    "prices": [
+                        {
+                            "id": "c8ca873a-e203-4984-b9fa-9dbb8ff46114",
+                            "value": {
+                                "type": "centPrecision",
+                                "currencyCode": "EUR",
+                                "centAmount": 10200,
+                                "fractionDigits": 2
+                            },
+                            "key": "ant_orchid_price1"
+                        }
+                    ],
+                    "images": [
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/1677514242_klau-club-JVet81iz.jpg",
+                            "dimensions": {
+                                "w": 1246,
+                                "h": 1238
+                            }
+                        },
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/P7LES5iElQlM92eAocxR-Z4ekKP_x.jpg",
+                            "dimensions": {
+                                "w": 600,
+                                "h": 616
+                            }
+                        },
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/1632445384_6-oir-mob-xpX66-61.jpg",
+                            "dimensions": {
+                                "w": 900,
+                                "h": 1000
+                            }
+                        },
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/1632445400_33-oir-mo-v0Y7JMBU.jpg",
+                            "dimensions": {
+                                "w": 2048,
+                                "h": 2048
+                            }
+                        }
+                    ],
+                    "attributes": [
+                        {
+                            "name": "Moisture-loving",
+                            "value": true
+                        },
+                        {
+                            "name": "Sun-loving",
+                            "value": false
+                        },
+                        {
+                            "name": "Pet-friendly",
+                            "value": false
+                        },
+                        {
+                            "name": "Easy-care",
+                            "value": true
+                        },
+                        {
+                            "name": "Air-purifier",
+                            "value": false
+                        },
+                        {
+                            "name": "Favorite",
+                            "value": false
+                        },
+                        {
+                            "name": "Size",
+                            "value": [
+                                "S"
+                            ]
+                        }
+                    ],
+                    "assets": []
+                },
+                "price": {
+                    "id": "c8ca873a-e203-4984-b9fa-9dbb8ff46114",
+                    "value": {
+                        "type": "centPrecision",
+                        "currencyCode": "EUR",
+                        "centAmount": 10200,
+                        "fractionDigits": 2
+                    },
+                    "key": "ant_orchid_price1"
+                },
+                "quantity": 2,
+                "discountedPricePerQuantity": [],
+                "perMethodTaxRate": [],
+                "addedAt": "2024-06-10T12:49:55.038Z",
+                "lastModifiedAt": "2024-06-10T12:49:57.390Z",
+                "state": [
+                    {
+                        "quantity": 2,
+                        "state": {
+                            "typeId": "state",
+                            "id": "e95dfdb9-d081-41be-8060-36d972feb5e5"
+                        }
+                    }
+                ],
+                "priceMode": "Platform",
+                "lineItemMode": "Standard",
+                "totalPrice": {
+                    "type": "centPrecision",
+                    "currencyCode": "EUR",
+                    "centAmount": 20400,
+                    "fractionDigits": 2
+                },
+                "taxedPricePortions": []
+            },
+            {
+                "id": "0fd89fa1-5db9-42ba-95bc-32a5c3b93bde",
+                "productId": "8d000145-aad0-4bee-9522-092e6968c849",
+                "productKey": "anthurium-cochabamba",
+                "name": {
+                    "en": "Anthurium Cochabamba"
+                },
+                "productType": {
+                    "typeId": "product-type",
+                    "id": "629e71c5-e141-4cc5-adbc-476da923ccf4",
+                    "version": 17
+                },
+                "productSlug": {
+                    "en": "anthurium-cochabamba"
+                },
+                "variant": {
+                    "id": 1,
+                    "sku": "anthurium-cochabamba_variant1",
+                    "key": "anthurium-cochabamba_variant1",
+                    "prices": [
+                        {
+                            "id": "22526ad7-83c7-41c7-9128-291da72c683e",
+                            "value": {
+                                "type": "centPrecision",
+                                "currencyCode": "EUR",
+                                "centAmount": 6700,
+                                "fractionDigits": 2
+                            },
+                            "key": "anthurium-cochabamba_price1"
+                        }
+                    ],
+                    "images": [
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/c3087f3c-93eb-431b-8-KavTf4XA.jpg",
+                            "dimensions": {
+                                "w": 3072,
+                                "h": 4096
+                            }
+                        },
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/198364i7-JnhIHvaK.jpg",
+                            "dimensions": {
+                                "w": 600,
+                                "h": 600
+                            }
+                        },
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/234864350_4319250304-Si2pzErH.jpg",
+                            "dimensions": {
+                                "w": 447,
+                                "h": 527
+                            }
+                        }
+                    ],
+                    "attributes": [
+                        {
+                            "name": "Moisture-loving",
+                            "value": true
+                        },
+                        {
+                            "name": "Sun-loving",
+                            "value": false
+                        },
+                        {
+                            "name": "Pet-friendly",
+                            "value": true
+                        },
+                        {
+                            "name": "Easy-care",
+                            "value": true
+                        },
+                        {
+                            "name": "Air-purifier",
+                            "value": true
+                        },
+                        {
+                            "name": "Favorite",
+                            "value": false
+                        },
+                        {
+                            "name": "Size",
+                            "value": [
+                                "S"
+                            ]
+                        }
+                    ],
+                    "assets": []
+                },
+                "price": {
+                    "id": "22526ad7-83c7-41c7-9128-291da72c683e",
+                    "value": {
+                        "type": "centPrecision",
+                        "currencyCode": "EUR",
+                        "centAmount": 6700,
+                        "fractionDigits": 2
+                    },
+                    "key": "anthurium-cochabamba_price1"
+                },
+                "quantity": 3,
+                "discountedPricePerQuantity": [],
+                "perMethodTaxRate": [],
+                "addedAt": "2024-06-10T12:49:55.158Z",
+                "lastModifiedAt": "2024-06-10T12:49:56.679Z",
+                "state": [
+                    {
+                        "quantity": 3,
+                        "state": {
+                            "typeId": "state",
+                            "id": "e95dfdb9-d081-41be-8060-36d972feb5e5"
+                        }
+                    }
+                ],
+                "priceMode": "Platform",
+                "lineItemMode": "Standard",
+                "totalPrice": {
+                    "type": "centPrecision",
+                    "currencyCode": "EUR",
+                    "centAmount": 20100,
+                    "fractionDigits": 2
+                },
+                "taxedPricePortions": []
+            },
+            {
+                "id": "fe9f1a8a-377c-42a4-b32c-1fc2e4aa8fcd",
+                "productId": "1325a3c2-f0d7-4f1a-a82f-8b2a78e1ac78",
+                "productKey": "aglaonema",
+                "name": {
+                    "en": "Aglaonema 'Red Master'"
+                },
+                "productType": {
+                    "typeId": "product-type",
+                    "id": "629e71c5-e141-4cc5-adbc-476da923ccf4",
+                    "version": 17
+                },
+                "productSlug": {
+                    "en": "aglaonema-red-master"
+                },
+                "variant": {
+                    "id": 1,
+                    "sku": "aglaonema_variant1",
+                    "key": "aglaonema_variant1",
+                    "prices": [
+                        {
+                            "id": "8745f765-73f3-4b87-bbb1-043dd0539196",
+                            "value": {
+                                "type": "centPrecision",
+                                "currencyCode": "EUR",
+                                "centAmount": 1400,
+                                "fractionDigits": 2
+                            },
+                            "key": "aglaonema_price1"
+                        }
+                    ],
+                    "images": [
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/aglaonema-red-master-rC566Q83.jpg",
+                            "dimensions": {
+                                "w": 1082,
+                                "h": 1082
+                            }
+                        },
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/aglaonema-red-master-Ly_zvgEv.jpg",
+                            "dimensions": {
+                                "w": 300,
+                                "h": 300
+                            }
+                        },
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/075596c84601b80dc154-1NBJdZqL.jpg",
+                            "dimensions": {
+                                "w": 736,
+                                "h": 736
+                            }
+                        }
+                    ],
+                    "attributes": [
+                        {
+                            "name": "Moisture-loving",
+                            "value": false
+                        },
+                        {
+                            "name": "Sun-loving",
+                            "value": true
+                        },
+                        {
+                            "name": "Pet-friendly",
+                            "value": false
+                        },
+                        {
+                            "name": "Easy-care",
+                            "value": true
+                        },
+                        {
+                            "name": "Air-purifier",
+                            "value": false
+                        },
+                        {
+                            "name": "Size",
+                            "value": [
+                                "S"
+                            ]
+                        }
+                    ],
+                    "assets": []
+                },
+                "price": {
+                    "id": "8745f765-73f3-4b87-bbb1-043dd0539196",
+                    "value": {
+                        "type": "centPrecision",
+                        "currencyCode": "EUR",
+                        "centAmount": 1400,
+                        "fractionDigits": 2
+                    },
+                    "key": "aglaonema_price1"
+                },
+                "quantity": 7,
+                "discountedPricePerQuantity": [],
+                "perMethodTaxRate": [],
+                "addedAt": "2024-06-10T12:49:55.506Z",
+                "lastModifiedAt": "2024-06-10T13:16:37.008Z",
+                "state": [
+                    {
+                        "quantity": 7,
+                        "state": {
+                            "typeId": "state",
+                            "id": "e95dfdb9-d081-41be-8060-36d972feb5e5"
+                        }
+                    }
+                ],
+                "priceMode": "Platform",
+                "lineItemMode": "Standard",
+                "totalPrice": {
+                    "type": "centPrecision",
+                    "currencyCode": "EUR",
+                    "centAmount": 9800,
+                    "fractionDigits": 2
+                },
+                "taxedPricePortions": []
+            },
+            {
+                "id": "bc26aa2a-a45f-4dcf-960b-99fb3edb2d32",
+                "productId": "276eda74-7288-4066-8135-c9161884fd2a",
+                "productKey": "alocasia-bambino",
+                "name": {
+                    "en": "Alocasia Bambino"
+                },
+                "productType": {
+                    "typeId": "product-type",
+                    "id": "629e71c5-e141-4cc5-adbc-476da923ccf4",
+                    "version": 17
+                },
+                "productSlug": {
+                    "en": "alocasia-bambino"
+                },
+                "variant": {
+                    "id": 1,
+                    "sku": "alocasia-bambino_variant1",
+                    "key": "alocasia-bambino_variant1",
+                    "prices": [
+                        {
+                            "id": "f8d8c3bc-1d3a-40ac-ac37-a89f2e0ad019",
+                            "value": {
+                                "type": "centPrecision",
+                                "currencyCode": "EUR",
+                                "centAmount": 2100,
+                                "fractionDigits": 2
+                            },
+                            "key": "alocasia-bambino_price1"
+                        }
+                    ],
+                    "images": [
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/2012.-Alocasia-Bambi-ahCIAXaX.png",
+                            "dimensions": {
+                                "w": 1080,
+                                "h": 1080
+                            }
+                        },
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/Alocasia-Bambino-Arr-y-bOrpR5.jpg",
+                            "dimensions": {
+                                "w": 1024,
+                                "h": 1024
+                            }
+                        }
+                    ],
+                    "attributes": [
+                        {
+                            "name": "Moisture-loving",
+                            "value": true
+                        },
+                        {
+                            "name": "Sun-loving",
+                            "value": true
+                        },
+                        {
+                            "name": "Pet-friendly",
+                            "value": true
+                        },
+                        {
+                            "name": "Easy-care",
+                            "value": false
+                        },
+                        {
+                            "name": "Air-purifier",
+                            "value": true
+                        },
+                        {
+                            "name": "Favorite",
+                            "value": false
+                        },
+                        {
+                            "name": "Size",
+                            "value": [
+                                "S"
+                            ]
+                        }
+                    ],
+                    "assets": []
+                },
+                "price": {
+                    "id": "f8d8c3bc-1d3a-40ac-ac37-a89f2e0ad019",
+                    "value": {
+                        "type": "centPrecision",
+                        "currencyCode": "EUR",
+                        "centAmount": 2100,
+                        "fractionDigits": 2
+                    },
+                    "key": "alocasia-bambino_price1"
+                },
+                "quantity": 3,
+                "discountedPricePerQuantity": [],
+                "perMethodTaxRate": [],
+                "addedAt": "2024-06-10T12:49:55.611Z",
+                "lastModifiedAt": "2024-06-10T14:08:51.375Z",
+                "state": [
+                    {
+                        "quantity": 3,
+                        "state": {
+                            "typeId": "state",
+                            "id": "e95dfdb9-d081-41be-8060-36d972feb5e5"
+                        }
+                    }
+                ],
+                "priceMode": "Platform",
+                "lineItemMode": "Standard",
+                "totalPrice": {
+                    "type": "centPrecision",
+                    "currencyCode": "EUR",
+                    "centAmount": 6300,
+                    "fractionDigits": 2
+                },
+                "taxedPricePortions": []
+            },
+            {
+                "id": "d7be05c5-8161-4384-b856-6597e6bd6297",
+                "productId": "d49f22a7-07af-4561-b6ed-5106750dc581",
+                "productKey": "ananas-comosus",
+                "name": {
+                    "en": "Ananas comosus"
+                },
+                "productType": {
+                    "typeId": "product-type",
+                    "id": "629e71c5-e141-4cc5-adbc-476da923ccf4",
+                    "version": 17
+                },
+                "productSlug": {
+                    "en": "ananas-comosus"
+                },
+                "variant": {
+                    "id": 1,
+                    "sku": "ananas-comosus_variant1",
+                    "key": "ananas-comosus_variant1",
+                    "prices": [
+                        {
+                            "id": "6e20108d-b1ed-4c9a-817e-499a409ca97a",
+                            "value": {
+                                "type": "centPrecision",
+                                "currencyCode": "EUR",
+                                "centAmount": 1640,
+                                "fractionDigits": 2
+                            },
+                            "key": "ananas-comosus_price1"
+                        }
+                    ],
+                    "images": [
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/il_570xN.2502329857_-7jPNarn4.jpg",
+                            "dimensions": {
+                                "w": 570,
+                                "h": 570
+                            }
+                        }
+                    ],
+                    "attributes": [
+                        {
+                            "name": "Moisture-loving",
+                            "value": true
+                        },
+                        {
+                            "name": "Sun-loving",
+                            "value": true
+                        },
+                        {
+                            "name": "Pet-friendly",
+                            "value": true
+                        },
+                        {
+                            "name": "Easy-care",
+                            "value": false
+                        },
+                        {
+                            "name": "Air-purifier",
+                            "value": true
+                        },
+                        {
+                            "name": "Favorite",
+                            "value": false
+                        },
+                        {
+                            "name": "Size",
+                            "value": [
+                                "S"
+                            ]
+                        }
+                    ],
+                    "assets": []
+                },
+                "price": {
+                    "id": "6e20108d-b1ed-4c9a-817e-499a409ca97a",
+                    "value": {
+                        "type": "centPrecision",
+                        "currencyCode": "EUR",
+                        "centAmount": 1640,
+                        "fractionDigits": 2
+                    },
+                    "key": "ananas-comosus_price1"
+                },
+                "quantity": 2,
+                "discountedPricePerQuantity": [],
+                "perMethodTaxRate": [],
+                "addedAt": "2024-06-10T12:49:55.735Z",
+                "lastModifiedAt": "2024-06-10T12:49:56.541Z",
+                "state": [
+                    {
+                        "quantity": 2,
+                        "state": {
+                            "typeId": "state",
+                            "id": "e95dfdb9-d081-41be-8060-36d972feb5e5"
+                        }
+                    }
+                ],
+                "priceMode": "Platform",
+                "lineItemMode": "Standard",
+                "totalPrice": {
+                    "type": "centPrecision",
+                    "currencyCode": "EUR",
+                    "centAmount": 3280,
+                    "fractionDigits": 2
+                },
+                "taxedPricePortions": []
+            },
+            {
+                "id": "ee48f30b-a746-49b8-90cd-0361c1051d13",
+                "productId": "802c7ce9-8690-4865-8aee-cbd9182c1f7e",
+                "productKey": "aechmea-fasciata",
+                "name": {
+                    "en": "Aechmea fasciata"
+                },
+                "productType": {
+                    "typeId": "product-type",
+                    "id": "629e71c5-e141-4cc5-adbc-476da923ccf4",
+                    "version": 17
+                },
+                "productSlug": {
+                    "en": "aechmea-fasciata"
+                },
+                "variant": {
+                    "id": 1,
+                    "sku": "aechmea-fasciata_variant1",
+                    "key": "aechmea-fasciata_variant1",
+                    "prices": [
+                        {
+                            "id": "c49d83f3-fb8e-4878-936f-b2ddaac42792",
+                            "value": {
+                                "type": "centPrecision",
+                                "currencyCode": "EUR",
+                                "centAmount": 2700,
+                                "fractionDigits": 2
+                            },
+                            "key": "aechmea-fasciata_variant1"
+                        }
+                    ],
+                    "images": [
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/aechmea-bromeliad-pl-X6Mco7vq.jpg",
+                            "dimensions": {
+                                "w": 554,
+                                "h": 550
+                            }
+                        },
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/27681ed07babc637087d-J0wZB33v.jpg",
+                            "dimensions": {
+                                "w": 640,
+                                "h": 800
+                            }
+                        },
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/9e914ab2-9ee4-4379-b-Kqy8DaPG.jpg",
+                            "dimensions": {
+                                "w": 1303,
+                                "h": 1365
+                            }
+                        }
+                    ],
+                    "attributes": [
+                        {
+                            "name": "Moisture-loving",
+                            "value": true
+                        },
+                        {
+                            "name": "Sun-loving",
+                            "value": true
+                        },
+                        {
+                            "name": "Pet-friendly",
+                            "value": true
+                        },
+                        {
+                            "name": "Easy-care",
+                            "value": false
+                        },
+                        {
+                            "name": "Air-purifier",
+                            "value": true
+                        },
+                        {
+                            "name": "Favorite",
+                            "value": false
+                        },
+                        {
+                            "name": "Size",
+                            "value": [
+                                "S"
+                            ]
+                        }
+                    ],
+                    "assets": []
+                },
+                "price": {
+                    "id": "c49d83f3-fb8e-4878-936f-b2ddaac42792",
+                    "value": {
+                        "type": "centPrecision",
+                        "currencyCode": "EUR",
+                        "centAmount": 2700,
+                        "fractionDigits": 2
+                    },
+                    "key": "aechmea-fasciata_variant1"
+                },
+                "quantity": 15,
+                "discountedPricePerQuantity": [],
+                "perMethodTaxRate": [],
+                "addedAt": "2024-06-10T12:49:56.009Z",
+                "lastModifiedAt": "2024-06-10T14:07:39.355Z",
+                "state": [
+                    {
+                        "quantity": 15,
+                        "state": {
+                            "typeId": "state",
+                            "id": "e95dfdb9-d081-41be-8060-36d972feb5e5"
+                        }
+                    }
+                ],
+                "priceMode": "Platform",
+                "lineItemMode": "Standard",
+                "totalPrice": {
+                    "type": "centPrecision",
+                    "currencyCode": "EUR",
+                    "centAmount": 40500,
+                    "fractionDigits": 2
+                },
+                "taxedPricePortions": []
+            },
+            {
+                "id": "9dbf0c2e-40b3-4c44-a810-7034032ea603",
+                "productId": "59e9d22c-071f-4e5f-babd-2b4704dec374",
+                "productKey": "aloe-squarrosa",
+                "name": {
+                    "en": "Aloe Squarrosa"
+                },
+                "productType": {
+                    "typeId": "product-type",
+                    "id": "629e71c5-e141-4cc5-adbc-476da923ccf4",
+                    "version": 17
+                },
+                "productSlug": {
+                    "en": "aloe-squarrosa"
+                },
+                "variant": {
+                    "id": 1,
+                    "sku": "aloe-squarrosa_variant1",
+                    "key": "aloe-squarrosa_variant1",
+                    "prices": [
+                        {
+                            "id": "dcab8dbb-b3fb-446c-afc6-9a94a19b2e6a",
+                            "value": {
+                                "type": "centPrecision",
+                                "currencyCode": "EUR",
+                                "centAmount": 780,
+                                "fractionDigits": 2
+                            },
+                            "key": "aloe-squarrosa_price1"
+                        }
+                    ],
+                    "images": [
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/20211118_150229_11zo-rIuoBHCq.jpg",
+                            "dimensions": {
+                                "w": 2033,
+                                "h": 2033
+                            }
+                        },
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/84d4e7df-1856-4cb8-b-nqCWrpf3.jpg",
+                            "dimensions": {
+                                "w": 1472,
+                                "h": 1713
+                            }
+                        }
+                    ],
+                    "attributes": [
+                        {
+                            "name": "Moisture-loving",
+                            "value": true
+                        },
+                        {
+                            "name": "Sun-loving",
+                            "value": true
+                        },
+                        {
+                            "name": "Pet-friendly",
+                            "value": false
+                        },
+                        {
+                            "name": "Easy-care",
+                            "value": true
+                        },
+                        {
+                            "name": "Air-purifier",
+                            "value": true
+                        },
+                        {
+                            "name": "Favorite",
+                            "value": false
+                        },
+                        {
+                            "name": "Size",
+                            "value": [
+                                "S"
+                            ]
+                        }
+                    ],
+                    "assets": []
+                },
+                "price": {
+                    "id": "dcab8dbb-b3fb-446c-afc6-9a94a19b2e6a",
+                    "value": {
+                        "type": "centPrecision",
+                        "currencyCode": "EUR",
+                        "centAmount": 780,
+                        "fractionDigits": 2
+                    },
+                    "key": "aloe-squarrosa_price1"
+                },
+                "quantity": 1,
+                "discountedPricePerQuantity": [],
+                "perMethodTaxRate": [],
+                "addedAt": "2024-06-10T12:49:56.423Z",
+                "lastModifiedAt": "2024-06-10T12:49:56.423Z",
+                "state": [
+                    {
+                        "quantity": 1,
+                        "state": {
+                            "typeId": "state",
+                            "id": "e95dfdb9-d081-41be-8060-36d972feb5e5"
+                        }
+                    }
+                ],
+                "priceMode": "Platform",
+                "lineItemMode": "Standard",
+                "totalPrice": {
+                    "type": "centPrecision",
+                    "currencyCode": "EUR",
+                    "centAmount": 780,
+                    "fractionDigits": 2
+                },
+                "taxedPricePortions": []
+            },
+            {
+                "id": "4b18d64d-2c72-444e-accd-8e9d0652ec7d",
+                "productId": "a32f3a61-8f54-43a4-b626-a9c937c9f71c",
+                "productKey": "aetherblossom",
+                "name": {
+                    "en": "Aetherblossom"
+                },
+                "productType": {
+                    "typeId": "product-type",
+                    "id": "629e71c5-e141-4cc5-adbc-476da923ccf4",
+                    "version": 17
+                },
+                "productSlug": {
+                    "en": "aetherblossom"
+                },
+                "variant": {
+                    "id": 1,
+                    "sku": "aetherblossom_variant1",
+                    "key": "aetherblossom_variant1",
+                    "prices": [
+                        {
+                            "id": "93769f44-7961-4856-bf1e-a68d63da0b07",
+                            "value": {
+                                "type": "centPrecision",
+                                "currencyCode": "EUR",
+                                "centAmount": 18100,
+                                "fractionDigits": 2
+                            },
+                            "key": "aetherblossom_price1"
+                        }
+                    ],
+                    "images": [
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/03-glowing-flowers-O-hzBsOepe.jpg",
+                            "dimensions": {
+                                "w": 3072,
+                                "h": 3072
+                            }
+                        }
+                    ],
+                    "attributes": [
+                        {
+                            "name": "Moisture-loving",
+                            "value": false
+                        },
+                        {
+                            "name": "Sun-loving",
+                            "value": true
+                        },
+                        {
+                            "name": "Pet-friendly",
+                            "value": true
+                        },
+                        {
+                            "name": "Easy-care",
+                            "value": false
+                        },
+                        {
+                            "name": "Air-purifier",
+                            "value": false
+                        },
+                        {
+                            "name": "Size",
+                            "value": [
+                                "S"
+                            ]
+                        }
+                    ],
+                    "assets": []
+                },
+                "price": {
+                    "id": "93769f44-7961-4856-bf1e-a68d63da0b07",
+                    "value": {
+                        "type": "centPrecision",
+                        "currencyCode": "EUR",
+                        "centAmount": 18100,
+                        "fractionDigits": 2
+                    },
+                    "key": "aetherblossom_price1"
+                },
+                "quantity": 7,
+                "discountedPricePerQuantity": [],
+                "perMethodTaxRate": [],
+                "addedAt": "2024-06-10T12:49:56.907Z",
+                "lastModifiedAt": "2024-06-10T13:49:26.519Z",
+                "state": [
+                    {
+                        "quantity": 7,
+                        "state": {
+                            "typeId": "state",
+                            "id": "e95dfdb9-d081-41be-8060-36d972feb5e5"
+                        }
+                    }
+                ],
+                "priceMode": "Platform",
+                "lineItemMode": "Standard",
+                "totalPrice": {
+                    "type": "centPrecision",
+                    "currencyCode": "EUR",
+                    "centAmount": 126700,
+                    "fractionDigits": 2
+                },
+                "taxedPricePortions": []
+            },
+            {
+                "id": "ce078bc3-140a-47d7-ab87-2fc550dc73ff",
+                "productId": "0875a5c6-a1c0-4948-b0ad-b48ce3667d29",
+                "productKey": "aloe-vera",
+                "name": {
+                    "en": "Aloe vera"
+                },
+                "productType": {
+                    "typeId": "product-type",
+                    "id": "629e71c5-e141-4cc5-adbc-476da923ccf4",
+                    "version": 17
+                },
+                "productSlug": {
+                    "en": "aloe-vera"
+                },
+                "variant": {
+                    "id": 1,
+                    "sku": "aloe-vera_variant1",
+                    "key": "aloe-vera_variant1",
+                    "prices": [
+                        {
+                            "id": "dc3336c7-eb34-45ad-bc18-a4cbc1b85a02",
+                            "value": {
+                                "type": "centPrecision",
+                                "currencyCode": "EUR",
+                                "centAmount": 2720,
+                                "fractionDigits": 2
+                            },
+                            "key": "aloe-vera_price1"
+                        }
+                    ],
+                    "images": [
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/106203556_1187402638-OolvhGRn.jpg",
+                            "dimensions": {
+                                "w": 1080,
+                                "h": 1080
+                            }
+                        },
+                        {
+                            "url": "https://images.cdn.europe-west1.gcp.commercetools.com/f1bf5462-8ac1-45ad-893a-84ad3438eb99/71tXTYw%2BoGL._AC_UF10-87ojXMXI.jpg",
+                            "dimensions": {
+                                "w": 1000,
+                                "h": 1000
+                            }
+                        }
+                    ],
+                    "attributes": [
+                        {
+                            "name": "Moisture-loving",
+                            "value": true
+                        },
+                        {
+                            "name": "Sun-loving",
+                            "value": false
+                        },
+                        {
+                            "name": "Pet-friendly",
+                            "value": false
+                        },
+                        {
+                            "name": "Easy-care",
+                            "value": true
+                        },
+                        {
+                            "name": "Air-purifier",
+                            "value": true
+                        },
+                        {
+                            "name": "Favorite",
+                            "value": false
+                        },
+                        {
+                            "name": "Size",
+                            "value": [
+                                "S"
+                            ]
+                        }
+                    ],
+                    "assets": []
+                },
+                "price": {
+                    "id": "dc3336c7-eb34-45ad-bc18-a4cbc1b85a02",
+                    "value": {
+                        "type": "centPrecision",
+                        "currencyCode": "EUR",
+                        "centAmount": 2720,
+                        "fractionDigits": 2
+                    },
+                    "key": "aloe-vera_price1"
+                },
+                "quantity": 1,
+                "discountedPricePerQuantity": [],
+                "perMethodTaxRate": [],
+                "addedAt": "2024-06-10T12:49:57.277Z",
+                "lastModifiedAt": "2024-06-10T12:49:57.277Z",
+                "state": [
+                    {
+                        "quantity": 1,
+                        "state": {
+                            "typeId": "state",
+                            "id": "e95dfdb9-d081-41be-8060-36d972feb5e5"
+                        }
+                    }
+                ],
+                "priceMode": "Platform",
+                "lineItemMode": "Standard",
+                "totalPrice": {
+                    "type": "centPrecision",
+                    "currencyCode": "EUR",
+                    "centAmount": 2720,
+                    "fractionDigits": 2
+                },
+                "taxedPricePortions": []
+            }
+        ],
+        "cartState": "Active",
+        "totalPrice": {
+            "type": "centPrecision",
+            "currencyCode": "EUR",
+            "centAmount": 276310,
+            "fractionDigits": 2
+        },
+        "country": "EU",
+        "shippingMode": "Single",
+        "shipping": [],
+        "customLineItems": [],
+        "discountCodes": [],
+        "directDiscounts": [],
+        "inventoryMode": "None",
+        "taxMode": "Platform",
+        "taxRoundingMode": "HalfEven",
+        "taxCalculationMode": "LineItemLevel",
+        "deleteDaysAfterLastModification": 90,
+        "refusedGifts": [],
+        "origin": "Customer",
+        "itemShippingAddresses": [],
+        "totalLineItemQuantity": 60
+    },
+    "statusCode": 200
+}

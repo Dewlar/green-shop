@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Range } from 'react-range';
 import {
   Dialog,
@@ -13,19 +13,21 @@ import {
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon, FunnelIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
 import { toast } from 'react-toastify';
-import { ClientResponse } from '@commercetools/sdk-client-v2';
-import { Link } from 'react-router-dom';
-import { ProductProjection, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
+import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Cart, ProductProjection, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import { classNames, formatPriceInEuro } from '../../api/helpers';
-import { ISortOption } from '../../api/types';
-import { categoryFilters, sizeFilters, sortOptionForCTP } from '../../constans';
+import { ICategoryData, IClickedIconsState, ISortOption } from '../../api/types';
+import { sizeFilters, sortOptionForCTP } from '../../constans';
 import getProductsFilter from '../../api/catalog/getProductsFilter';
-import { useStateContext } from '../../state/state-context';
 import getCategories from '../../api/catalog/getCategories';
+import { addProductToBasket } from '../../api/basket/BasketRepository';
+import { getCategoryValue } from '../../models';
 
-const CatalogForm = () => {
+const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [products, setProducts] = useState<ProductProjection[] | undefined>(undefined);
+  const [productId, setProductId] = useState('');
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [selectedCategoryValue, setSelectedCategoryValue] = useState('');
   const [selectedSizeValue, setSelectedSizeValue] = useState('');
@@ -35,19 +37,35 @@ const CatalogForm = () => {
   const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionForCTP);
   const [priceRange, setPriceRange] = useState([0, 100000]);
   const [inputSearch, setInputSearch] = useState('');
+  const [clickedIcons, setClickedIcons] = useState<IClickedIconsState>({});
+  const [categories, setCategories] = useState<ICategoryData[]>([]);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleInputSearch = (value: string) => {
     setInputSearch(value);
   };
 
-  const handleCategoryClick = (categoryId: string, categoryValue: string) => {
-    setSelectedCategoryId(categoryId === '' ? '' : `categories.id:subtree("${categoryId}")`);
-    setSelectedCategoryValue(categoryValue === '' ? '' : categoryValue);
-  };
-
   const handleSizeClick = (sizeValue: string, sizeLabel: string) => {
     setSelectedSizeValue(sizeValue === '' ? '' : `variants.attributes.Size:"${sizeValue}"`);
     setSelectedSizeLabel(sizeLabel === '' ? '' : sizeLabel);
+  };
+
+  const handleCategoryClick = (categoryId: string, categoryValue: string) => {
+    // console.log('rrrrrr---->, ', movedCategory, categoryValue);
+    // setSelectedCategoryId(categoryId === '' ? '' : `categories.id:subtree("${categoryId}")`);
+    if (categoryValue) navigate(`/catalog/${getCategoryValue(categoryValue)}`);
+    else navigate(`/catalog`);
+    // else {
+    //   handleCategoryClick('', '');
+    //   handleSizeClick('', '');
+    //   setPriceRange([0, 100000]);
+    // }
+    // if (location.state?.isExternal) {
+    //   handleSizeClick('', '');
+    //   setPriceRange([0, 100000]);
+    // }
+    setSelectedCategoryValue(categoryValue === '' ? '' : categoryValue);
   };
 
   const handleSortClick = (sortOption: ISortOption) => {
@@ -67,58 +85,103 @@ const CatalogForm = () => {
     setPriceRange([0, 100000]);
   };
 
-  const { setCategories } = useStateContext();
+  const handleIconBasketClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, id: string) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setProductId(id);
+    setClickedIcons((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id],
+    }));
+  };
 
   useEffect(() => {
     const fetchCategories = async () => {
-      try {
-        const response = await getCategories();
-        setCategories(response);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-        toast.error('Error fetching categories.');
+      const response = await getCategories();
+      setCategories(response);
+
+      // response.some((category) => getCategoryValue(category.name) === movedCategory);
+      // if (response.some((category) => getCategoryValue(category.name) === movedCategory))
+      //   console.log('aaaaaaaaaaaaaaa');
+      // console.log('movedCategory', movedCategory);
+      // setSelectedCategoryId('');
+
+      let currentCategory: ICategoryData = {
+        id: '',
+        name: '',
+      };
+      response.forEach((category) => {
+        if (getCategoryValue(category.name) === movedCategory) {
+          // console.log('categoryID -> ', category, movedCategory);
+          currentCategory = { ...category };
+        }
+      });
+      if (currentCategory.id) setSelectedCategoryId(`categories.id:subtree("${currentCategory.id}")`);
+      else setSelectedCategoryId('');
+      setSelectedCategoryValue(currentCategory.name === '' ? '' : currentCategory.name);
+      // console.log('useFfect start catalog', currentCategory, 'a', selectedCategoryValue);
+      //
+      // console.log('location -------- ', location.state?.isExternal);
+      if (location.state?.isExternal) {
+        handleSizeClick('', '');
+        setPriceRange([0, 100000]);
       }
     };
 
-    fetchCategories();
-  }, [selectedCategoryId]);
+    fetchCategories().catch(() => toast.error('Error fetching categories.'));
+  }, [selectedCategoryId, movedCategory]);
 
   useEffect(() => {
     const fetchProducts = async () => {
-      try {
-        const response: ClientResponse<ProductProjectionPagedQueryResponse> = await getProductsFilter({
-          filter: [
-            selectedCategoryId,
-            selectedSizeValue,
-            `variants.price.centAmount:range (${priceRange[0]} to ${priceRange[1]})`,
-          ],
-          sort: [sortMethod],
-          limit: 12,
-          offset: 0,
-          search: inputSearch,
+      const response: ClientResponse<ProductProjectionPagedQueryResponse> = await getProductsFilter({
+        filter: [
+          selectedCategoryId,
+          selectedSizeValue,
+          `variants.price.centAmount:range (${priceRange[0]} to ${priceRange[1]})`,
+        ],
+        sort: [sortMethod],
+        limit: 12,
+        offset: 0,
+        search: inputSearch,
+      });
+      const responseResult = response.body?.results;
+      // console.log('actual response products:', responseResult);
+      if (sortName === 'Price: High to Low' && responseResult) {
+        responseResult.sort((a, b) => {
+          const aPrice = a?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
+          const bPrice = b?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
+          return bPrice - aPrice;
         });
-        const responseResult = response.body?.results;
-        if (sortName === 'Price: High to Low' && responseResult) {
-          responseResult.sort((a, b) => {
-            const aPrice = a?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
-            const bPrice = b?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
-            return bPrice - aPrice;
-          });
-        }
-        setProducts(
-          responseResult?.filter((product) => {
-            const masterVariantPrice = product?.masterVariant?.prices?.[0]?.value.centAmount ?? null;
-            return masterVariantPrice !== null && masterVariantPrice >= priceRange[0];
-          })
-        );
+      }
+      setProducts(
+        responseResult?.filter((product) => {
+          const masterVariantPrice = product?.masterVariant?.prices?.[0]?.value.centAmount ?? null;
+          return masterVariantPrice !== null && masterVariantPrice >= priceRange[0];
+        })
+      );
+    };
+
+    fetchProducts().catch(() => toast.error('Error fetching products.'));
+  }, [selectedCategoryId, selectedSizeValue, sortMethod, priceRange, inputSearch]);
+
+  useEffect(() => {
+    if (!productId) return;
+
+    const fetchProducts = async () => {
+      try {
+        const response: ClientResponse<Cart | ClientResult> = await addProductToBasket({
+          productId,
+          quantity: 1,
+          variantId: 1,
+        });
+        console.log(response);
       } catch (error) {
-        // console.error('Error fetching products:', error);
-        toast.error('Error fetching products.');
+        toast.error('Error adding product to cart.');
       }
     };
 
     fetchProducts();
-  }, [selectedCategoryId, selectedSizeValue, sortMethod, priceRange, inputSearch]);
+  }, [productId]);
 
   return (
     <div className="bg-white">
@@ -158,24 +221,24 @@ const CatalogForm = () => {
                     </button>
                   </div>
 
+                  {/* mobile menu */}
                   <form className="mobile-categories mt-4 border-t border-gray-200">
-                    <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleCategoryClick('', '')}>
+                    <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleResetFilters()}>
                       <div className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400">
                         <span className="font-medium text-gray-900">Categories</span>
                       </div>
                     </h3>
-                    {categoryFilters.map((category, categoryIdx) => (
+                    {categories.map((category) => (
                       <div
-                        key={category.value}
-                        className={`border-b border-gray-200 py-6 ${selectedCategoryValue === category.value ? 'bg-gray-100' : ''}`}
-                        onClick={() => handleCategoryClick(category.id, category.value)}
+                        key={category.name}
+                        className={`border-b border-gray-200 py-6 ${selectedCategoryValue === category.name ? 'bg-gray-100' : ''}`}
+                        onClick={() => handleCategoryClick(category.id, category.name)}
                       >
                         <div className="flex items-center">
                           <label
-                            htmlFor={`filter-${category.value}-${categoryIdx}`}
-                            className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryValue === category.value ? 'text-green-600' : ''}`}
+                            className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryValue === category.name ? 'text-green-600' : ''}`}
                           >
-                            {category.label}
+                            {category.name}
                           </label>
                         </div>
                       </div>
@@ -186,7 +249,7 @@ const CatalogForm = () => {
                         <span className="font-medium text-gray-900">Size</span>
                       </div>
                     </h3>
-                    {sizeFilters.map((size, sizeIdx) => (
+                    {sizeFilters.map((size) => (
                       <div
                         key={size.label}
                         className={`border-b border-gray-200 py-6 cursor-pointer ${selectedSizeLabel === size.label ? 'bg-gray-100' : ''}`}
@@ -194,7 +257,6 @@ const CatalogForm = () => {
                       >
                         <div className="flex items-center">
                           <label
-                            htmlFor={`filter-${size.value}-${sizeIdx}`}
                             className={`text-sm text-gray-600 cursor-pointer ${selectedSizeValue === size.value ? 'text-green-600' : ''}`}
                           >
                             {size.label}
@@ -237,6 +299,7 @@ const CatalogForm = () => {
           </Dialog>
         </Transition>
 
+        {/* desktop main section */}
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-baseline justify-end border-b border-gray-200 pb-6 pt-4">
             <div className="flex items-center">
@@ -319,26 +382,26 @@ const CatalogForm = () => {
             </div>
           </div>
 
+          {/* desktop */}
           <section aria-labelledby="products-heading" className="pb-24 pt-6">
             <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
               <form className="hidden lg:block">
-                <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleCategoryClick('', '')}>
+                <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleResetFilters()}>
                   <div className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400">
                     <span className="font-medium text-gray-900">Categories</span>
                   </div>
                 </h3>
-                {categoryFilters.map((category, categoryIdx) => (
+                {categories.map((category) => (
                   <div
-                    key={category.value}
-                    className={`border-b border-gray-200 py-6 cursor-pointer ${selectedCategoryValue === category.value ? 'bg-gray-100' : ''}`}
-                    onClick={() => handleCategoryClick(category.id, category.value)}
+                    key={category.name}
+                    className={`border-b border-gray-200 py-6 cursor-pointer ${selectedCategoryValue === category.name ? 'bg-gray-100' : ''}`}
+                    onClick={() => handleCategoryClick(category.id, category.name)}
                   >
                     <div className="flex items-center">
                       <label
-                        htmlFor={`filter-${category.value}-${categoryIdx}`}
-                        className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryValue === category.value ? 'text-green-600' : ''}`}
+                        className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryValue === category.name ? 'text-green-600' : ''}`}
                       >
-                        {category.label}
+                        {category.name}
                       </label>
                     </div>
                   </div>
@@ -349,7 +412,7 @@ const CatalogForm = () => {
                     <span className="font-medium text-gray-900">Size</span>
                   </div>
                 </h3>
-                {sizeFilters.map((size, sizeIdx) => (
+                {sizeFilters.map((size) => (
                   <div
                     key={size.label}
                     className={`border-b border-gray-200 py-6 cursor-pointer ${selectedSizeLabel === size.label ? 'bg-gray-100' : ''}`}
@@ -357,7 +420,6 @@ const CatalogForm = () => {
                   >
                     <div className="flex items-center">
                       <label
-                        htmlFor={`filter-${size.value}-${sizeIdx}`}
                         className={`text-sm text-gray-600 cursor-pointer ${selectedSizeValue === size.value ? 'text-green-600' : ''}`}
                       >
                         {size.label}
@@ -402,13 +464,14 @@ const CatalogForm = () => {
                       <li
                         className={`flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer hover:text-light-blue-500 ${!selectedCategoryValue && !selectedSizeLabel ? 'text-green-600' : 'text-gray-500'}`}
                       >
-                        <a
-                          href="#"
+                        <Link
+                          to="/catalog"
                           className={`${!selectedCategoryValue && !selectedSizeLabel ? 'text-green-600' : ''}`}
-                          onClick={handleResetFilters}
+                          // onClick={() => navigate('/catalog')}
+                          onClick={() => handleResetFilters()}
                         >
                           Category
-                        </a>
+                        </Link>
                         {(selectedCategoryValue || selectedSizeLabel) && (
                           <span className="mx-2 font-sans text-sm antialiased font-normal leading-normal pointer-events-none select-none text-blue-gray-500">
                             /
@@ -416,37 +479,43 @@ const CatalogForm = () => {
                         )}
                       </li>
                       {selectedCategoryValue && (
-                        <li className="flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer text-blue-gray-900 hover:text-light-blue-500">
-                          <a href="#" onClick={() => handleSizeClick('', '')}>
-                            {selectedCategoryValue.charAt(0).toUpperCase() + selectedCategoryValue.slice(1)}
-                          </a>
-                          {selectedSizeLabel && (
-                            <span className="mx-2 font-sans text-sm antialiased font-normal leading-normal pointer-events-none select-none text-blue-gray-500">
-                              /
-                            </span>
-                          )}
+                        <li className="select-none flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 text-blue-gray-900 hover:text-light-blue-500">
+                          {selectedCategoryValue}
+                          {/* <a href="#" onClick={() => handleSizeClick('', '')}> */}
+                          {/*  {selectedCategoryValue} */}
+                          {/* </a> */}
+                          {/* {selectedSizeLabel && ( */}
+                          {/*  <span className="mx-2 font-sans text-sm antialiased font-normal leading-normal pointer-events-none select-none text-blue-gray-500"> */}
+                          {/*    / */}
+                          {/*  </span> */}
+                          {/* )} */}
                         </li>
                       )}
-                      {selectedSizeLabel && (
-                        <li className="flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer text-blue-gray-900 hover:text-light-blue-500">
-                          <a
-                            href="#"
-                            // onClick={() => handleCategoryClick('', '')}
-                          >
-                            {selectedSizeLabel}
-                          </a>
-                        </li>
-                      )}
+                      {/* {selectedSizeLabel && ( */}
+                      {/*  <li className="flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer text-blue-gray-900 hover:text-light-blue-500"> */}
+                      {/*    <a */}
+                      {/*      href="#" */}
+                      {/*      // onClick={() => handleCategoryClick('', '')} */}
+                      {/*    > */}
+                      {/*      {selectedSizeLabel} */}
+                      {/*    </a> */}
+                      {/*  </li> */}
+                      {/* )} */}
                     </ol>
                   </nav>
 
+                  {/* product card */}
                   <div className="mx-auto max-w-2xl px-4 pt-8 pb-16 sm:px-6 sm:pt-12 sm:pb-24 lg:max-w-7xl lg:px-8">
                     <h2 className="sr-only">Products</h2>
                     <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                       {products?.map((product) => (
                         <Link
                           key={product.id}
-                          to={`/catalog/${product.id}`}
+                          to={
+                            selectedCategoryValue
+                              ? `/catalog/${getCategoryValue(selectedCategoryValue)}/${product.id}`
+                              : `/product/${product.id}`
+                          }
                           className="group block border border-gray-100 rounded-lg shadow transition-transform hover:shadow-md"
                         >
                           <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
@@ -489,21 +558,25 @@ const CatalogForm = () => {
                                 </p>
                               )
                             )}
-
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth="1.5"
-                              stroke="currentColor"
-                              className="w-6 h-6 text-green-600"
+                            <div
+                              onClick={(e) => handleIconBasketClick(e, product.id)}
+                              className={`cursor-pointer ${clickedIcons[product.id] ? 'pointer-events-none text-red-400' : 'text-green-600'}`}
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
-                              />
-                            </svg>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth="1.5"
+                                stroke="currentColor"
+                                className="w-6 h-6"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+                                />
+                              </svg>
+                            </div>
                           </div>
                         </Link>
                       ))}

@@ -60,6 +60,10 @@ const MobileMenu: FC<HeaderProps> = ({ open, setOpen }) => {
                     </Link>
                   </div>
                 ))}
+                <Link to="/cart" className="flex gap-3.5 p-2 font-medium text-gray-900">
+                  <span>Cart</span>
+                  <CartIcon></CartIcon>
+                </Link>
               </div>
 
               {isAuth ? (
@@ -70,10 +74,6 @@ const MobileMenu: FC<HeaderProps> = ({ open, setOpen }) => {
                         Profile
                       </Link>
                     </div>
-                    <Link to="/cart" className="flex gap-3.5 p-2 font-medium text-gray-900">
-                      <span>Cart</span>
-                      <CartIcon></CartIcon>
-                    </Link>
                   </div>
                   <div className="border-t border-gray-200 px-4 py-6 flex flex-col gap-2.5">
                     <div className="flow-root">

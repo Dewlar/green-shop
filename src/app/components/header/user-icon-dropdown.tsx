@@ -10,7 +10,7 @@ const UserIconDropdown = () => {
 
   return (
     <div className="flex">
-      <Menu as="div" className="relative ml-3">
+      <Menu as="div" className="relative">
         <div>
           <Menu.Button className="relative flex -m-2 p-2 text-sm text-gray-400 hover:text-gray-500 rounded-full">
             <span className="sr-only">Open user menu</span>

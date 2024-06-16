@@ -1,15 +1,43 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import mocks from '../mocks-data/mocks';
+import { toast } from 'react-toastify';
+import getCategories from '../../api/catalog/getCategories';
+import { getCategoryValue } from '../../models';
+
+interface IHomePageCategories {
+  name: string;
+  href: string;
+  imageSrc: string;
+  imageAlt: string;
+}
 
 const Collections = () => {
+  const [collections, setCollections] = useState<IHomePageCategories[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await getCategories();
+      const categories = response.map((category) => {
+        return {
+          name: category.name,
+          href: `/catalog/${getCategoryValue(category.name)}`,
+          imageSrc: `./assets/products/${getCategoryValue(category.name)}.jpg`,
+          imageAlt: category.name,
+        };
+      });
+      setCollections(categories);
+    };
+
+    fetchCategories().catch(() => toast.error('Error fetching categories.'));
+  }, []);
+
   return (
     <section aria-labelledby="collection-heading" className="relative -mt-96 sm:mt-0">
       <h2 id="collection-heading" className="sr-only">
         Collections
       </h2>
       <div className="mx-auto grid max-w-md grid-cols-1 gap-y-6 px-4 sm:max-w-7xl sm:grid-cols-3 sm:gap-x-6 sm:gap-y-0 sm:px-6 lg:gap-x-8 lg:px-8">
-        {mocks.collections.map((collection) => (
+        {collections.map((collection) => (
           <div
             key={collection.name}
             className="group relative h-96 rounded-lg bg-white shadow-xl sm:aspect-h-5 sm:aspect-w-4"

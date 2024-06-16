@@ -1,10 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { ClientResponse } from '@commercetools/sdk-client-v2';
+import { ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import mocks from '../mocks-data/mocks';
 import RsLogoSvg from '../svg/rs-logo-svg';
 import GithubLink from './github-link';
+import { useStateContext } from '../../state/state-context';
+import getCategories from '../../api/catalog/getCategories';
+import { getCategoryValue } from '../../models';
+import { ICategoryData, IProductData } from '../../api/types';
+import getProductsFilter from '../../api/catalog/getProductsFilter';
 
 const Footer = () => {
+  const { isAuth } = useStateContext();
+  const [categories, setCategories] = useState<ICategoryData[]>([]);
+  const [favoriteProducts, setFavoriteProducts] = useState<IProductData[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await getCategories();
+      setCategories(response);
+    };
+
+    fetchCategories().catch(() => toast.error('Error fetching categories.'));
+  }, []);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const response: ClientResponse<ProductProjectionPagedQueryResponse> = await getProductsFilter({
+        filter: [`variants.attributes.Favorite:"true"`],
+        limit: 4,
+      });
+      const responseResult = response.body?.results;
+      if (responseResult) {
+        const products = responseResult.map((product) => {
+          return {
+            id: product.id,
+            name: product.name.en,
+          };
+        });
+        setFavoriteProducts(products);
+      }
+    };
+
+    fetchProducts().catch(() => toast.error('Error fetching products.'));
+  }, []);
+
   return (
     <footer aria-labelledby="footer-heading" className="bg-gray-50">
       <h2 id="footer-heading" className="sr-only">
@@ -19,11 +61,15 @@ const Footer = () => {
                 <div>
                   <h3 className="text-sm font-medium text-gray-900">Main Categories</h3>
                   <ul role="list" className="mt-6 space-y-6">
-                    {mocks.footerNavigation.categories.map((item) => (
-                      <li key={item.name} className="text-sm">
-                        <a href={item.href} className="text-gray-500 hover:text-gray-600">
-                          {item.name}
-                        </a>
+                    {categories.map((category) => (
+                      <li key={category.name} className="text-sm">
+                        <Link
+                          state={{ isExternal: true }}
+                          to={`/catalog/${getCategoryValue(category.name)}`}
+                          className="text-gray-500 hover:text-gray-600"
+                        >
+                          {category.name}
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -31,10 +77,10 @@ const Footer = () => {
                 <div>
                   <h3 className="text-sm font-medium text-gray-900">Products</h3>
                   <ul role="list" className="mt-6 space-y-6">
-                    {mocks.footerNavigation.products.map((item) => (
-                      <li key={item.name} className="text-sm">
-                        <a href={item.href} className="text-gray-500 hover:text-gray-600">
-                          {item.name}
+                    {favoriteProducts.map((product) => (
+                      <li key={product.name} className="text-sm">
+                        <a href={`/product/${product.id}`} className="text-gray-500 hover:text-gray-600">
+                          {product.name}
                         </a>
                       </li>
                     ))}
@@ -45,13 +91,21 @@ const Footer = () => {
                 <div>
                   <h3 className="text-sm font-medium text-gray-900">Usefull Pages</h3>
                   <ul role="list" className="mt-6 space-y-6">
-                    {mocks.footerNavigation.pages.map((item) => (
-                      <li key={item.name} className="text-sm">
-                        <Link to={item.href} className="text-gray-500 hover:text-gray-600">
-                          {item.name}
-                        </Link>
-                      </li>
-                    ))}
+                    {mocks.footerNavigation.pages.map((item) => {
+                      const link = { ...item };
+
+                      if (item.name === 'Your account') {
+                        link.href = isAuth ? '/profile' : '/login';
+                      }
+
+                      return (
+                        <li key={link.name} className="text-sm">
+                          <Link to={link.href} className="text-gray-500 hover:text-gray-600">
+                            {link.name}
+                          </Link>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
                 <div>
