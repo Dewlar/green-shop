@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { XMarkIcon as XMarkIconMini } from '@heroicons/react/20/solid';
-import { Cart, CentPrecisionMoney, LineItem, ClientResponse as ClientResponse2 } from '@commercetools/platform-sdk';
+import { Cart, LineItem, ClientResponse as ClientResponse2, CentPrecisionMoney } from '@commercetools/platform-sdk';
 import { toast } from 'react-toastify';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import {
@@ -21,8 +21,9 @@ const BasketForm = () => {
   console.log('currentBasket', currentBasket);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
-  const [totalPrice, setTotalPrice] = useState<CentPrecisionMoney | undefined>();
-  const [orderPrice, setOrderPrice] = useState<number>();
+  const [totalPrice, setTotalPrice] = useState<number>();
+  const [subTotalPrice, setSubTotalPrice] = useState<number>();
+  const [discountOnTotalPrice, setDiscountOnTotalPrice] = useState<number>(0);
   const [quantityProduct, setQuantityProduct] = useState(1);
   const [inputPromoCode, setInputPromoCode] = useState('');
   const [promoCode, setPromoCode] = useState('');
@@ -31,7 +32,8 @@ const BasketForm = () => {
   const [discountId, setDiscountId] = useState<string | null>(null);
   const discountFixed = 0;
 
-  const { setTotalLineItemQuantity } = useStateContext();
+  const { setTotalLineItemQuantity, discountCodes, setDiscountCodes } = useStateContext();
+  console.log('discountCodes!!!!!!!!!!!!!!!!!!', discountCodes);
 
   const handleQuantityChange = async (
     productId: string,
@@ -74,6 +76,7 @@ const BasketForm = () => {
       setLineItems((response as ClientResponse<Cart>).body?.lineItems ?? []);
       setIsModalOpen(false);
       setTotalLineItemQuantity(0);
+      setDiscountCodes([]);
     } catch (error) {
       toast.error('Error removing product from cart.');
     }
@@ -125,25 +128,29 @@ const BasketForm = () => {
         const response: ClientResponse<Cart | ClientResult> = await getBasket();
         setCurrentBasket(response);
 
+        if ('body' in response && response.body && 'discountCodes' in response.body) {
+          setDiscountCodes(response?.body?.discountCodes ?? []);
+        }
+
+        if ('body' in response && response.body && 'discountOnTotalPrice' in response.body) {
+          setDiscountOnTotalPrice(response?.body?.discountOnTotalPrice?.discountedAmount.centAmount ?? 0);
+        }
+
         if ('body' in response && response.body && 'totalPrice' in response.body) {
-          const totalPriceNew = response.body.totalPrice as CentPrecisionMoney;
-          setTotalPrice(totalPriceNew);
-        } else {
-          setTotalPrice(undefined);
+          setTotalPrice(response?.body?.totalPrice?.centAmount ?? 0);
         }
 
         if ('body' in response && response.body && 'totalLineItemQuantity' in response.body) {
           setTotalLineItemQuantity(response.body.totalLineItemQuantity ?? 0);
-        } else {
-          setTotalLineItemQuantity(0);
         }
       } catch (error) {
         console.error('Failed to fetch basket:', error);
       }
     };
 
+    console.log({ quantityProduct, lineItems, promoCode, isDisabledButtonPromoCode });
     fetchBasket();
-  }, [quantityProduct, lineItems]);
+  }, [quantityProduct, lineItems, promoCode, isDisabledButtonPromoCode]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -161,16 +168,28 @@ const BasketForm = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response: CentPrecisionMoney | undefined = await getTotalPrice();
-        setTotalPrice(response);
-        setOrderPrice((response?.centAmount ?? 0) - discountFixed);
+        setSubTotalPrice((totalPrice ?? 0) + (discountOnTotalPrice ?? 0));
+        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@', totalPrice, discountOnTotalPrice);
       } catch (error) {
         toast.error('Error adding product to cart.');
       }
     };
 
     fetchProducts();
-  }, [lineItems, quantityProduct, promoCode, discountId, isDisabledButtonPromoCode]);
+  }, [totalPrice, discountOnTotalPrice]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response: CentPrecisionMoney | undefined = await getTotalPrice();
+        setTotalPrice(response?.centAmount);
+      } catch (error) {
+        toast.error('Error adding product to cart.');
+      }
+    };
+
+    fetchProducts();
+  }, [lineItems, quantityProduct, promoCode, discountId, isDisabledButtonPromoCode, discountOnTotalPrice]);
 
   useEffect(() => {
     if (!promoCode) return;
@@ -179,9 +198,9 @@ const BasketForm = () => {
       try {
         const response: ClientResponse2<Cart> | ClientResult = await addDiscountCode(promoCode);
 
-        const { discountCodes } = response.body as Cart;
-        if (discountCodes.length > 0) {
-          const discountCodeId = discountCodes[0].discountCode.id;
+        const { discountCodes: discountCodes0 } = response.body as Cart;
+        if (discountCodes0.length > 0) {
+          const discountCodeId = discountCodes0[0].discountCode.id;
           setDiscountId(discountCodeId);
         } else {
           setDiscountId(null);
@@ -347,9 +366,7 @@ const BasketForm = () => {
               <dl className="mt-6 space-y-4">
                 <div className="flex items-center justify-between">
                   <dt className="text-sm text-gray-600">Subtotal</dt>
-                  <dd className="text-sm font-medium text-gray-900">
-                    {formatPriceInEuro(totalPrice?.centAmount ?? 0)}
-                  </dd>
+                  <dd className="text-sm font-medium text-gray-900">{formatPriceInEuro(subTotalPrice ?? 0)}</dd>
                 </div>
                 <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                   <dt className="flex items-center text-sm text-gray-600">
@@ -386,11 +403,11 @@ const BasketForm = () => {
                       </button>
                     </div>
                   </dt>
-                  <dd className="text-sm font-medium text-gray-900">{isDisabledButtonPromoCode ? 5 : ''}</dd>
+                  <dd className="text-sm font-medium text-gray-900">{formatPriceInEuro(discountOnTotalPrice)}</dd>
                 </div>
                 <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                   <dt className="text-base font-medium text-gray-900">Order total</dt>
-                  <dd className="text-base font-medium text-gray-900">{formatPriceInEuro(orderPrice ?? 0)}</dd>
+                  <dd className="text-base font-medium text-gray-900">{formatPriceInEuro(totalPrice ?? 0)}</dd>
                 </div>
               </dl>
 
