@@ -15,19 +15,19 @@ import { ChevronDownIcon, FunnelIcon, Squares2X2Icon } from '@heroicons/react/20
 import { toast } from 'react-toastify';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ProductProjection, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
+import { ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import { classNames, formatPriceInEuro } from '../../api/helpers';
 import { ICategoryData, IClickedIconsState, ISortOption } from '../../api/types';
 import { sizeFilters, sortOptionForCTP } from '../../constans';
 import getProductsFilter from '../../api/catalog/getProductsFilter';
 import getCategories from '../../api/catalog/getCategories';
 import { addProductToBasket } from '../../api/basket/BasketRepository';
-import { getCategoryValue, IPageCounter } from '../../models';
+import { getCategoryValue, IPageCounter, IProductsVariant } from '../../models';
 import CatalogPagination from './catalog-pagination';
 
 const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [products, setProducts] = useState<ProductProjection[] | undefined>(undefined);
+  const [products, setProducts] = useState<IProductsVariant[] | undefined>(undefined);
   const [productId, setProductId] = useState('');
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [selectedCategoryValue, setSelectedCategoryValue] = useState('');
@@ -130,6 +130,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
         limit: pageCounter.itemsPerPage,
         offset: pageCounter.offset,
         search: inputSearch,
+        markMatchingVariants: true,
       });
       const responseResult = response.body?.results;
 
@@ -140,19 +141,32 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
         };
       });
 
-      if (sortName === 'Price: High to Low' && responseResult) {
-        responseResult.sort((a, b) => {
-          const aPrice = a?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
-          const bPrice = b?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
+      const productsResult = responseResult?.map((product) => {
+        const masterVariantPrice = product?.variants.filter((variant) => variant.isMatchingVariant === true);
+        return {
+          id: product.id,
+          name: product.name.en.toString(),
+          description: product.description?.en.toString() || '',
+          variant: masterVariantPrice[0],
+        };
+      });
+
+      if (sortName === 'Price: High to Low' && productsResult) {
+        productsResult.sort((a, b) => {
+          const aPrice = a?.variant?.prices?.[0]?.value.centAmount ?? 0;
+          const bPrice = b?.variant?.prices?.[0]?.value.centAmount ?? 0;
           return bPrice - aPrice;
         });
       }
-      setProducts(
-        responseResult?.filter((product) => {
-          const masterVariantPrice = product?.masterVariant?.prices?.[0]?.value.centAmount ?? null;
-          return masterVariantPrice !== null && masterVariantPrice >= priceRange[0];
-        })
-      );
+      if (sortName === 'Price: Low to High' && productsResult) {
+        productsResult.sort((a, b) => {
+          const aPrice = a?.variant?.prices?.[0]?.value.centAmount ?? 0;
+          const bPrice = b?.variant?.prices?.[0]?.value.centAmount ?? 0;
+          return aPrice - bPrice;
+        });
+      }
+      // console.log(responseResult);
+      setProducts(productsResult);
     };
 
     fetchProducts().catch(() => toast.error('Error fetching products.'));
@@ -493,10 +507,10 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                           className="group block border border-gray-100 rounded-lg shadow transition-transform hover:shadow-md"
                         >
                           <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-                            {product.masterVariant?.images?.[0]?.url ? (
+                            {product.variant?.images?.[0]?.url ? (
                               <img
-                                src={product.masterVariant.images[0].url}
-                                alt={product.name.en}
+                                src={product.variant.images[0].url}
+                                alt={product.name}
                                 className="h-full w-full object-cover object-center transition-transform duration-300 ease-in-out transform group-hover:scale-105"
                               />
                             ) : (
@@ -509,26 +523,26 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                             className="mt-4 mb-2 text-lg font-bold text-center text-gray-700"
                             style={{ height: '3.3rem', overflow: 'hidden' }}
                           >
-                            {product.name.en}
+                            {product.name}
                           </h3>
 
                           <div className="mt-1 flex items-center justify-between px-4 py-2">
-                            {product.masterVariant?.prices?.[0]?.discounted?.discount ? (
+                            {product.variant?.prices?.[0]?.discounted?.discount ? (
                               <>
                                 <p className="text-lg font-medium text-red-600">
-                                  {formatPriceInEuro(product.masterVariant.prices[0].discounted.value.centAmount)}
+                                  {formatPriceInEuro(product.variant.prices[0].discounted.value.centAmount)}
                                 </p>
                                 <p
                                   className="text-lg font-medium text-green-600"
                                   style={{ textDecoration: 'line-through' }}
                                 >
-                                  {formatPriceInEuro(product.masterVariant.prices[0].value.centAmount)}
+                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount)}
                                 </p>
                               </>
                             ) : (
-                              product.masterVariant?.prices?.[0]?.value?.centAmount && (
+                              product.variant?.prices?.[0]?.value?.centAmount && (
                                 <p className="text-lg font-medium text-green-600">
-                                  {formatPriceInEuro(product.masterVariant.prices[0].value.centAmount)}
+                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount)}
                                 </p>
                               )
                             )}
