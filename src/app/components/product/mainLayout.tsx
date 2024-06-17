@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Disclosure } from '@headlessui/react';
 import { HeartIcon, MinusIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Attribute, Image, Price, Product, ProductData } from '@commercetools/platform-sdk';
+import { Attribute, Cart, Image, Price, Product, ProductData } from '@commercetools/platform-sdk';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
+import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import SliderMain from './slider/sliderLayout';
 import SizeBtn from './sizeBtn';
 import { addProductToBasket } from '../../api/basket/BasketRepository';
+import { useStateContext } from '../../state/state-context';
 
 const ProductMain = (data: Product) => {
   const [selectedSize, setSelectedSize] = useState(0);
@@ -27,6 +29,7 @@ const ProductMain = (data: Product) => {
   ];
   const [productId, setProductId] = useState('');
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const { setTotalLineItemQuantity } = useStateContext();
 
   function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
@@ -42,16 +45,24 @@ const ProductMain = (data: Product) => {
     if (!productId) return;
 
     const fetchProducts = async () => {
-      await addProductToBasket({
-        productId,
-        quantity: 1,
-        variantId: 1,
-      });
+      try {
+        const response: ClientResponse<Cart | ClientResult> = await addProductToBasket({
+          productId,
+          quantity: 1,
+          variantId: 1,
+        });
+
+        if ('body' in response && response.body && 'totalLineItemQuantity' in response.body) {
+          setTotalLineItemQuantity(response.body.totalLineItemQuantity ?? 0);
+        } else {
+          setTotalLineItemQuantity(0);
+        }
+      } catch (error) {
+        toast.error('Error adding product to cart.');
+      }
     };
 
-    fetchProducts().catch((error) => {
-      toast.error('Error fetching categories.', error);
-    });
+    fetchProducts();
   }, [productId]);
 
   return (

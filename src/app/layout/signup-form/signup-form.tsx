@@ -15,6 +15,7 @@ const SignupForm = () => {
   const [isDefaultBilling, setDefaultBilling] = useState(false);
   const [isDefaultShipping, setDefaultShipping] = useState(false);
   const [isShipping, setShipping] = useState(false);
+  const [isShippingPress, setShippingPress] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(false);
   const [selectedShippingCountry, setSelectedShippingCountry] = useState(false);
   const [modalData, setModalData] = useState({ login: '', pass: '' });
@@ -24,6 +25,7 @@ const SignupForm = () => {
     formState: { errors, isValid },
     control,
     setValue,
+    trigger,
   } = useForm<StorageType>({
     mode: 'onChange',
     defaultValues: defaultFormValues,
@@ -36,15 +38,46 @@ const SignupForm = () => {
   const watchZip = useWatch({ control, name: 'addresses.0.postalCode' });
 
   useEffect(() => {
+    setSelectedShippingCountry(true);
+    if (isShippingPress) {
+      setValue('addresses.1.country', watchCountryBilling, {
+        shouldValidate: isShipping,
+        shouldDirty: false,
+        shouldTouch: false,
+      });
+      setValue('addresses.1.city', isShipping ? '' : watchCity, {
+        shouldValidate: isShipping,
+        shouldDirty: false,
+        shouldTouch: false,
+      });
+      setValue('addresses.1.streetName', isShipping ? '' : watchStreet, {
+        shouldValidate: isShipping,
+        shouldDirty: false,
+        shouldTouch: false,
+      });
+      setValue('addresses.1.postalCode', isShipping ? '' : watchZip, {
+        shouldValidate: isShipping,
+        shouldDirty: false,
+        shouldTouch: false,
+      });
+      trigger(['addresses.1.country', 'addresses.1.city', 'addresses.1.streetName', 'addresses.1.postalCode']);
+    }
+  }, [isShipping, isShippingPress, setValue, trigger]);
+
+  useEffect(() => {
     if (selectedCountry) {
       setValue('addresses.0.postalCode', '', { shouldValidate: true, shouldDirty: true, shouldTouch: true });
       setSelectedCountry(false);
     }
   }, [watchCountryBilling, selectedCountry, setValue]);
   useEffect(() => {
-    if (selectedShippingCountry) {
+    if (selectedShippingCountry && isShipping) {
       setValue('addresses.1.postalCode', '', { shouldValidate: true, shouldDirty: true, shouldTouch: true });
       setSelectedShippingCountry(false);
+    } else if (selectedShippingCountry && !isShipping) {
+      setValue('addresses.1.postalCode', watchZip, { shouldValidate: false, shouldDirty: false, shouldTouch: false });
+      setSelectedShippingCountry(false);
+      trigger(['addresses.1.country', 'addresses.1.postalCode']);
     }
   }, [watchCountryShipping, selectedShippingCountry, setValue]);
   useEffect(() => {
@@ -197,7 +230,10 @@ const SignupForm = () => {
                 <label className="switch-btn text-xs w-fit mr-5 h-fit">Add Shipping address</label>
                 <Switch
                   checked={isShipping}
-                  onChange={setShipping}
+                  onChange={() => {
+                    setShipping((prev) => !prev);
+                    setShippingPress(true);
+                  }}
                   className={classNames(
                     isShipping ? 'bg-green-500' : 'bg-gray-200',
                     'flex w-8 cursor-pointer rounded-full p-px ring-1 ring-inset ring-gray-900/5 transition-colors duration-200 ease-in-out focus-visible:outline-none'
@@ -345,7 +381,7 @@ const SignupForm = () => {
                 </select>
               )}
             />
-            {errors.addresses?.[1]?.country && (
+            {errors.addresses?.[1]?.country && isShipping && (
               <div className="text-xs sm:text-sm text-red-500">{errors.addresses?.[1]?.country.message}</div>
             )}
           </div>
@@ -367,7 +403,7 @@ const SignupForm = () => {
                 />
               )}
             />
-            {errors.addresses?.[1]?.city && (
+            {errors.addresses?.[1]?.city && isShipping && (
               <div className="text-xs sm:text-sm text-red-500">{errors.addresses?.[1]?.city.message}</div>
             )}
           </div>
@@ -389,7 +425,7 @@ const SignupForm = () => {
                 />
               )}
             />
-            {errors.addresses?.[1]?.streetName && (
+            {errors.addresses?.[1]?.streetName && isShipping && (
               <div className="text-xs sm:text-sm text-red-500">{errors.addresses?.[1]?.streetName.message}</div>
             )}
           </div>
@@ -411,7 +447,7 @@ const SignupForm = () => {
                 />
               )}
             />
-            {errors.addresses?.[1]?.postalCode && (
+            {errors.addresses?.[1]?.postalCode && isShipping && (
               <div className="text-xs sm:text-sm text-red-500">{errors.addresses?.[1]?.postalCode.message}</div>
             )}
           </div>

@@ -22,6 +22,7 @@ import { sizeFilters, sortOptionForCTP } from '../../constans';
 import getProductsFilter from '../../api/catalog/getProductsFilter';
 import getCategories from '../../api/catalog/getCategories';
 import { addProductToBasket } from '../../api/basket/BasketRepository';
+import { useStateContext } from '../../state/state-context';
 import { getCategoryValue, IPageCounter, IProductsVariant } from '../../models';
 import CatalogPagination from './catalog-pagination';
 
@@ -56,6 +57,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
       };
     });
   };
+  const { setTotalLineItemQuantity } = useStateContext();
 
   const handleInputSearch = (value: string) => {
     resetOffsetProducts();
@@ -193,6 +195,13 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
           quantity: 1,
           variantId: 1,
         });
+
+        if ('body' in response && response.body && 'totalLineItemQuantity' in response.body) {
+          setTotalLineItemQuantity(response.body.totalLineItemQuantity ?? 0);
+        } else {
+          setTotalLineItemQuantity(0);
+        }
+        console.log('addProductToBasket=>>>>>>>>>>>>', response);
       } catch (error) {
         toast.error('Error adding product to cart.');
       }
@@ -322,7 +331,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
 
         {/* desktop main section */}
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-baseline justify-end border-b border-gray-200 pb-6 pt-4">
+          <div className="flex items-baseline justify-end border-b border-gray-200 pb-5 pt-3">
             <div className="flex items-center">
               <div className="relative mr-4">
                 <input
@@ -341,7 +350,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                 </div>
               </div>
               <Menu as="div" className="relative inline-block text-left">
-                <div className="flex" style={{ width: '200px' }}>
+                <div className="flex relative">
                   <div>
                     <MenuButton className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-green-900">
                       Sort
@@ -351,7 +360,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                       />
                     </MenuButton>
                   </div>
-                  <div className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-green-900 ml-4">
+                  <div className="absolute -bottom-20 -left-10 inline-flex w-32 group justify-center whitespace-nowrap text-sm font-medium text-gray-700 hover:text-green-900">
                     {sortName}
                   </div>
                 </div>

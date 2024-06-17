@@ -52,6 +52,26 @@ export const createOrGetActiveBasket = async (): Promise<ICurrentBasket> => {
   }
 };
 
+export const getBasket = async (): Promise<ClientResponse<Cart | ClientResult>> => {
+  try {
+    const client = new RefreshTokenClient();
+    const apiRoot = client.getApiRoot();
+
+    const result = await apiRoot
+      .withProjectKey({
+        projectKey,
+      })
+      .me()
+      .activeCart()
+      .get()
+      .execute();
+
+    return result as ClientResponse<Cart>;
+  } catch (error) {
+    return error as ClientResponse<ClientResult>;
+  }
+};
+
 export const getTotalPrice = async (): Promise<CentPrecisionMoney | undefined> => {
   const client = new RefreshTokenClient();
   const apiRoot = client.getApiRoot();
@@ -313,7 +333,7 @@ export const removeDiscountCode = async (code: string): Promise<ClientResponse<C
 
     const isApplied = await isDiscountsApplied();
     if (!isApplied) {
-      console.log('No discounts applied, skipping removal.');
+      // console.log('No discounts applied, skipping removal.');
       return {
         statusCode: 200,
         message: 'No discounts applied, skipping removal.',
@@ -341,7 +361,7 @@ export const removeDiscountCode = async (code: string): Promise<ClientResponse<C
       })
       .execute();
 
-    console.log('Discount code removed successfully');
+    // console.log('Discount code removed successfully');
 
     return result as ClientResponse<Cart>;
   } catch (error) {
