@@ -1,9 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
+import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
+import { Cart } from '@commercetools/platform-sdk';
 import { useStateContext } from '../../state/state-context';
+import { getBasket } from '../../api/basket/BasketRepository';
 
 const CartIcon = () => {
-  const { totalLineItemQuantity } = useStateContext();
+  const { totalLineItemQuantity, setTotalLineItemQuantity } = useStateContext();
+
+  useEffect(() => {
+    const fetchBasket = async () => {
+      try {
+        const response: ClientResponse<Cart | ClientResult> = await getBasket();
+
+        if ('body' in response && response.body && 'totalLineItemQuantity' in response.body) {
+          setTotalLineItemQuantity(response.body.totalLineItemQuantity ?? 0);
+        }
+      } catch (error) {
+        console.error('Failed to fetch basket:', error);
+      }
+    };
+
+    fetchBasket();
+  }, []);
 
   return (
     <div className="group -m-2 flex items-center p-2">
