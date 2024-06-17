@@ -333,7 +333,7 @@ export const removeDiscountCode = async (code: string): Promise<ClientResponse<C
 
     const isApplied = await isDiscountsApplied();
     if (!isApplied) {
-      console.log('No discounts applied, skipping removal.');
+      // console.log('No discounts applied, skipping removal.');
       return {
         statusCode: 200,
         message: 'No discounts applied, skipping removal.',
@@ -361,7 +361,7 @@ export const removeDiscountCode = async (code: string): Promise<ClientResponse<C
       })
       .execute();
 
-    console.log('Discount code removed successfully');
+    // console.log('Discount code removed successfully');
 
     return result as ClientResponse<Cart>;
   } catch (error) {

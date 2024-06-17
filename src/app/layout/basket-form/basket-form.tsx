@@ -148,7 +148,6 @@ const BasketForm = () => {
       }
     };
 
-    console.log({ quantityProduct, lineItems, promoCode, isDisabledButtonPromoCode });
     fetchBasket();
   }, [quantityProduct, lineItems, promoCode, isDisabledButtonPromoCode]);
 
