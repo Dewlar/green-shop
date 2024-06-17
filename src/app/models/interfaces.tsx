@@ -2,8 +2,11 @@ import { Address, Product } from '@commercetools/platform-sdk';
 import { NavigateFunction } from 'react-router-dom';
 import React from 'react';
 
-const sample = () => 1;
-const sample2 = () => 1;
+export interface IPageCounter {
+  itemsPerPage: number;
+  totalProducts: number;
+  offset: number;
+}
 
 export interface StringObject {
   [key: string]: string;
@@ -46,5 +49,3 @@ export interface StorageType {
   defaultBillingAddress?: number;
   defaultShippingAddress?: number;
 }
-
-export default { sample, sample2 };

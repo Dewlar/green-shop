@@ -15,19 +15,20 @@ import { ChevronDownIcon, FunnelIcon, Squares2X2Icon } from '@heroicons/react/20
 import { toast } from 'react-toastify';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Cart, ProductProjection, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
+import { Cart, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import { classNames, formatPriceInEuro } from '../../api/helpers';
 import { ICategoryData, IClickedIconsState, ISortOption } from '../../api/types';
 import { sizeFilters, sortOptionForCTP } from '../../constans';
 import getProductsFilter from '../../api/catalog/getProductsFilter';
 import getCategories from '../../api/catalog/getCategories';
 import { addProductToBasket } from '../../api/basket/BasketRepository';
-import { getCategoryValue } from '../../models';
 import { useStateContext } from '../../state/state-context';
+import { getCategoryValue, IPageCounter, IProductsVariant } from '../../models';
+import CatalogPagination from './catalog-pagination';
 
 const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [products, setProducts] = useState<ProductProjection[] | undefined>(undefined);
+  const [products, setProducts] = useState<IProductsVariant[] | undefined>(undefined);
   const [productId, setProductId] = useState('');
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [selectedCategoryValue, setSelectedCategoryValue] = useState('');
@@ -42,31 +43,36 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   const [categories, setCategories] = useState<ICategoryData[]>([]);
   const navigate = useNavigate();
   const location = useLocation();
+  const [pageCounter, setPageCounter] = useState<IPageCounter>({
+    totalProducts: 0,
+    offset: 0,
+    itemsPerPage: 12,
+  });
+
+  const resetOffsetProducts = () => {
+    setPageCounter((prev) => {
+      return {
+        ...prev,
+        offset: 0,
+      };
+    });
+  };
   const { setTotalLineItemQuantity } = useStateContext();
 
   const handleInputSearch = (value: string) => {
+    resetOffsetProducts();
     setInputSearch(value);
   };
 
   const handleSizeClick = (sizeValue: string, sizeLabel: string) => {
+    resetOffsetProducts();
     setSelectedSizeValue(sizeValue === '' ? '' : `variants.attributes.Size:"${sizeValue}"`);
     setSelectedSizeLabel(sizeLabel === '' ? '' : sizeLabel);
   };
 
   const handleCategoryClick = (categoryId: string, categoryValue: string) => {
-    // console.log('rrrrrr---->, ', movedCategory, categoryValue);
-    // setSelectedCategoryId(categoryId === '' ? '' : `categories.id:subtree("${categoryId}")`);
     if (categoryValue) navigate(`/catalog/${getCategoryValue(categoryValue)}`);
     else navigate(`/catalog`);
-    // else {
-    //   handleCategoryClick('', '');
-    //   handleSizeClick('', '');
-    //   setPriceRange([0, 100000]);
-    // }
-    // if (location.state?.isExternal) {
-    //   handleSizeClick('', '');
-    //   setPriceRange([0, 100000]);
-    // }
     setSelectedCategoryValue(categoryValue === '' ? '' : categoryValue);
   };
 
@@ -102,28 +108,20 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
       const response = await getCategories();
       setCategories(response);
 
-      // response.some((category) => getCategoryValue(category.name) === movedCategory);
-      // if (response.some((category) => getCategoryValue(category.name) === movedCategory))
-      //   console.log('aaaaaaaaaaaaaaa');
-      // console.log('movedCategory', movedCategory);
-      // setSelectedCategoryId('');
-
       let currentCategory: ICategoryData = {
         id: '',
         name: '',
       };
       response.forEach((category) => {
         if (getCategoryValue(category.name) === movedCategory) {
-          // console.log('categoryID -> ', category, movedCategory);
           currentCategory = { ...category };
         }
       });
+
       if (currentCategory.id) setSelectedCategoryId(`categories.id:subtree("${currentCategory.id}")`);
       else setSelectedCategoryId('');
       setSelectedCategoryValue(currentCategory.name === '' ? '' : currentCategory.name);
-      // console.log('useFfect start catalog', currentCategory, 'a', selectedCategoryValue);
-      //
-      // console.log('location -------- ', location.state?.isExternal);
+
       if (location.state?.isExternal) {
         handleSizeClick('', '');
         setPriceRange([0, 100000]);
@@ -142,29 +140,50 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
           `variants.price.centAmount:range (${priceRange[0]} to ${priceRange[1]})`,
         ],
         sort: [sortMethod],
-        limit: 12,
-        offset: 0,
+        limit: pageCounter.itemsPerPage,
+        offset: pageCounter.offset,
         search: inputSearch,
+        markMatchingVariants: true,
       });
       const responseResult = response.body?.results;
-      // console.log('actual response products:', responseResult);
-      if (sortName === 'Price: High to Low' && responseResult) {
-        responseResult.sort((a, b) => {
-          const aPrice = a?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
-          const bPrice = b?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
+
+      setPageCounter((prev) => {
+        return {
+          ...prev,
+          totalProducts: response.body?.total || 0,
+        };
+      });
+
+      const productsResult = responseResult?.map((product) => {
+        const masterVariantPrice = product?.variants.filter((variant) => variant.isMatchingVariant === true);
+        return {
+          id: product.id,
+          name: product.name.en.toString(),
+          description: product.description?.en.toString() || '',
+          variant: masterVariantPrice[0],
+        };
+      });
+
+      if (sortName === 'Price: High to Low' && productsResult) {
+        productsResult.sort((a, b) => {
+          const aPrice = a?.variant?.prices?.[0]?.value.centAmount ?? 0;
+          const bPrice = b?.variant?.prices?.[0]?.value.centAmount ?? 0;
           return bPrice - aPrice;
         });
       }
-      setProducts(
-        responseResult?.filter((product) => {
-          const masterVariantPrice = product?.masterVariant?.prices?.[0]?.value.centAmount ?? null;
-          return masterVariantPrice !== null && masterVariantPrice >= priceRange[0];
-        })
-      );
+      if (sortName === 'Price: Low to High' && productsResult) {
+        productsResult.sort((a, b) => {
+          const aPrice = a?.variant?.prices?.[0]?.value.centAmount ?? 0;
+          const bPrice = b?.variant?.prices?.[0]?.value.centAmount ?? 0;
+          return aPrice - bPrice;
+        });
+      }
+      // console.log(responseResult);
+      setProducts(productsResult);
     };
 
     fetchProducts().catch(() => toast.error('Error fetching products.'));
-  }, [selectedCategoryId, selectedSizeValue, sortMethod, priceRange, inputSearch]);
+  }, [selectedCategoryId, selectedSizeValue, sortMethod, priceRange, inputSearch, pageCounter.offset]);
 
   useEffect(() => {
     if (!productId) return;
@@ -182,7 +201,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
         } else {
           setTotalLineItemQuantity(0);
         }
-        console.log('addProductToBasket=>>>>>>>>>>>>', response);
+        // console.log('addProductToBasket=>>>>>>>>>>>>', response);
       } catch (error) {
         toast.error('Error adding product to cart.');
       }
@@ -281,7 +300,10 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                           min={0}
                           max={100000}
                           values={priceRange}
-                          onChange={(values) => setPriceRange(values)}
+                          onChange={(values) => {
+                            resetOffsetProducts();
+                            setPriceRange(values);
+                          }}
                           renderTrack={({ props, children }) => (
                             <div {...props} className="h-1 bg-gray-200 rounded-md">
                               {children}
@@ -444,7 +466,10 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                       min={0}
                       max={100000}
                       values={priceRange}
-                      onChange={(values) => setPriceRange(values)}
+                      onChange={(values) => {
+                        resetOffsetProducts();
+                        setPriceRange(values);
+                      }}
                       renderTrack={({ props, children }) => (
                         <div {...props} className="h-1 bg-gray-200 rounded-md">
                           {children}
@@ -475,12 +500,11 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                         <Link
                           to="/catalog"
                           className={`${!selectedCategoryValue && !selectedSizeLabel ? 'text-green-600' : ''}`}
-                          // onClick={() => navigate('/catalog')}
                           onClick={() => handleResetFilters()}
                         >
                           Category
                         </Link>
-                        {(selectedCategoryValue || selectedSizeLabel) && (
+                        {selectedCategoryValue && (
                           <span className="mx-2 font-sans text-sm antialiased font-normal leading-normal pointer-events-none select-none text-blue-gray-500">
                             /
                           </span>
@@ -489,26 +513,8 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                       {selectedCategoryValue && (
                         <li className="select-none flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 text-blue-gray-900 hover:text-light-blue-500">
                           {selectedCategoryValue}
-                          {/* <a href="#" onClick={() => handleSizeClick('', '')}> */}
-                          {/*  {selectedCategoryValue} */}
-                          {/* </a> */}
-                          {/* {selectedSizeLabel && ( */}
-                          {/*  <span className="mx-2 font-sans text-sm antialiased font-normal leading-normal pointer-events-none select-none text-blue-gray-500"> */}
-                          {/*    / */}
-                          {/*  </span> */}
-                          {/* )} */}
                         </li>
                       )}
-                      {/* {selectedSizeLabel && ( */}
-                      {/*  <li className="flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer text-blue-gray-900 hover:text-light-blue-500"> */}
-                      {/*    <a */}
-                      {/*      href="#" */}
-                      {/*      // onClick={() => handleCategoryClick('', '')} */}
-                      {/*    > */}
-                      {/*      {selectedSizeLabel} */}
-                      {/*    </a> */}
-                      {/*  </li> */}
-                      {/* )} */}
                     </ol>
                   </nav>
 
@@ -527,10 +533,10 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                           className="group block border border-gray-100 rounded-lg shadow transition-transform hover:shadow-md"
                         >
                           <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-                            {product.masterVariant?.images?.[0]?.url ? (
+                            {product.variant?.images?.[0]?.url ? (
                               <img
-                                src={product.masterVariant.images[0].url}
-                                alt={product.name.en}
+                                src={product.variant.images[0].url}
+                                alt={product.name}
                                 className="h-full w-full object-cover object-center transition-transform duration-300 ease-in-out transform group-hover:scale-105"
                               />
                             ) : (
@@ -543,26 +549,26 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                             className="mt-4 mb-2 text-lg font-bold text-center text-gray-700"
                             style={{ height: '3.3rem', overflow: 'hidden' }}
                           >
-                            {product.name.en}
+                            {product.name}
                           </h3>
 
                           <div className="mt-1 flex items-center justify-between px-4 py-2">
-                            {product.masterVariant?.prices?.[0]?.discounted?.discount ? (
+                            {product.variant?.prices?.[0]?.discounted?.discount ? (
                               <>
                                 <p className="text-lg font-medium text-red-600">
-                                  {formatPriceInEuro(product.masterVariant.prices[0].discounted.value.centAmount)}
+                                  {formatPriceInEuro(product.variant.prices[0].discounted.value.centAmount)}
                                 </p>
                                 <p
                                   className="text-lg font-medium text-green-600"
                                   style={{ textDecoration: 'line-through' }}
                                 >
-                                  {formatPriceInEuro(product.masterVariant.prices[0].value.centAmount)}
+                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount)}
                                 </p>
                               </>
                             ) : (
-                              product.masterVariant?.prices?.[0]?.value?.centAmount && (
+                              product.variant?.prices?.[0]?.value?.centAmount && (
                                 <p className="text-lg font-medium text-green-600">
-                                  {formatPriceInEuro(product.masterVariant.prices[0].value.centAmount)}
+                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount)}
                                 </p>
                               )
                             )}
@@ -592,23 +598,8 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-                  <div className="flex flex-1 justify-between sm:hidden">
-                    <a
-                      href="#"
-                      className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                    >
-                      Previous
-                    </a>
-                    <a
-                      href="#"
-                      className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                    >
-                      Next
-                    </a>
-                  </div>
-                  {/* Pagination code here */}
-                </div>
+                {/* Pagination code here */}
+                <CatalogPagination pageCounter={pageCounter} setPageCounter={setPageCounter} />
               </div>
             </div>
           </section>
