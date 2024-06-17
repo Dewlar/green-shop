@@ -38,8 +38,9 @@ const SignupForm = () => {
   const watchZip = useWatch({ control, name: 'addresses.0.postalCode' });
 
   useEffect(() => {
+    setSelectedShippingCountry(true);
     if (isShippingPress) {
-      setValue('addresses.1.country', isShipping ? 'DE' : watchCountryBilling, {
+      setValue('addresses.1.country', watchCountryBilling, {
         shouldValidate: isShipping,
         shouldDirty: false,
         shouldTouch: false,
@@ -70,9 +71,13 @@ const SignupForm = () => {
     }
   }, [watchCountryBilling, selectedCountry, setValue]);
   useEffect(() => {
-    if (selectedShippingCountry) {
+    if (selectedShippingCountry && isShipping) {
       setValue('addresses.1.postalCode', '', { shouldValidate: true, shouldDirty: true, shouldTouch: true });
       setSelectedShippingCountry(false);
+    } else if (selectedShippingCountry && !isShipping) {
+      setValue('addresses.1.postalCode', watchZip, { shouldValidate: false, shouldDirty: false, shouldTouch: false });
+      setSelectedShippingCountry(false);
+      trigger(['addresses.1.country', 'addresses.1.postalCode']);
     }
   }, [watchCountryShipping, selectedShippingCountry, setValue]);
   useEffect(() => {
