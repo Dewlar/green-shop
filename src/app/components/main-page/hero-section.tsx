@@ -34,13 +34,17 @@ const HeroSection = () => {
             Breathe life into your décor,
             <br /> with plants delivered to your door
           </h1>
-          <div className="mt-4 sm:mt-6">
+          <div className="mt-4 sm:mt-6 relative">
             <Link
               to="/catalog"
               className="inline-block rounded-md border border-transparent bg-green-600 px-8 py-3 font-medium text-white hover:bg-green-700"
             >
               Shop Collection
             </Link>
+
+            <div className="inline-block rounded-md border border-transparent bg-green-600 px-8 py-3 font-medium text-white absolute -bottom-16 whitespace-nowrap transform left-1/2 -translate-x-1/2">
+              10% discount promo code: <span className="font-bold">plant-coupon</span>
+            </div>
           </div>
         </div>
       </div>

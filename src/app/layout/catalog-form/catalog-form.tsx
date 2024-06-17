@@ -23,6 +23,7 @@ import getProductsFilter from '../../api/catalog/getProductsFilter';
 import getCategories from '../../api/catalog/getCategories';
 import { addProductToBasket } from '../../api/basket/BasketRepository';
 import { getCategoryValue } from '../../models';
+import { useStateContext } from '../../state/state-context';
 
 const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -41,6 +42,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   const [categories, setCategories] = useState<ICategoryData[]>([]);
   const navigate = useNavigate();
   const location = useLocation();
+  const { setTotalLineItemQuantity } = useStateContext();
 
   const handleInputSearch = (value: string) => {
     setInputSearch(value);
@@ -174,7 +176,13 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
           quantity: 1,
           variantId: 1,
         });
-        console.log(response);
+
+        if ('body' in response && response.body && 'totalLineItemQuantity' in response.body) {
+          setTotalLineItemQuantity(response.body.totalLineItemQuantity ?? 0);
+        } else {
+          setTotalLineItemQuantity(0);
+        }
+        console.log('addProductToBasket=>>>>>>>>>>>>', response);
       } catch (error) {
         toast.error('Error adding product to cart.');
       }
