@@ -55,20 +55,21 @@ const AboutLayout = () => {
                     <div className="font-semibold text-white text-2xl">Andrei Markouski</div>
                     <div className="mt-1 text-gray-900">Frontend Developer</div>
                   </div>
-                  <div className="text-sm font-semibold leading-8 text-white sm:text-lg sm:leading-9 text-justify">
-                    <p>
-                      Gravida quam mi erat tortor neque molestie. Auctor aliquet at porttitor a enim nunc suscipit
-                      tincidunt nunc. Et non lorem tortor posuere.{' '}
-                      <span className="m-1 h-44 w-60 float-right relative block text-center">
+                  <div className="text-sm font-semibold leading-8 text-white sm:text-lg sm:leading-9">
+                    <p className="text-justify">
+                      2 higher education where I studied Delphi and C#. 7 years of experience as a system administrator.
+                      Now I aspire to become FrontEnd developer with immersion in technologies.{' '}
+                      <span className="m-1 h-44 w-44 sm:w-60 float-right relative block text-center">
                         <img
                           src="assets/about/pic/lead.png"
                           alt=""
-                          className="absolute h-auto w-56 sm:w-72 -top-8 left-1/2 transform -translate-x-1/2 max-w-none"
+                          className="absolute h-auto w-44 sm:w-72 -top-5 sm:-top-8 left-1/2 transform -translate-x-1/2 max-w-none"
                         />
                         <span className="text-sm text-gray-900">R.S.Survivor Lead</span>
                       </span>
-                      Nunc eu scelerisque interdum eget tellus non nibh scelerisque bibendum.
                     </p>
+                    <p>On the project I fulfill the role of team lead.</p>
+                    <p>My slogan is &#171;no problem is unsolvable!&#187;</p>
                   </div>
                 </div>
               </div>
@@ -97,8 +98,8 @@ const AboutLayout = () => {
                   </div>
                   <div className="text-sm font-semibold leading-8 text-white sm:text-lg sm:leading-9 text-justify">
                     <p>
-                      Gravida quam mi erat tortor neque molestie. Auctor aliquet at porttitor a enim nunc suscipit
-                      tincidunt nunc. Et non lorem tortor posuere.{' '}
+                      I have completed a five-year higher education. I graduated from the Faculty of Biology of the
+                      Belarusian State University. Currently I work in my specialty, but I decided to change my
                       <span className="m-1 h-44 w-56 float-left relative block text-center">
                         <img
                           src="assets/about/pic/commerce2.png"
@@ -107,7 +108,8 @@ const AboutLayout = () => {
                         />
                         <span className="text-sm text-gray-900">R.S.Survivor developer</span>
                       </span>
-                      Nunc eu scelerisque interdum eget tellus non nibh scelerisque bibendum.
+                      profession and become a web developer. Despite all the difficulties that arise, I like to solve
+                      all these problems, find my own solutions, and simply - constantly learn something new.
                     </p>
                   </div>
                 </div>
