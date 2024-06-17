@@ -48,11 +48,22 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
     itemsPerPage: 12,
   });
 
+  const resetOffsetProducts = () => {
+    setPageCounter((prev) => {
+      return {
+        ...prev,
+        offset: 0,
+      };
+    });
+  };
+
   const handleInputSearch = (value: string) => {
+    resetOffsetProducts();
     setInputSearch(value);
   };
 
   const handleSizeClick = (sizeValue: string, sizeLabel: string) => {
+    resetOffsetProducts();
     setSelectedSizeValue(sizeValue === '' ? '' : `variants.attributes.Size:"${sizeValue}"`);
     setSelectedSizeLabel(sizeLabel === '' ? '' : sizeLabel);
   };
@@ -280,7 +291,10 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                           min={0}
                           max={100000}
                           values={priceRange}
-                          onChange={(values) => setPriceRange(values)}
+                          onChange={(values) => {
+                            resetOffsetProducts();
+                            setPriceRange(values);
+                          }}
                           renderTrack={({ props, children }) => (
                             <div {...props} className="h-1 bg-gray-200 rounded-md">
                               {children}
@@ -443,7 +457,10 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                       min={0}
                       max={100000}
                       values={priceRange}
-                      onChange={(values) => setPriceRange(values)}
+                      onChange={(values) => {
+                        resetOffsetProducts();
+                        setPriceRange(values);
+                      }}
                       renderTrack={({ props, children }) => (
                         <div {...props} className="h-1 bg-gray-200 rounded-md">
                           {children}

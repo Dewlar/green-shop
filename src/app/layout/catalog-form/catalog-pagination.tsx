@@ -28,6 +28,10 @@ const CatalogPagination: FC<Props> = ({ pageCounter, setPageCounter }) => {
     });
   }, [currentPage]);
 
+  useEffect(() => {
+    setCurrentPage(pageCounter.offset / pageCounter.itemsPerPage + 1);
+  }, [pageCounter.offset]);
+
   const handlePrevious = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
