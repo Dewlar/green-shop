@@ -13,9 +13,9 @@ import {
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon, FunnelIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
 import { toast } from 'react-toastify';
-import { ClientResponse } from '@commercetools/sdk-client-v2';
+import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
+import { Cart, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import { classNames, formatPriceInEuro } from '../../api/helpers';
 import { ICategoryData, IClickedIconsState, ISortOption } from '../../api/types';
 import { sizeFilters, sortOptionForCTP } from '../../constans';
@@ -190,7 +190,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
 
     const fetchProducts = async () => {
       try {
-        await addProductToBasket({
+        const response: ClientResponse<Cart | ClientResult> = await addProductToBasket({
           productId,
           quantity: 1,
           variantId: 1,
@@ -201,7 +201,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
         } else {
           setTotalLineItemQuantity(0);
         }
-        console.log('addProductToBasket=>>>>>>>>>>>>', response);
+        // console.log('addProductToBasket=>>>>>>>>>>>>', response);
       } catch (error) {
         toast.error('Error adding product to cart.');
       }
