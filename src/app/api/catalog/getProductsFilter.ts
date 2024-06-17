@@ -10,7 +10,8 @@ const getQueryProducts = async (
   sort?: string[],
   limit = 20,
   offset = 0,
-  search?: string
+  search?: string,
+  markMatchingVariants?: boolean
 ): Promise<ClientResponse<ProductProjectionPagedQueryResponse>> => {
   const client = new AnonymousClient();
   const apiRoot = client.getApiRoot();
@@ -21,6 +22,7 @@ const getQueryProducts = async (
       limit,
       offset,
       'text.en': search,
+      markMatchingVariants,
     },
   };
   const result = await apiRoot
@@ -40,14 +42,16 @@ const getProductsFilter = async ({
   limit = 20,
   offset = 0,
   search = '',
+  markMatchingVariants = true,
 }: {
   filter?: string[];
   sort?: string[];
   limit?: number;
   offset?: number;
   search?: string;
+  markMatchingVariants: boolean;
 }): Promise<ClientResponse<ProductProjectionPagedQueryResponse>> => {
-  return getQueryProducts(filter, sort, limit, offset, search);
+  return getQueryProducts(filter, sort, limit, offset, search, markMatchingVariants);
 };
 
 export default getProductsFilter;

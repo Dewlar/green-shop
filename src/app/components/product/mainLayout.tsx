@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Disclosure } from '@headlessui/react';
 import { HeartIcon, MinusIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Attribute, Image, Price, Product, ProductData } from '@commercetools/platform-sdk';
+import { Attribute, Cart, Image, Price, Product, ProductData } from '@commercetools/platform-sdk';
 import ReactLoading from 'react-loading';
+import { toast } from 'react-toastify';
+import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import SliderMain from './slider/sliderLayout';
 import SizeBtn from './sizeBtn';
+import { addProductToBasket } from '../../api/basket/BasketRepository';
+import { useStateContext } from '../../state/state-context';
 
 const ProductMain = (data: Product) => {
   const [selectedSize, setSelectedSize] = useState(0);
@@ -23,10 +27,43 @@ const ProductMain = (data: Product) => {
     { name: 'M', bgColor: 'bg-green-500', hoverSize: 'hover:bg-green-600' },
     { name: 'L', bgColor: 'bg-green-700', hoverSize: 'hover:bg-green-800' },
   ];
+  const [productId, setProductId] = useState('');
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const { setTotalLineItemQuantity } = useStateContext();
 
   function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
   }
+
+  const handleIconBasketClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
+    e.preventDefault();
+    setProductId(id);
+    setIsButtonDisabled(true);
+  };
+
+  useEffect(() => {
+    if (!productId) return;
+
+    const fetchProducts = async () => {
+      try {
+        const response: ClientResponse<Cart | ClientResult> = await addProductToBasket({
+          productId,
+          quantity: 1,
+          variantId: 1,
+        });
+
+        if ('body' in response && response.body && 'totalLineItemQuantity' in response.body) {
+          setTotalLineItemQuantity(response.body.totalLineItemQuantity ?? 0);
+        } else {
+          setTotalLineItemQuantity(0);
+        }
+      } catch (error) {
+        toast.error('Error adding product to cart.');
+      }
+    };
+
+    fetchProducts();
+  }, [productId]);
 
   return (
     <div className="bg-white mb-8">
@@ -93,8 +130,11 @@ const ProductMain = (data: Product) => {
                 <div className="mt-10 flex">
                   <button
                     type="submit"
-                    onClick={(e) => e.preventDefault()}
-                    className="flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-green-600 px-8 py-3 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full"
+                    onClick={(e) => handleIconBasketClick(e, data.id)}
+                    className={`flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full ${
+                      isButtonDisabled ? 'bg-gray-400' : 'bg-green-600 hover:bg-green-700'
+                    }`}
+                    disabled={isButtonDisabled}
                   >
                     Add to bag
                   </button>

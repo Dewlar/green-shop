@@ -1,5 +1,10 @@
 import { ISortOption } from './api/types';
 
+export interface IProductCategories {
+  id: string;
+  name: string;
+}
+
 export const categoryFilters = [
   {
     name: 'Category',
@@ -51,6 +56,6 @@ export const sizeFilters = [
 export const sortOptionForCTP: ISortOption[] = [
   { name: 'Price: High to Low', href: '#', current: false, method: 'price desc' },
   { name: 'Price: Low to High', href: '#', current: false, method: 'price asc' },
-  { name: 'A-Z', href: '#', current: false, method: 'name.en asc' },
-  { name: 'Z-A', href: '#', current: false, method: 'name.en desc' },
+  { name: 'Sort method: A-Z', href: '#', current: false, method: 'name.en asc' },
+  { name: 'Sort method: Z-A', href: '#', current: false, method: 'name.en desc' },
 ];

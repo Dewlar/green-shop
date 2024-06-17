@@ -17,9 +17,12 @@ const App = () => {
   const { isAuth } = useStateContext();
   return (
     <Routes>
-      <Route element={<Product />} path="catalog/:id" />
+      <Route element={<Product />} path="product/:id" />
       <Route element={<Cart />} path="cart" />
       <Route element={<Catalog />} path="catalog" />
+      <Route element={<Catalog />} path="catalog/:category">
+        <Route element={<Product />} path=":id" />
+      </Route>
       <Route element={<Home />} path="/" />
       <Route
         element={

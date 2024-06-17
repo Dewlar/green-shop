@@ -4,17 +4,14 @@ import { useParams } from 'react-router-dom';
 import ProductMain from '../../components/product/mainLayout';
 import HeaderWidthMobile from '../../components/header/header-width-mobile';
 import Footer from '../../components/footer/footer';
-import { getOneProduct, getProductData } from '../../components/product/getProduct/getDataProduct';
+import { getOneProduct } from '../../api/catalog/getProductsAll';
 
 const ProductForm = () => {
   const { id } = useParams();
   const [productStorage, setProduct] = useState({} as Product);
-  const depth = '2';
-
   useEffect(() => {
     async function response() {
       if (!id) return;
-      await getProductData();
       await getOneProduct(id).then(({ body }) => {
         setProduct(body);
       });
@@ -24,7 +21,7 @@ const ProductForm = () => {
 
   return (
     <div>
-      <HeaderWidthMobile depth={depth}></HeaderWidthMobile>
+      <HeaderWidthMobile></HeaderWidthMobile>
       <ProductMain {...productStorage}></ProductMain>
       <Footer></Footer>
     </div>

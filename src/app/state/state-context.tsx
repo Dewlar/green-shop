@@ -1,11 +1,12 @@
 import React, { createContext, useState, useContext, ReactNode, FC, useEffect } from 'react';
 // import { useLocation, useNavigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { Customer, ClientResponse } from '@commercetools/platform-sdk';
+import { Customer, ClientResponse, DiscountCodeInfo } from '@commercetools/platform-sdk';
 import CustomerController from '../api/CustomerController';
 import TokenService from '../api/TokenService';
 import { LocalStorageKeysEnum, storageGet, storageSet } from '../api/helpers';
 import { ICategoryData } from '../api/types';
+import { clearBasket } from '../api/basket/BasketRepository';
 
 export interface IAuthData {
   token: string;
@@ -19,6 +20,10 @@ export interface IState {
   authData: IAuthData;
   customerData: ClientResponse<Customer>;
   categoriesData: ICategoryData[];
+  totalLineItemQuantity: number;
+  discountCodes: DiscountCodeInfo[];
+  setDiscountCodes: React.Dispatch<React.SetStateAction<DiscountCodeInfo[]>>;
+  setTotalLineItemQuantity: React.Dispatch<React.SetStateAction<number>>;
   setAuthData: React.Dispatch<React.SetStateAction<IAuthData>>;
   setCustomerData: React.Dispatch<React.SetStateAction<ClientResponse<Customer>>>;
   setCategories: React.Dispatch<React.SetStateAction<ICategoryData[]>>;
@@ -46,6 +51,8 @@ function getInitialState() {
       billingAddressIds: [],
     } as unknown as ClientResponse<Customer>,
     categoriesData: [],
+    quantityProductsBasket: 0,
+    discountCodes: [],
   };
 }
 
@@ -65,6 +72,8 @@ export const StateProvider: FC<Props> = ({ children }) => {
   const [authData, setAuthData] = useState<IAuthData>(getInitialState().authData);
   const [customerData, setCustomerData] = useState<ClientResponse<Customer>>(getInitialState().customerData);
   const [categoriesData, setCategories] = useState<ICategoryData[]>(getInitialState().categoriesData);
+  const [totalLineItemQuantity, setTotalLineItemQuantity] = useState<number>(0);
+  const [discountCodes, setDiscountCodes] = useState<DiscountCodeInfo[]>(getInitialState().discountCodes);
 
   const savedToken = new TokenService();
   const customerController = new CustomerController();
@@ -85,6 +94,7 @@ export const StateProvider: FC<Props> = ({ children }) => {
     setIsAuth(false);
     // setAuthData - example of using the set function in useState, if the new state depends on the previous state, to avoid side effects
     setAuthData((prev) => ({ ...prev, ...savedToken.get() }));
+    clearBasket();
     navigate('/', { replace: true });
   };
 
@@ -98,6 +108,10 @@ export const StateProvider: FC<Props> = ({ children }) => {
         customerData,
         setCustomerData,
         categoriesData,
+        totalLineItemQuantity,
+        discountCodes,
+        setDiscountCodes,
+        setTotalLineItemQuantity,
         setCategories,
         logout,
       }}

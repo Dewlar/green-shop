@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Range } from 'react-range';
 import {
   Dialog,
@@ -13,19 +13,23 @@ import {
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon, FunnelIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
 import { toast } from 'react-toastify';
-import { ClientResponse } from '@commercetools/sdk-client-v2';
-import { Link } from 'react-router-dom';
-import { ProductProjection, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
+import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Cart, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import { classNames, formatPriceInEuro } from '../../api/helpers';
-import { ISortOption } from '../../api/types';
-import { categoryFilters, sizeFilters, sortOptionForCTP } from '../../constans';
+import { ICategoryData, IClickedIconsState, ISortOption } from '../../api/types';
+import { sizeFilters, sortOptionForCTP } from '../../constans';
 import getProductsFilter from '../../api/catalog/getProductsFilter';
-import { useStateContext } from '../../state/state-context';
 import getCategories from '../../api/catalog/getCategories';
+import { addProductToBasket } from '../../api/basket/BasketRepository';
+import { useStateContext } from '../../state/state-context';
+import { getCategoryValue, IPageCounter, IProductsVariant } from '../../models';
+import CatalogPagination from './catalog-pagination';
 
-const CatalogForm = () => {
+const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [products, setProducts] = useState<ProductProjection[] | undefined>(undefined);
+  const [products, setProducts] = useState<IProductsVariant[] | undefined>(undefined);
+  const [productId, setProductId] = useState('');
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [selectedCategoryValue, setSelectedCategoryValue] = useState('');
   const [selectedSizeValue, setSelectedSizeValue] = useState('');
@@ -35,19 +39,41 @@ const CatalogForm = () => {
   const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionForCTP);
   const [priceRange, setPriceRange] = useState([0, 100000]);
   const [inputSearch, setInputSearch] = useState('');
+  const [clickedIcons, setClickedIcons] = useState<IClickedIconsState>({});
+  const [categories, setCategories] = useState<ICategoryData[]>([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [pageCounter, setPageCounter] = useState<IPageCounter>({
+    totalProducts: 0,
+    offset: 0,
+    itemsPerPage: 12,
+  });
+
+  const resetOffsetProducts = () => {
+    setPageCounter((prev) => {
+      return {
+        ...prev,
+        offset: 0,
+      };
+    });
+  };
+  const { setTotalLineItemQuantity } = useStateContext();
 
   const handleInputSearch = (value: string) => {
+    resetOffsetProducts();
     setInputSearch(value);
   };
 
-  const handleCategoryClick = (categoryId: string, categoryValue: string) => {
-    setSelectedCategoryId(categoryId === '' ? '' : `categories.id:subtree("${categoryId}")`);
-    setSelectedCategoryValue(categoryValue === '' ? '' : categoryValue);
-  };
-
   const handleSizeClick = (sizeValue: string, sizeLabel: string) => {
+    resetOffsetProducts();
     setSelectedSizeValue(sizeValue === '' ? '' : `variants.attributes.Size:"${sizeValue}"`);
     setSelectedSizeLabel(sizeLabel === '' ? '' : sizeLabel);
+  };
+
+  const handleCategoryClick = (categoryId: string, categoryValue: string) => {
+    if (categoryValue) navigate(`/catalog/${getCategoryValue(categoryValue)}`);
+    else navigate(`/catalog`);
+    setSelectedCategoryValue(categoryValue === '' ? '' : categoryValue);
   };
 
   const handleSortClick = (sortOption: ISortOption) => {
@@ -67,58 +93,122 @@ const CatalogForm = () => {
     setPriceRange([0, 100000]);
   };
 
-  const { setCategories } = useStateContext();
+  const handleIconBasketClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, id: string) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setProductId(id);
+    setClickedIcons((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id],
+    }));
+  };
 
   useEffect(() => {
     const fetchCategories = async () => {
-      try {
-        const response = await getCategories();
-        setCategories(response);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-        toast.error('Error fetching categories.');
+      const response = await getCategories();
+      setCategories(response);
+
+      let currentCategory: ICategoryData = {
+        id: '',
+        name: '',
+      };
+      response.forEach((category) => {
+        if (getCategoryValue(category.name) === movedCategory) {
+          currentCategory = { ...category };
+        }
+      });
+
+      if (currentCategory.id) setSelectedCategoryId(`categories.id:subtree("${currentCategory.id}")`);
+      else setSelectedCategoryId('');
+      setSelectedCategoryValue(currentCategory.name === '' ? '' : currentCategory.name);
+
+      if (location.state?.isExternal) {
+        handleSizeClick('', '');
+        setPriceRange([0, 100000]);
       }
     };
 
-    fetchCategories();
-  }, [selectedCategoryId]);
+    fetchCategories().catch(() => toast.error('Error fetching categories.'));
+  }, [selectedCategoryId, movedCategory]);
 
   useEffect(() => {
     const fetchProducts = async () => {
-      try {
-        const response: ClientResponse<ProductProjectionPagedQueryResponse> = await getProductsFilter({
-          filter: [
-            selectedCategoryId,
-            selectedSizeValue,
-            `variants.price.centAmount:range (${priceRange[0]} to ${priceRange[1]})`,
-          ],
-          sort: [sortMethod],
-          limit: 12,
-          offset: 0,
-          search: inputSearch,
+      const response: ClientResponse<ProductProjectionPagedQueryResponse> = await getProductsFilter({
+        filter: [
+          selectedCategoryId,
+          selectedSizeValue,
+          `variants.price.centAmount:range (${priceRange[0]} to ${priceRange[1]})`,
+        ],
+        sort: [sortMethod],
+        limit: pageCounter.itemsPerPage,
+        offset: pageCounter.offset,
+        search: inputSearch,
+        markMatchingVariants: true,
+      });
+      const responseResult = response.body?.results;
+
+      setPageCounter((prev) => {
+        return {
+          ...prev,
+          totalProducts: response.body?.total || 0,
+        };
+      });
+
+      const productsResult = responseResult?.map((product) => {
+        const masterVariantPrice = product?.variants.filter((variant) => variant.isMatchingVariant === true);
+        return {
+          id: product.id,
+          name: product.name.en.toString(),
+          description: product.description?.en.toString() || '',
+          variant: masterVariantPrice[0],
+        };
+      });
+
+      if (sortName === 'Price: High to Low' && productsResult) {
+        productsResult.sort((a, b) => {
+          const aPrice = a?.variant?.prices?.[0]?.value.centAmount ?? 0;
+          const bPrice = b?.variant?.prices?.[0]?.value.centAmount ?? 0;
+          return bPrice - aPrice;
         });
-        const responseResult = response.body?.results;
-        if (sortName === 'Price: High to Low' && responseResult) {
-          responseResult.sort((a, b) => {
-            const aPrice = a?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
-            const bPrice = b?.masterVariant?.prices?.[0]?.value.centAmount ?? 0;
-            return bPrice - aPrice;
-          });
+      }
+      if (sortName === 'Price: Low to High' && productsResult) {
+        productsResult.sort((a, b) => {
+          const aPrice = a?.variant?.prices?.[0]?.value.centAmount ?? 0;
+          const bPrice = b?.variant?.prices?.[0]?.value.centAmount ?? 0;
+          return aPrice - bPrice;
+        });
+      }
+      // console.log(responseResult);
+      setProducts(productsResult);
+    };
+
+    fetchProducts().catch(() => toast.error('Error fetching products.'));
+  }, [selectedCategoryId, selectedSizeValue, sortMethod, priceRange, inputSearch, pageCounter.offset]);
+
+  useEffect(() => {
+    if (!productId) return;
+
+    const fetchProducts = async () => {
+      try {
+        const response: ClientResponse<Cart | ClientResult> = await addProductToBasket({
+          productId,
+          quantity: 1,
+          variantId: 1,
+        });
+
+        if ('body' in response && response.body && 'totalLineItemQuantity' in response.body) {
+          setTotalLineItemQuantity(response.body.totalLineItemQuantity ?? 0);
+        } else {
+          setTotalLineItemQuantity(0);
         }
-        setProducts(
-          responseResult?.filter((product) => {
-            const masterVariantPrice = product?.masterVariant?.prices?.[0]?.value.centAmount ?? null;
-            return masterVariantPrice !== null && masterVariantPrice >= priceRange[0];
-          })
-        );
+        // console.log('addProductToBasket=>>>>>>>>>>>>', response);
       } catch (error) {
-        // console.error('Error fetching products:', error);
-        toast.error('Error fetching products.');
+        toast.error('Error adding product to cart.');
       }
     };
 
     fetchProducts();
-  }, [selectedCategoryId, selectedSizeValue, sortMethod, priceRange, inputSearch]);
+  }, [productId]);
 
   return (
     <div className="bg-white">
@@ -158,24 +248,24 @@ const CatalogForm = () => {
                     </button>
                   </div>
 
+                  {/* mobile menu */}
                   <form className="mobile-categories mt-4 border-t border-gray-200">
-                    <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleCategoryClick('', '')}>
+                    <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleResetFilters()}>
                       <div className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400">
                         <span className="font-medium text-gray-900">Categories</span>
                       </div>
                     </h3>
-                    {categoryFilters.map((category, categoryIdx) => (
+                    {categories.map((category) => (
                       <div
-                        key={category.value}
-                        className={`border-b border-gray-200 py-6 ${selectedCategoryValue === category.value ? 'bg-gray-100' : ''}`}
-                        onClick={() => handleCategoryClick(category.id, category.value)}
+                        key={category.name}
+                        className={`border-b border-gray-200 py-6 ${selectedCategoryValue === category.name ? 'bg-gray-100' : ''}`}
+                        onClick={() => handleCategoryClick(category.id, category.name)}
                       >
                         <div className="flex items-center">
                           <label
-                            htmlFor={`filter-${category.value}-${categoryIdx}`}
-                            className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryValue === category.value ? 'text-green-600' : ''}`}
+                            className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryValue === category.name ? 'text-green-600' : ''}`}
                           >
-                            {category.label}
+                            {category.name}
                           </label>
                         </div>
                       </div>
@@ -186,7 +276,7 @@ const CatalogForm = () => {
                         <span className="font-medium text-gray-900">Size</span>
                       </div>
                     </h3>
-                    {sizeFilters.map((size, sizeIdx) => (
+                    {sizeFilters.map((size) => (
                       <div
                         key={size.label}
                         className={`border-b border-gray-200 py-6 cursor-pointer ${selectedSizeLabel === size.label ? 'bg-gray-100' : ''}`}
@@ -194,7 +284,6 @@ const CatalogForm = () => {
                       >
                         <div className="flex items-center">
                           <label
-                            htmlFor={`filter-${size.value}-${sizeIdx}`}
                             className={`text-sm text-gray-600 cursor-pointer ${selectedSizeValue === size.value ? 'text-green-600' : ''}`}
                           >
                             {size.label}
@@ -211,7 +300,10 @@ const CatalogForm = () => {
                           min={0}
                           max={100000}
                           values={priceRange}
-                          onChange={(values) => setPriceRange(values)}
+                          onChange={(values) => {
+                            resetOffsetProducts();
+                            setPriceRange(values);
+                          }}
                           renderTrack={({ props, children }) => (
                             <div {...props} className="h-1 bg-gray-200 rounded-md">
                               {children}
@@ -237,8 +329,9 @@ const CatalogForm = () => {
           </Dialog>
         </Transition>
 
+        {/* desktop main section */}
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-baseline justify-end border-b border-gray-200 pb-6 pt-4">
+          <div className="flex items-baseline justify-end border-b border-gray-200 pb-5 pt-3">
             <div className="flex items-center">
               <div className="relative mr-4">
                 <input
@@ -257,7 +350,7 @@ const CatalogForm = () => {
                 </div>
               </div>
               <Menu as="div" className="relative inline-block text-left">
-                <div className="flex" style={{ width: '200px' }}>
+                <div className="flex relative">
                   <div>
                     <MenuButton className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-green-900">
                       Sort
@@ -267,7 +360,7 @@ const CatalogForm = () => {
                       />
                     </MenuButton>
                   </div>
-                  <div className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-green-900 ml-4">
+                  <div className="absolute -bottom-20 -left-10 inline-flex w-32 group justify-center whitespace-nowrap text-sm font-medium text-gray-700 hover:text-green-900">
                     {sortName}
                   </div>
                 </div>
@@ -319,26 +412,26 @@ const CatalogForm = () => {
             </div>
           </div>
 
+          {/* desktop */}
           <section aria-labelledby="products-heading" className="pb-24 pt-6">
             <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
               <form className="hidden lg:block">
-                <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleCategoryClick('', '')}>
+                <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleResetFilters()}>
                   <div className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400">
                     <span className="font-medium text-gray-900">Categories</span>
                   </div>
                 </h3>
-                {categoryFilters.map((category, categoryIdx) => (
+                {categories.map((category) => (
                   <div
-                    key={category.value}
-                    className={`border-b border-gray-200 py-6 cursor-pointer ${selectedCategoryValue === category.value ? 'bg-gray-100' : ''}`}
-                    onClick={() => handleCategoryClick(category.id, category.value)}
+                    key={category.name}
+                    className={`border-b border-gray-200 py-6 cursor-pointer ${selectedCategoryValue === category.name ? 'bg-gray-100' : ''}`}
+                    onClick={() => handleCategoryClick(category.id, category.name)}
                   >
                     <div className="flex items-center">
                       <label
-                        htmlFor={`filter-${category.value}-${categoryIdx}`}
-                        className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryValue === category.value ? 'text-green-600' : ''}`}
+                        className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryValue === category.name ? 'text-green-600' : ''}`}
                       >
-                        {category.label}
+                        {category.name}
                       </label>
                     </div>
                   </div>
@@ -349,7 +442,7 @@ const CatalogForm = () => {
                     <span className="font-medium text-gray-900">Size</span>
                   </div>
                 </h3>
-                {sizeFilters.map((size, sizeIdx) => (
+                {sizeFilters.map((size) => (
                   <div
                     key={size.label}
                     className={`border-b border-gray-200 py-6 cursor-pointer ${selectedSizeLabel === size.label ? 'bg-gray-100' : ''}`}
@@ -357,7 +450,6 @@ const CatalogForm = () => {
                   >
                     <div className="flex items-center">
                       <label
-                        htmlFor={`filter-${size.value}-${sizeIdx}`}
                         className={`text-sm text-gray-600 cursor-pointer ${selectedSizeValue === size.value ? 'text-green-600' : ''}`}
                       >
                         {size.label}
@@ -374,7 +466,10 @@ const CatalogForm = () => {
                       min={0}
                       max={100000}
                       values={priceRange}
-                      onChange={(values) => setPriceRange(values)}
+                      onChange={(values) => {
+                        resetOffsetProducts();
+                        setPriceRange(values);
+                      }}
                       renderTrack={({ props, children }) => (
                         <div {...props} className="h-1 bg-gray-200 rounded-md">
                           {children}
@@ -402,58 +497,46 @@ const CatalogForm = () => {
                       <li
                         className={`flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer hover:text-light-blue-500 ${!selectedCategoryValue && !selectedSizeLabel ? 'text-green-600' : 'text-gray-500'}`}
                       >
-                        <a
-                          href="#"
+                        <Link
+                          to="/catalog"
                           className={`${!selectedCategoryValue && !selectedSizeLabel ? 'text-green-600' : ''}`}
-                          onClick={handleResetFilters}
+                          onClick={() => handleResetFilters()}
                         >
                           Category
-                        </a>
-                        {(selectedCategoryValue || selectedSizeLabel) && (
+                        </Link>
+                        {selectedCategoryValue && (
                           <span className="mx-2 font-sans text-sm antialiased font-normal leading-normal pointer-events-none select-none text-blue-gray-500">
                             /
                           </span>
                         )}
                       </li>
                       {selectedCategoryValue && (
-                        <li className="flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer text-blue-gray-900 hover:text-light-blue-500">
-                          <a href="#" onClick={() => handleSizeClick('', '')}>
-                            {selectedCategoryValue.charAt(0).toUpperCase() + selectedCategoryValue.slice(1)}
-                          </a>
-                          {selectedSizeLabel && (
-                            <span className="mx-2 font-sans text-sm antialiased font-normal leading-normal pointer-events-none select-none text-blue-gray-500">
-                              /
-                            </span>
-                          )}
-                        </li>
-                      )}
-                      {selectedSizeLabel && (
-                        <li className="flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 cursor-pointer text-blue-gray-900 hover:text-light-blue-500">
-                          <a
-                            href="#"
-                            // onClick={() => handleCategoryClick('', '')}
-                          >
-                            {selectedSizeLabel}
-                          </a>
+                        <li className="select-none flex items-center font-sans text-sm antialiased font-normal leading-normal transition-colors duration-300 text-blue-gray-900 hover:text-light-blue-500">
+                          {selectedCategoryValue}
                         </li>
                       )}
                     </ol>
                   </nav>
 
+                  {/* product card */}
                   <div className="mx-auto max-w-2xl px-4 pt-8 pb-16 sm:px-6 sm:pt-12 sm:pb-24 lg:max-w-7xl lg:px-8">
                     <h2 className="sr-only">Products</h2>
                     <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                       {products?.map((product) => (
                         <Link
                           key={product.id}
-                          to={`/catalog/${product.id}`}
+                          to={
+                            selectedCategoryValue
+                              ? `/catalog/${getCategoryValue(selectedCategoryValue)}/${product.id}`
+                              : `/product/${product.id}`
+                          }
                           className="group block border border-gray-100 rounded-lg shadow transition-transform hover:shadow-md"
                         >
                           <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-                            {product.masterVariant?.images?.[0]?.url ? (
+                            {product.variant?.images?.[0]?.url ? (
                               <img
-                                src={product.masterVariant.images[0].url}
-                                alt={product.name.en}
+                                src={product.variant.images[0].url}
+                                alt={product.name}
                                 className="h-full w-full object-cover object-center transition-transform duration-300 ease-in-out transform group-hover:scale-105"
                               />
                             ) : (
@@ -466,44 +549,48 @@ const CatalogForm = () => {
                             className="mt-4 mb-2 text-lg font-bold text-center text-gray-700"
                             style={{ height: '3.3rem', overflow: 'hidden' }}
                           >
-                            {product.name.en}
+                            {product.name}
                           </h3>
 
                           <div className="mt-1 flex items-center justify-between px-4 py-2">
-                            {product.masterVariant?.prices?.[0]?.discounted?.discount ? (
+                            {product.variant?.prices?.[0]?.discounted?.discount ? (
                               <>
                                 <p className="text-lg font-medium text-red-600">
-                                  {formatPriceInEuro(product.masterVariant.prices[0].discounted.value.centAmount)}
+                                  {formatPriceInEuro(product.variant.prices[0].discounted.value.centAmount)}
                                 </p>
                                 <p
                                   className="text-lg font-medium text-green-600"
                                   style={{ textDecoration: 'line-through' }}
                                 >
-                                  {formatPriceInEuro(product.masterVariant.prices[0].value.centAmount)}
+                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount)}
                                 </p>
                               </>
                             ) : (
-                              product.masterVariant?.prices?.[0]?.value?.centAmount && (
+                              product.variant?.prices?.[0]?.value?.centAmount && (
                                 <p className="text-lg font-medium text-green-600">
-                                  {formatPriceInEuro(product.masterVariant.prices[0].value.centAmount)}
+                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount)}
                                 </p>
                               )
                             )}
-
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth="1.5"
-                              stroke="currentColor"
-                              className="w-6 h-6 text-green-600"
+                            <div
+                              onClick={(e) => handleIconBasketClick(e, product.id)}
+                              className={`cursor-pointer ${clickedIcons[product.id] ? 'pointer-events-none text-red-400' : 'text-green-600'}`}
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
-                              />
-                            </svg>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth="1.5"
+                                stroke="currentColor"
+                                className="w-6 h-6"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+                                />
+                              </svg>
+                            </div>
                           </div>
                         </Link>
                       ))}
@@ -511,23 +598,8 @@ const CatalogForm = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-                  <div className="flex flex-1 justify-between sm:hidden">
-                    <a
-                      href="#"
-                      className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                    >
-                      Previous
-                    </a>
-                    <a
-                      href="#"
-                      className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                    >
-                      Next
-                    </a>
-                  </div>
-                  {/* Pagination code here */}
-                </div>
+                {/* Pagination code here */}
+                <CatalogPagination pageCounter={pageCounter} setPageCounter={setPageCounter} />
               </div>
             </div>
           </section>

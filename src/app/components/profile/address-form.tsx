@@ -13,11 +13,12 @@ import { TrashIcon } from '@heroicons/react/24/outline';
 import { toast } from 'react-toastify';
 import { HttpErrorType } from '@commercetools/sdk-client-v2';
 import { Controller, useForm, useWatch } from 'react-hook-form';
-import { CountryEnum, IUserAddresses, States } from '../../models';
+import { classNames, CountryEnum, IUserAddresses, States } from '../../models';
 import DefaultAddressSwitch from './default-address-switch';
 import ButtonEditUpdate from './button-edit-update';
 import CustomerController from '../../api/CustomerController';
 import { validationRules } from '../signup/regExp';
+import BubblingSideImage from './bubblingSideImage';
 
 interface IProps {
   address: Address & { isNew?: boolean };
@@ -238,154 +239,162 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
   };
 
   return (
-    <form
-      key={address.id}
-      className="md:col-span-2 md:col-start-2 border rounded-md p-3"
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <div className="grid grid-cols-1 gap-x-6 gap-y-7 sm:grid-cols-6">
-        <div className="sm:col-span-3">
-          <label htmlFor="country" className="block text-sm font-medium leading-6 text-gray-900">
-            Country
-          </label>
-          <div className="mt-2">
-            <Controller
-              name="country"
-              control={control}
-              rules={validationRules.country}
-              render={({ field }) => (
-                <select
-                  {...field}
-                  id="country"
-                  disabled={isEdit}
-                  className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:max-w-xs sm:text-sm sm:leading-6"
-                  onChange={(e) => {
-                    field.onChange(e);
-                    setIsChangeCountry(true);
-                  }}
-                >
-                  {Object.entries(CountryEnum).map(([code, name]) => (
-                    <option key={code} value={code}>
-                      {name}
-                    </option>
-                  ))}
-                </select>
-              )}
-            />
-            {errors.country && <p className="text-red-500 text-xs mt-1">{errors.country.message}</p>}
-          </div>
-        </div>
-
-        <div className="sm:col-span-3">
-          <label htmlFor="street-address" className="block text-sm font-medium leading-6 text-gray-900">
-            Street address
-          </label>
-          <div className="mt-2">
-            <Controller
-              name="streetName"
-              control={control}
-              rules={validationRules.streetName}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  id="street-address"
-                  type="text"
-                  disabled={isEdit}
-                  className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
-                />
-              )}
-            />
-            {errors.streetName && <p className="text-red-500 text-xs mt-1">{errors.streetName.message}</p>}
-          </div>
-        </div>
-
-        <div className="sm:col-span-3 sm:col-start-1">
-          <label htmlFor="city" className="block text-sm font-medium leading-6 text-gray-900">
-            City
-          </label>
-          <div className="mt-2">
-            <Controller
-              name="city"
-              control={control}
-              rules={validationRules.city}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  id="city"
-                  type="text"
-                  disabled={isEdit}
-                  className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
-                />
-              )}
-            />
-            {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city.message}</p>}
-          </div>
-        </div>
-
-        <div className="sm:col-span-3">
-          <label htmlFor="postal-code" className="block text-sm font-medium leading-6 text-gray-900">
-            ZIP / Postal code
-          </label>
-          <div className="mt-2">
-            <Controller
-              name="postalCode"
-              control={control}
-              rules={validationRules.postalCode(selectedCountry)}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  id="postal-code"
-                  type="text"
-                  disabled={isEdit}
-                  className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
-                />
-              )}
-            />
-            {errors.postalCode && <p className="text-red-500 text-xs mt-1">{errors.postalCode.message}</p>}
-          </div>
-        </div>
-
-        <div className="sm:col-span-3 flex flex-col gap-1">
-          <DefaultAddressSwitch
-            title={'default billing'}
-            isEdit={isEdit}
-            isDefaultAddress={isDefaultBillingAddress}
-            setIsDefaultAddress={setIsDefaultBillingAddress}
-          />
-          <DefaultAddressSwitch
-            title={'default shipping'}
-            isEdit={isEdit}
-            isDefaultAddress={isDefaultShippingAddress}
-            setIsDefaultAddress={setIsDefaultShippingAddress}
-          />
-        </div>
-
-        <div className="sm:col-span-3"></div>
-      </div>
-
-      <div className="mt-8 flex justify-between items-center">
-        <ButtonEditUpdate isEdit={isEdit} isNew={address.isNew} setIsEdit={setIsEdit} />
-        {address.isNew && !isEdit && (
-          <button
-            className="flex gap-1.5 justify-center items-center bg-amber-400 hover:bg-amber-500 min-w-36 py-2 col-span-1 rounded-md px-3 text-sm font-semibold text-white shadow-sm focus-visible:outline-none"
-            onClick={(e) => {
-              e.preventDefault();
-              setCustomerData((prev) => ({
-                ...prev,
-                addresses: prev.addresses.filter((existingAddress) => existingAddress.id !== address.id),
-              }));
-            }}
-          >
-            Cancel
-          </button>
+    <div className="relative z-0 md:col-span-2 md:col-start-2 ">
+      <img
+        className={classNames(
+          isEdit ? ' opacity-0' : ' opacity-100',
+          'md:hidden absolute bottom-0 right-12 w-24 sm:w-32 h-auto transform transition-opacity duration-500 ease-in-out'
         )}
-        {!address.isNew && (
-          <button onClick={handleAddressDelete}>
-            <TrashIcon className="text-green-500 w-7 h-7" />
-          </button>
-        )}
-      </div>
-    </form>
+        src="./assets/budding-pop-pictures/waiter.gif"
+        alt=""
+      />
+      <form key={address.id} className="border rounded-md p-3 bg-white" onSubmit={handleSubmit(onSubmit)}>
+        <div className="grid grid-cols-1 gap-x-6 gap-y-7 sm:grid-cols-6">
+          <div className="sm:col-span-3">
+            <label htmlFor="country" className="block text-sm font-medium leading-6 text-gray-900">
+              Country
+            </label>
+            <div className="mt-2">
+              <Controller
+                name="country"
+                control={control}
+                rules={validationRules.country}
+                render={({ field }) => (
+                  <select
+                    {...field}
+                    id="country"
+                    disabled={isEdit}
+                    className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:max-w-xs sm:text-sm sm:leading-6"
+                    onChange={(e) => {
+                      field.onChange(e);
+                      setIsChangeCountry(true);
+                    }}
+                  >
+                    {Object.entries(CountryEnum).map(([code, name]) => (
+                      <option key={code} value={code}>
+                        {name}
+                      </option>
+                    ))}
+                  </select>
+                )}
+              />
+              {errors.country && <p className="text-red-500 text-xs mt-1">{errors.country.message}</p>}
+            </div>
+          </div>
+
+          <div className="sm:col-span-3">
+            <label htmlFor="street-address" className="block text-sm font-medium leading-6 text-gray-900">
+              Street address
+            </label>
+            <div className="mt-2">
+              <Controller
+                name="streetName"
+                control={control}
+                rules={validationRules.streetName}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    id="street-address"
+                    type="text"
+                    disabled={isEdit}
+                    className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                  />
+                )}
+              />
+              {errors.streetName && <p className="text-red-500 text-xs mt-1">{errors.streetName.message}</p>}
+            </div>
+          </div>
+
+          <div className="sm:col-span-3 sm:col-start-1">
+            <label htmlFor="city" className="block text-sm font-medium leading-6 text-gray-900">
+              City
+            </label>
+            <div className="mt-2">
+              <Controller
+                name="city"
+                control={control}
+                rules={validationRules.city}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    id="city"
+                    type="text"
+                    disabled={isEdit}
+                    className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                  />
+                )}
+              />
+              {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city.message}</p>}
+            </div>
+          </div>
+
+          <div className="sm:col-span-3">
+            <label htmlFor="postal-code" className="block text-sm font-medium leading-6 text-gray-900">
+              ZIP / Postal code
+            </label>
+            <div className="mt-2">
+              <Controller
+                name="postalCode"
+                control={control}
+                rules={validationRules.postalCode(selectedCountry)}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    id="postal-code"
+                    type="text"
+                    disabled={isEdit}
+                    className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                  />
+                )}
+              />
+              {errors.postalCode && <p className="text-red-500 text-xs mt-1">{errors.postalCode.message}</p>}
+            </div>
+          </div>
+
+          <div className="sm:col-span-3 flex flex-col gap-1">
+            <DefaultAddressSwitch
+              title={'default billing'}
+              isEdit={isEdit}
+              isDefaultAddress={isDefaultBillingAddress}
+              setIsDefaultAddress={setIsDefaultBillingAddress}
+            />
+            <DefaultAddressSwitch
+              title={'default shipping'}
+              isEdit={isEdit}
+              isDefaultAddress={isDefaultShippingAddress}
+              setIsDefaultAddress={setIsDefaultShippingAddress}
+            />
+          </div>
+
+          <div className="sm:col-span-3"></div>
+        </div>
+
+        <div className="mt-8 flex justify-between items-center">
+          <ButtonEditUpdate isEdit={isEdit} isNew={address.isNew} setIsEdit={setIsEdit} />
+          {address.isNew && !isEdit && (
+            <button
+              className="flex gap-1.5 justify-center items-center bg-amber-400 hover:bg-amber-500 min-w-36 py-2 col-span-1 rounded-md px-3 text-sm font-semibold text-white shadow-sm focus-visible:outline-none"
+              onClick={(e) => {
+                e.preventDefault();
+                setCustomerData((prev) => ({
+                  ...prev,
+                  addresses: prev.addresses.filter((existingAddress) => existingAddress.id !== address.id),
+                }));
+              }}
+            >
+              Cancel
+            </button>
+          )}
+          {!address.isNew && (
+            <button onClick={handleAddressDelete}>
+              <TrashIcon className="text-green-500 w-7 h-7" />
+            </button>
+          )}
+        </div>
+      </form>
+
+      <BubblingSideImage isEdit={isEdit} />
+    </div>
   );
 };
 

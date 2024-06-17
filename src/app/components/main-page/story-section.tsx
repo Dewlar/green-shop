@@ -44,7 +44,7 @@ const StorySection = () => {
           <div className="relative flex flex-wrap py-12 sm:py-20">
             <div className="flex w-full items-center max-w-96">
               <div>
-                <img src="./assets/story/smile-pot.png" alt="" className="w-full object-contain rounded" />
+                <img src="./assets/budding-pop-pictures/babies.gif" alt="" className="w-full object-contain rounded" />
               </div>
               <div className="sm:w-44 sm:flex-grow-0 sm:flex-shrink-0 lg:w-2/5 pl-6 text-center text-sm text-gray-600">
                 Our babies begin their lives in the safety of the greenhouse.

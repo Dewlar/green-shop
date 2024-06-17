@@ -114,6 +114,17 @@ class CustomerRepository {
       .execute();
     return result as ClientResponse<Customer>;
   }
+
+  public async registerNewCustomer(data: Customer): Promise<ClientResponse<Customer>> {
+    const client = new AnonymousClient();
+    const apiRoot = client.getApiRoot();
+    const result = await apiRoot
+      .withProjectKey({ projectKey: this.projectKey })
+      .customers()
+      .post({ body: data })
+      .execute();
+    return result as unknown as ClientResponse<Customer>;
+  }
 }
 
 export default CustomerRepository;
