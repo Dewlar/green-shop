@@ -252,7 +252,17 @@ const BasketForm = () => {
 
                 <ul role="list" className="divide-y divide-gray-200 border-b border-t border-gray-200">
                   {lineItems.map((product, productIdx) => (
-                    <li key={product.id} className="flex py-6 sm:py-10">
+                    <li key={product.id} className="flex py-6 sm:py-10 relative">
+                      <div className="absolute right-3 top-3">
+                        <button
+                          type="button"
+                          className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
+                          onClick={() => handleRemoveProductClick(product.id, product.quantity)}
+                        >
+                          <span className="sr-only">Remove</span>
+                          <XMarkIconMini className="h-5 w-5" aria-hidden="true" />
+                        </button>
+                      </div>
                       <div className="flex-shrink-0">
                         <img
                           src={product.variant?.images?.[0]?.url || ''}
@@ -333,17 +343,6 @@ const BasketForm = () => {
                                 onClick={() => handleQuantityChange(product.id, product.quantity, 'increment')}
                               >
                                 +
-                              </button>
-                            </div>
-
-                            <div className="absolute right-0 top-0">
-                              <button
-                                type="button"
-                                className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
-                                onClick={() => handleRemoveProductClick(product.id, product.quantity)}
-                              >
-                                <span className="sr-only">Remove</span>
-                                <XMarkIconMini className="h-5 w-5" aria-hidden="true" />
                               </button>
                             </div>
                           </div>
