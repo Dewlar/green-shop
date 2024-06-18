@@ -331,7 +331,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
 
         {/* desktop main section */}
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-baseline justify-end border-b border-gray-200 pb-5 pt-3">
+          <div className="flex items-baseline justify-end border-b border-gray-200 pb-[17px] pt-3">
             <div className="flex items-center">
               <div className="relative mr-4">
                 <input
@@ -360,7 +360,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                       />
                     </MenuButton>
                   </div>
-                  <div className="absolute -bottom-20 -left-10 inline-flex w-32 group justify-center whitespace-nowrap text-sm font-medium text-gray-700 hover:text-green-900">
+                  <div className="absolute -bottom-20 left-1 lg:-left-10 inline-flex w-32 group justify-center whitespace-nowrap text-sm font-medium text-gray-700 hover:text-green-900">
                     {sortName}
                   </div>
                 </div>
