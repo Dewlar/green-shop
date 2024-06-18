@@ -250,20 +250,20 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
 
                   {/* mobile menu */}
                   <form className="mobile-categories mt-4 border-t border-gray-200">
-                    <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleResetFilters()}>
-                      <div className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400">
-                        <span className="font-medium text-gray-900">Categories</span>
+                    <h3 className="my-3 flow-root cursor-pointer" onClick={() => handleResetFilters()}>
+                      <div className="flex w-full items-center justify-between bg-white p-4 text-sm text-gray-400">
+                        <span className="font-medium text-gray-900 hover:text-green-500">Categories</span>
                       </div>
                     </h3>
                     {categories.map((category) => (
                       <div
                         key={category.name}
-                        className={`border-b border-gray-200 py-6 ${selectedCategoryValue === category.name ? 'bg-gray-100' : ''}`}
+                        className={`mx-6 border-b border-gray-200 py-4 ${selectedCategoryValue === category.name ? 'bg-gray-50/10' : ''}`}
                         onClick={() => handleCategoryClick(category.id, category.name)}
                       >
                         <div className="flex items-center">
                           <label
-                            className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryValue === category.name ? 'text-green-600' : ''}`}
+                            className={`text-sm text-gray-600 cursor-pointer hover:text-green-500 ${selectedCategoryValue === category.name ? 'text-green-600 font-bold' : ''}`}
                           >
                             {category.name}
                           </label>
@@ -271,30 +271,30 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                       </div>
                     ))}
 
-                    <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleSizeClick('', '')}>
-                      <div className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400">
-                        <span className="font-medium text-gray-900">Size</span>
+                    <h3 className="mb-3 mt-6 flow-root cursor-pointer" onClick={() => handleSizeClick('', '')}>
+                      <div className="flex w-full items-center justify-between bg-white p-4 text-sm text-gray-400">
+                        <span className="font-medium text-gray-900 hover:text-green-500">Size</span>
                       </div>
                     </h3>
                     {sizeFilters.map((size) => (
                       <div
                         key={size.label}
-                        className={`border-b border-gray-200 py-6 cursor-pointer ${selectedSizeLabel === size.label ? 'bg-gray-100' : ''}`}
+                        className={`mx-6 border-b border-gray-200 py-4 cursor-pointer ${selectedSizeLabel === size.label ? 'bg-gray-50/10' : ''}`}
                         onClick={() => handleSizeClick(size.value, size.label)}
                       >
                         <div className="flex items-center">
                           <label
-                            className={`text-sm text-gray-600 cursor-pointer ${selectedSizeValue === size.value ? 'text-green-600' : ''}`}
+                            className={`text-sm text-gray-600 cursor-pointer hover:text-green-500 ${selectedSizeLabel === size.label ? 'text-green-600 font-bold' : ''}`}
                           >
-                            {size.label}
+                            Pot size: {size.label}
                           </label>
                         </div>
                       </div>
                     ))}
 
-                    <div className="price border-t border-gray-200 px-4 py-6">
+                    <div className="price px-4 py-6">
                       <h3 className="text-sm font-medium text-gray-900">Price</h3>
-                      <div className="mt-6 flex flex-col gap-2.5">
+                      <div className="mt-6 ml-2 flex flex-col gap-2.5">
                         <Range
                           step={100}
                           min={0}
@@ -305,7 +305,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                             setPriceRange(values);
                           }}
                           renderTrack={({ props, children }) => (
-                            <div {...props} className="h-1 bg-gray-200 rounded-md">
+                            <div {...props} className="mx-2 h-1 bg-gray-200 rounded-md">
                               {children}
                             </div>
                           )}
@@ -416,20 +416,20 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
           <section aria-labelledby="products-heading" className="pb-24 pt-6">
             <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
               <form className="hidden lg:block">
-                <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleResetFilters()}>
-                  <div className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400">
-                    <span className="font-medium text-gray-900">Categories</span>
+                <h3 className="my-3 flow-root cursor-pointer" onClick={() => handleResetFilters()}>
+                  <div className="flex w-full items-center justify-between pb-3 text-sm text-gray-400">
+                    <span className="font-medium text-gray-900 hover:text-green-500">Categories</span>
                   </div>
                 </h3>
                 {categories.map((category) => (
                   <div
                     key={category.name}
-                    className={`border-b border-gray-200 py-6 cursor-pointer ${selectedCategoryValue === category.name ? 'bg-gray-100' : ''}`}
+                    className={`ml-2 border-b border-gray-200 py-4 cursor-pointer ${selectedCategoryValue === category.name ? 'bg-gray-50/10' : ''}`}
                     onClick={() => handleCategoryClick(category.id, category.name)}
                   >
                     <div className="flex items-center">
                       <label
-                        className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryValue === category.name ? 'text-green-600' : ''}`}
+                        className={`text-sm text-gray-600 cursor-pointer hover:text-green-500 ${selectedCategoryValue === category.name ? 'text-green-600 font-bold' : ''}`}
                       >
                         {category.name}
                       </label>
@@ -437,30 +437,30 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                   </div>
                 ))}
 
-                <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleSizeClick('', '')}>
-                  <div className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400">
-                    <span className="font-medium text-gray-900">Size</span>
+                <h3 className="mb-3 mt-6 flow-root cursor-pointer" onClick={() => handleSizeClick('', '')}>
+                  <div className="flex w-full items-center justify-between py-3 text-sm text-gray-400">
+                    <span className="font-medium text-gray-900 hover:text-green-500">Size</span>
                   </div>
                 </h3>
                 {sizeFilters.map((size) => (
                   <div
                     key={size.label}
-                    className={`border-b border-gray-200 py-6 cursor-pointer ${selectedSizeLabel === size.label ? 'bg-gray-100' : ''}`}
+                    className={`ml-2 border-b border-gray-200 py-4 cursor-pointer ${selectedSizeLabel === size.label ? 'bg-gray-50/10' : ''}`}
                     onClick={() => handleSizeClick(size.value, size.label)}
                   >
                     <div className="flex items-center">
                       <label
-                        className={`text-sm text-gray-600 cursor-pointer ${selectedSizeValue === size.value ? 'text-green-600' : ''}`}
+                        className={`text-sm text-gray-600 cursor-pointer hover:text-green-500 ${selectedSizeLabel === size.label ? 'text-green-600 font-bold' : ''}`}
                       >
-                        {size.label}
+                        Pot size: {size.label}
                       </label>
                     </div>
                   </div>
                 ))}
 
-                <div className="price border-t border-gray-200 py-6">
+                <div className="price py-6">
                   <h3 className="text-sm font-medium text-gray-900">Price</h3>
-                  <div className="mt-6 flex flex-col gap-2.5">
+                  <div className="mt-6 ml-2 flex flex-col gap-2.5">
                     <Range
                       step={100}
                       min={0}
@@ -471,7 +471,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                         setPriceRange(values);
                       }}
                       renderTrack={({ props, children }) => (
-                        <div {...props} className="h-1 bg-gray-200 rounded-md">
+                        <div {...props} className="mx-2 h-1 bg-gray-200 rounded-md">
                           {children}
                         </div>
                       )}
