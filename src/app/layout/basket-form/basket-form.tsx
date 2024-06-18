@@ -358,11 +358,16 @@ const BasketForm = () => {
               {
                 <section
                   aria-labelledby="summary-heading"
-                  className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8"
+                  className="relative mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8"
                 >
                   <h2 id="summary-heading" className="text-lg font-medium text-gray-900">
                     Order summary
                   </h2>
+                  <img
+                    className="absolute w-24 h-24 right-1/2 transform translate-x-3/4 top-6"
+                    src="./assets/budding-pop-pictures/shopping-list.gif"
+                    alt=""
+                  />
 
                   <dl className="mt-6 space-y-4">
                     <div className="flex items-center justify-between">
@@ -384,7 +389,7 @@ const BasketForm = () => {
                             value={inputPromoCode}
                             onChange={handlePromoChangeInput}
                             placeholder="Enter promo code"
-                            className="block disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
+                            className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
                           />
                         </div>
                         <div className="flex space-x-2">
