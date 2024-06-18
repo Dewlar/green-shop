@@ -8,7 +8,7 @@ import {
   RefreshAuthMiddlewareOptions,
   TokenStore,
 } from '@commercetools/sdk-client-v2';
-import { Customer, CustomerSignInResult, ProductProjection } from '@commercetools/platform-sdk';
+import { Cart, Customer, CustomerSignInResult, ProductProjection } from '@commercetools/platform-sdk';
 import TokenService from './TokenService';
 import { IApiResponse, ICustomerData, IProductResultsData, IProductDataForRender } from './types';
 
@@ -235,4 +235,8 @@ export const getAttributes = (products: ProductProjection[]): string[] => {
   });
 
   return attributes.sort();
+};
+
+export const isCart = (response: Cart | ClientResult): response is Cart => {
+  return (response as Cart).cartState !== undefined;
 };
