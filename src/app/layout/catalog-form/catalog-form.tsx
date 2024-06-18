@@ -89,6 +89,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   };
 
   const handleResetFilters = () => {
+    resetOffsetProducts();
     handleCategoryClick('', '');
     handleSizeClick('', '');
     setPriceRange([0, 100000]);
@@ -335,6 +336,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                     </div>
                     <div
                       onClick={() => {
+                        resetOffsetProducts();
                         setSelectedDiscounted(`variants.prices.discounted:exists`);
                       }}
                       className="relative mt-4 px-6 h-52 cursor-pointer"
@@ -516,6 +518,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                 </div>
                 <div
                   onClick={() => {
+                    resetOffsetProducts();
                     setSelectedDiscounted(`variants.prices.discounted:exists`);
                   }}
                   className="relative mt-4 h-96 cursor-pointer"
