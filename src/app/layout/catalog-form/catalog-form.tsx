@@ -34,6 +34,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   const [selectedCategoryValue, setSelectedCategoryValue] = useState('');
   const [selectedSizeValue, setSelectedSizeValue] = useState('');
   const [selectedSizeLabel, setSelectedSizeLabel] = useState('');
+  const [selectedDiscounted, setSelectedDiscounted] = useState('');
   const [sortName, setSortName] = useState<string>('');
   const [sortMethod, setSortMethod] = useState<string>('name.en asc');
   const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionForCTP);
@@ -88,9 +89,11 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   };
 
   const handleResetFilters = () => {
+    resetOffsetProducts();
     handleCategoryClick('', '');
     handleSizeClick('', '');
     setPriceRange([0, 100000]);
+    setSelectedDiscounted('');
   };
 
   const handleIconBasketClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, id: string) => {
@@ -138,6 +141,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
           selectedCategoryId,
           selectedSizeValue,
           `variants.price.centAmount:range (${priceRange[0]} to ${priceRange[1]})`,
+          selectedDiscounted,
         ],
         sort: [sortMethod],
         limit: pageCounter.itemsPerPage,
@@ -183,7 +187,15 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
     };
 
     fetchProducts().catch(() => toast.error('Error fetching products.'));
-  }, [selectedCategoryId, selectedSizeValue, sortMethod, priceRange, inputSearch, pageCounter.offset]);
+  }, [
+    selectedCategoryId,
+    selectedSizeValue,
+    sortMethod,
+    priceRange,
+    inputSearch,
+    pageCounter.offset,
+    selectedDiscounted,
+  ]);
 
   useEffect(() => {
     if (!productId) return;
@@ -321,6 +333,22 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                           <span>€{(priceRange[1] / 100).toFixed(2)}</span>
                         </div>
                       </div>
+                    </div>
+                    <div
+                      onClick={() => {
+                        resetOffsetProducts();
+                        setSelectedDiscounted(`variants.prices.discounted:exists`);
+                      }}
+                      className="relative mt-4 px-6 h-52 cursor-pointer"
+                    >
+                      <div className="absolute top-8 left-1/2 transform -translate-x-1/2 p-4 bg-white border-2 rounded-xl">
+                        <h2 className=" text-5xl text-amber-400 font-bold">SALES!</h2>
+                      </div>
+                      <img
+                        className="h-full w-full object-cover object-center rounded-xl border-2"
+                        src="./assets/budding-pop-pictures/sales.jpg"
+                        alt="sales"
+                      />
                     </div>
                   </form>
                 </DialogPanel>
@@ -488,10 +516,26 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                     </div>
                   </div>
                 </div>
+                <div
+                  onClick={() => {
+                    resetOffsetProducts();
+                    setSelectedDiscounted(`variants.prices.discounted:exists`);
+                  }}
+                  className="relative mt-4 h-96 cursor-pointer"
+                >
+                  <div className="absolute top-8 left-1/2 transform -translate-x-1/2 p-4 bg-white border-2 rounded-xl">
+                    <h2 className=" text-5xl text-amber-400 font-bold">SALES!</h2>
+                  </div>
+                  <img
+                    className="h-full w-full object-cover object-center rounded-xl border-2"
+                    src="./assets/budding-pop-pictures/sales.jpg"
+                    alt="sales"
+                  />
+                </div>
               </form>
 
               <div className="lg:col-span-3">
-                <div className="bg-white">
+                <div className="bg-white h-full">
                   <nav aria-label="breadcrumb" className="w-max">
                     <ol className="flex flex-wrap items-center w-full px-4 py-2 rounded-md bg-blue-gray-50 bg-opacity-60">
                       <li
