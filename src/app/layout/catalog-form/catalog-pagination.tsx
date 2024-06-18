@@ -26,6 +26,11 @@ const CatalogPagination: FC<Props> = ({ pageCounter, setPageCounter }) => {
         offset: (currentPage - 1) * pageCounter.itemsPerPage,
       };
     });
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'auto',
+    });
   }, [currentPage]);
 
   useEffect(() => {
