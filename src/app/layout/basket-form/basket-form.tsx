@@ -28,7 +28,7 @@ const BasketForm = () => {
   const [discountCodes, setDiscountCodes] = useState<DiscountCodeInfo[]>([]);
   console.log('currentBasket+version', version, currentBasket);
   console.log('discountCodes', discountCodes);
-  const discountFixed = 0;
+  // const discountFixed = 0;
 
   const { setTotalLineItemQuantity } = useStateContext();
 
@@ -344,7 +344,17 @@ const BasketForm = () => {
                       <dt className="flex items-center text-sm text-gray-600">
                         <span>Discount</span>
                       </dt>
-                      <dd className="text-sm font-medium text-gray-900">{discountFixed.toFixed(2)} €</dd>
+                      <dd className="text-sm font-medium text-gray-900">
+                        {' '}
+                        {formatPriceInEuro(
+                          lineItems.reduce((total, item) => {
+                            if (item.price.discounted && item.price.discounted.value.centAmount) {
+                              return total + item.price.value.centAmount - item.price.discounted.value.centAmount;
+                            }
+                            return total;
+                          }, 0)
+                        )}
+                      </dd>
                     </div>
                     <div className="promo-code flex items-center justify-between border-t border-gray-200 pt-4">
                       <dt className="flex text-sm text-gray-600 items-center justify-center">
