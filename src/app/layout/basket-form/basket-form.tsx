@@ -25,7 +25,6 @@ const BasketForm = () => {
   const [quantityProduct, setQuantityProduct] = useState(1);
   const [inputPromoCode, setInputPromoCode] = useState('');
   const [isPromoValid, setIsPromoValid] = useState(false);
-  const [isDisabledButtonPromoCode, setIsDisabledButtonPromoCode] = useState(false);
   const [discountCodes, setDiscountCodes] = useState<DiscountCodeInfo[]>([]);
   console.log('currentBasket+version', version, currentBasket);
   console.log('discountCodes', discountCodes);
@@ -105,7 +104,7 @@ const BasketForm = () => {
         const response: ClientResponse<Cart | ClientResult> = await addDiscountCode('plant-coupon');
         if (response && response.body && isCart(response.body)) {
           setVersion(response.body.version);
-          setIsDisabledButtonPromoCode(true);
+          setInputPromoCode('');
         }
       } catch (error) {
         toast.error('Error fetching');
@@ -116,7 +115,6 @@ const BasketForm = () => {
   const handlePromoChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     setInputPromoCode(input);
-    setIsDisabledButtonPromoCode(false);
 
     if (input.trim() === 'plant-coupon') {
       setIsPromoValid(true);
@@ -125,12 +123,14 @@ const BasketForm = () => {
     }
   };
 
-  const handleRemovePromoCodeClick = async () => {
+  const handleRemovePromoCodeClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     try {
       const response: ClientResponse<Cart | ClientResult> = await removeDiscountCode('plant-coupon');
       if (response && response.body && isCart(response.body)) {
         setVersion(response.body.version);
-        setIsDisabledButtonPromoCode(false);
+        setDiscountOnTotalPrice(response.body.discountOnTotalPrice?.discountedAmount.centAmount ?? 0);
+        setIsPromoValid(false);
       }
     } catch (error) {
       toast.error('Error fetching');
@@ -354,22 +354,23 @@ const BasketForm = () => {
                             type="text"
                             value={inputPromoCode}
                             onChange={handlePromoChangeInput}
-                            placeholder="Enter promo code"
+                            disabled={discountCodes.length > 0}
+                            placeholder={discountCodes.length > 0 ? 'Promo code is applied' : 'Enter promo code'}
                             className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
                           />
                         </div>
                         <div className="flex space-x-2">
                           <button
                             onClick={handlePromoCodeClick}
-                            disabled={isDisabledButtonPromoCode}
-                            className={`ml-2 flex items-center justify-center w-8 h-8 rounded-full ${isPromoValid && !isDisabledButtonPromoCode ? 'bg-green-500 text-white hover:bg-green-700' : 'bg-gray-400 text-gray-700'}`}
+                            disabled={discountCodes.length > 0}
+                            className={`ml-2 flex items-center justify-center w-8 h-8 rounded-full ${discountCodes.length === 0 && isPromoValid ? 'bg-green-500 text-white' : 'bg-gray-400 text-gray-700'}`}
                           >
                             ✔
                           </button>
                           <button
                             onClick={handleRemovePromoCodeClick}
-                            disabled={!isDisabledButtonPromoCode}
-                            className={`ml-2 flex items-center justify-center w-8 h-8 rounded-full ${isDisabledButtonPromoCode ? 'bg-red-500 text-white hover:bg-red-700' : 'bg-gray-400 text-gray-700'}`}
+                            disabled={discountCodes.length === 0}
+                            className={`ml-2 flex items-center justify-center w-8 h-8 rounded-full ${discountCodes.length > 0 ? 'bg-red-500 text-white hover:bg-red-700' : 'bg-gray-400 text-gray-700'}`}
                           >
                             ✖
                           </button>
