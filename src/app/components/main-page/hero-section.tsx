@@ -44,6 +44,11 @@ const HeroSection = () => {
 
             <div className="inline-block rounded-md border border-transparent bg-green-600 px-8 py-3 font-medium text-white absolute -bottom-16 whitespace-nowrap transform left-1/2 -translate-x-1/2">
               10% discount promo code: <span className="font-bold">plant-coupon</span>
+              <img
+                className="absolute w-28 h-28 -top-28 -left-3"
+                src="./assets/budding-pop-pictures/hint.gif"
+                alt="gif"
+              />
             </div>
           </div>
         </div>
