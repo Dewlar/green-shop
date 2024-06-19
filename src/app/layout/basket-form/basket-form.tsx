@@ -16,7 +16,6 @@ import { formatPriceInEuro, isCart } from '../../api/helpers';
 import { useStateContext } from '../../state/state-context';
 
 const BasketForm = () => {
-  const [currentBasket, setCurrentBasket] = useState<ClientResponse<Cart | ClientResult> | undefined>(undefined);
   const [version, setVersion] = useState<number>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
@@ -26,9 +25,6 @@ const BasketForm = () => {
   const [inputPromoCode, setInputPromoCode] = useState('');
   const [isPromoValid, setIsPromoValid] = useState(false);
   const [discountCodes, setDiscountCodes] = useState<DiscountCodeInfo[]>([]);
-  console.log('currentBasket+version', version, currentBasket);
-  console.log('discountCodes', discountCodes);
-  // const discountFixed = 0;
 
   const { setTotalLineItemQuantity } = useStateContext();
 
@@ -143,8 +139,6 @@ const BasketForm = () => {
         const response: ClientResponse<Cart | ClientResult> = await getBasket();
 
         if (response && response.body && isCart(response.body)) {
-          setCurrentBasket(response);
-
           if (response.body.version) {
             setVersion(response.body.version);
           }

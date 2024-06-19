@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Disclosure } from '@headlessui/react';
 import { HeartIcon, MinusIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Attribute, Cart, Image, Price, Product, ProductData } from '@commercetools/platform-sdk';
+import { Attribute, Cart, Image, LineItem, Price, Product, ProductData } from '@commercetools/platform-sdk';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
@@ -16,7 +16,6 @@ const ProductMain = (data: Product) => {
   const [showModalSlider, setModalSlider] = useState(false);
 
   const productData: ProductData = data?.masterData?.current;
-  console.log('55555555555555555', data);
   const price: Price[] = productData?.variants[selectedSize]?.prices || [];
   const images: Image[] = data?.masterData?.current?.masterVariant?.images || [];
   const attributes: Attribute[] = productData?.masterVariant?.attributes || [];
@@ -32,7 +31,8 @@ const ProductMain = (data: Product) => {
   const [productId, setProductId] = useState('');
   const { setTotalLineItemQuantity } = useStateContext();
   const [version, setVersion] = useState<number>();
-  const [lineItems, setLineItems] = useState<string[]>([]);
+  const [lineItems, setLineItems] = useState<LineItem[]>([]);
+  const [isDisabledButton, setIsDisabledButton] = useState(false);
 
   function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
@@ -50,12 +50,30 @@ const ProductMain = (data: Product) => {
   ) => {
     try {
       e.preventDefault();
-      const response = await deleteProductInBasket({ productId: id, quantity });
+      setIsDisabledButton(true);
+      const lineItemById = lineItems.find((item) => item.productId === id);
+
+      if (!lineItemById) {
+        toast.error('Product not found in cart.');
+        return;
+      }
+      const response = await deleteProductInBasket({ productId: lineItemById.id, quantity });
+
       if (response && response.body && isCart(response.body)) {
         setVersion(response.body.version);
       }
+
+      if (response && response.body && isCart(response.body)) {
+        setTotalLineItemQuantity(response.body.totalLineItemQuantity ?? 0);
+        setVersion(response.body.version);
+      } else {
+        setTotalLineItemQuantity(0);
+      }
+      setProductId('');
     } catch (error) {
       toast.error('Error removing product from cart.');
+    } finally {
+      setIsDisabledButton(false);
     }
   };
 
@@ -92,12 +110,10 @@ const ProductMain = (data: Product) => {
         if (response && response.body && isCart(response.body)) {
           if (response.body.version) {
             setVersion(response.body.version);
-            console.log(response.body.version);
           }
 
           if (response.body.lineItems) {
-            setLineItems(response.body.lineItems.map((item) => item.productId));
-            console.log(response.body.lineItems);
+            setLineItems(response.body.lineItems);
           }
         }
       } catch (error) {
@@ -173,16 +189,19 @@ const ProductMain = (data: Product) => {
                 <div className="mt-10 flex">
                   <button
                     type="submit"
+                    disabled={isDisabledButton}
                     onClick={
-                      lineItems.includes(data.id)
+                      lineItems.find((item) => item.productId === data.id)
                         ? (e) => handleRemoveProductClick(e, data.id, 1)
                         : (e) => handleIconBasketClick(e, data.id)
                     }
                     className={`flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full ${
-                      lineItems.includes(data.id) ? 'bg-gray-400' : 'bg-green-600 hover:bg-green-700'
+                      lineItems.find((item) => item.productId === data.id)
+                        ? 'bg-gray-400'
+                        : 'bg-green-600 hover:bg-green-700'
                     }`}
                   >
-                    {lineItems.includes(data.id) ? 'Delete from cart' : 'Add to cart'}
+                    {lineItems.find((item) => item.productId === data.id) ? 'Delete from cart' : 'Add to cart'}
                   </button>
 
                   <button

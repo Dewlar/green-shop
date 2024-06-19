@@ -179,7 +179,6 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
           return aPrice - bPrice;
         });
       }
-      // console.log(responseResult);
       setProducts(productsResult);
     };
 
