@@ -25,6 +25,7 @@ import { addProductToBasket } from '../../api/basket/BasketRepository';
 import { useStateContext } from '../../state/state-context';
 import { getCategoryValue, IPageCounter, IProductsVariant } from '../../models';
 import CatalogPagination from './catalog-pagination';
+import SalesImage from '../../../assets/budding-pop-pictures/sales.jpg';
 
 const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -346,7 +347,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                       </div>
                       <img
                         className="h-full w-full object-cover object-center rounded-xl border-2"
-                        src="./assets/budding-pop-pictures/sales.jpg"
+                        src={SalesImage}
                         alt="sales"
                       />
                     </div>
@@ -528,7 +529,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                   </div>
                   <img
                     className="h-full w-full object-cover object-center rounded-xl border-2"
-                    src="./assets/budding-pop-pictures/sales.jpg"
+                    src={SalesImage}
                     alt="sales"
                   />
                 </div>
@@ -563,7 +564,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                   </nav>
 
                   {/* product card */}
-                  <div className="mx-auto max-w-2xl px-4 pt-8 pb-16 sm:px-6 sm:pt-12 sm:pb-24 lg:max-w-7xl lg:px-8">
+                  <div className="mx-auto max-w-2xl px-4 pt-8 sm:px-6 sm:pt-12 lg:max-w-7xl lg:px-8">
                     <h2 className="sr-only">Products</h2>
                     <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
                       {products?.map((product) => (
