@@ -43,7 +43,6 @@ const CatalogPagination: FC<Props> = ({ pageCounter, setPageCounter }) => {
 
   const handleNext = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-    console.log(currentPage);
   };
 
   return (
@@ -68,7 +67,7 @@ const CatalogPagination: FC<Props> = ({ pageCounter, setPageCounter }) => {
         </div>
         <button
           onClick={handleNext}
-          disabled={currentPage === totalPages || currentPage === 1}
+          disabled={currentPage === totalPages || paginationPageNumbers.length === 1}
           className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:bg-gray-300"
         >
           Next
@@ -122,7 +121,7 @@ const CatalogPagination: FC<Props> = ({ pageCounter, setPageCounter }) => {
             })}
             <button
               onClick={handleNext}
-              disabled={currentPage === totalPages || currentPage === 1}
+              disabled={currentPage === totalPages || paginationPageNumbers.length === 1}
               className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:bg-gray-300"
             >
               <span className="sr-only">Next</span>
