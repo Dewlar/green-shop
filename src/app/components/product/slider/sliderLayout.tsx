@@ -42,7 +42,7 @@ const SliderMain: React.FC<ModalSlider> = ({ data, setModalSlider }) => {
                   <img
                     src={image.url}
                     alt=""
-                    className="h-full w-full max-w-lg max-h-4xl object-cover object-center"
+                    className="h-full w-full object-cover object-center"
                     onClick={() => setIndexSlide(index)}
                   />
                 </span>
@@ -68,7 +68,7 @@ const SliderMain: React.FC<ModalSlider> = ({ data, setModalSlider }) => {
             {imagesOfSlides?.map((image, index) => (
               <img
                 src={`${image.url}`}
-                className={`block w-max-auto h-full shrink-0 grow-0 transition-[translate] ease-in-out duration-700`}
+                className={`block w-max-auto h-full max-h-4xl shrink-0 grow-0 transition-[translate] ease-in-out duration-700`}
                 alt="..."
                 key={index}
                 style={{ translate: `${-100 * indexSlide}%` }}
