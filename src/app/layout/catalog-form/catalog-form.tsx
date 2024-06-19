@@ -16,12 +16,12 @@ import { toast } from 'react-toastify';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Cart, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
-import { classNames, formatPriceInEuro } from '../../api/helpers';
-import { ICategoryData, IClickedIconsState, ISortOption } from '../../api/types';
+import { classNames, formatPriceInEuro, isCart } from '../../api/helpers';
+import { ICategoryData, ISortOption } from '../../api/types';
 import { sizeFilters, sortOptionForCTP } from '../../constans';
 import getProductsFilter from '../../api/catalog/getProductsFilter';
 import getCategories from '../../api/catalog/getCategories';
-import { addProductToBasket } from '../../api/basket/BasketRepository';
+import { addProductToBasket, getBasket } from '../../api/basket/BasketRepository';
 import { useStateContext } from '../../state/state-context';
 import { getCategoryValue, IPageCounter, IProductsVariant } from '../../models';
 import CatalogPagination from './catalog-pagination';
@@ -40,7 +40,6 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionForCTP);
   const [priceRange, setPriceRange] = useState([0, 100000]);
   const [inputSearch, setInputSearch] = useState('');
-  const [clickedIcons, setClickedIcons] = useState<IClickedIconsState>({});
   const [categories, setCategories] = useState<ICategoryData[]>([]);
   const navigate = useNavigate();
   const location = useLocation();
@@ -49,6 +48,8 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
     offset: 0,
     itemsPerPage: 12,
   });
+  const [version, setVersion] = useState<number>();
+  const [lineItems, setLineItems] = useState<string[]>([]);
 
   const resetOffsetProducts = () => {
     setPageCounter((prev) => {
@@ -100,10 +101,6 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
     e.stopPropagation();
     e.preventDefault();
     setProductId(id);
-    setClickedIcons((prevState) => ({
-      ...prevState,
-      [id]: !prevState[id],
-    }));
   };
 
   useEffect(() => {
@@ -208,12 +205,12 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
           variantId: 1,
         });
 
-        if ('body' in response && response.body && 'totalLineItemQuantity' in response.body) {
+        if (response && response.body && isCart(response.body)) {
           setTotalLineItemQuantity(response.body.totalLineItemQuantity ?? 0);
+          setVersion(response.body.version);
         } else {
           setTotalLineItemQuantity(0);
         }
-        // console.log('addProductToBasket=>>>>>>>>>>>>', response);
       } catch (error) {
         toast.error('Error adding product to cart.');
       }
@@ -221,6 +218,28 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
 
     fetchProducts();
   }, [productId]);
+
+  useEffect(() => {
+    const fetchBasket = async () => {
+      try {
+        const response: ClientResponse<Cart | ClientResult> = await getBasket();
+
+        if (response && response.body && isCart(response.body)) {
+          if (response.body.version) {
+            setVersion(response.body.version);
+          }
+
+          if (response.body.lineItems) {
+            setLineItems(response.body.lineItems.map((item) => item.productId));
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch basket:', error);
+      }
+    };
+
+    fetchBasket();
+  }, [version]);
 
   return (
     <div className="bg-white">
@@ -618,7 +637,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                             )}
                             <div
                               onClick={(e) => handleIconBasketClick(e, product.id)}
-                              className={`cursor-pointer ${clickedIcons[product.id] ? 'pointer-events-none text-red-400' : 'text-green-600'}`}
+                              className={`cursor-pointer ${lineItems.includes(product.id) ? 'pointer-events-none text-red-400' : 'text-green-600'}`}
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
