@@ -51,7 +51,6 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   const [version, setVersion] = useState<number>();
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
   const [isDisabledButton, setIsDisabledButton] = useState(false);
-  console.log('Taaaaaaaaaaann lineItems', lineItems);
 
   const resetOffsetProducts = () => {
     setPageCounter((prev) => {
