@@ -75,10 +75,10 @@ const BasketForm = () => {
     } catch (error) {
       toast.error('Error removing product from cart.');
     }
-    removeDiscountCode('plant-coupon').then(() => {
-      // setPromoCode('');
-      // setDiscountId('');
-    });
+    const response = await removeDiscountCode('plant-coupon');
+    if (response && response.body && isCart(response.body)) {
+      setVersion(response.body.version);
+    }
   };
 
   const handleRemoveProductClick = async (productId: string, quantity: number) => {
@@ -339,7 +339,6 @@ const BasketForm = () => {
                         <span>Discount</span>
                       </dt>
                       <dd className="text-sm font-medium text-gray-900">
-                        {' '}
                         {formatPriceInEuro(
                           lineItems.reduce((total, item) => {
                             if (item.price.discounted && item.price.discounted.value.centAmount) {
@@ -380,7 +379,9 @@ const BasketForm = () => {
                           </button>
                         </div>
                       </dt>
-                      <dd className="text-sm font-medium text-gray-900">{formatPriceInEuro(discountOnTotalPrice)}</dd>
+                      <dd className="text-sm font-medium text-gray-900 ml-2">
+                        {formatPriceInEuro(discountOnTotalPrice)}
+                      </dd>
                     </div>
                     <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                       <dt className="text-base font-medium text-gray-900">Order total</dt>
