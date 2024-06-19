@@ -42,7 +42,7 @@ const SliderMain: React.FC<ModalSlider> = ({ data, setModalSlider }) => {
                   <img
                     src={image.url}
                     alt=""
-                    className="h-full w-full object-cover object-center"
+                    className="h-full w-full max-w-lg max-h-4xl object-cover object-center"
                     onClick={() => setIndexSlide(index)}
                   />
                 </span>

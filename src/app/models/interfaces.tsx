@@ -11,6 +11,9 @@ export interface IPageCounter {
 export interface StringObject {
   [key: string]: string;
 }
+export interface StringArrayObject {
+  [key: string]: [string, string];
+}
 export interface ModalError {
   className: string;
   classText: string;
@@ -26,10 +29,10 @@ export interface ModalSlider {
   setModalSlider?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export interface TypeSizeBtn {
-  label: string;
+  label?: string;
   setSelectedSize: React.Dispatch<React.SetStateAction<number>>;
-  color: string;
-  colorHover: string;
+  color?: string;
+  colorHover?: string;
 }
 export interface TypeSizesOrder {
   [key: string]: number;
