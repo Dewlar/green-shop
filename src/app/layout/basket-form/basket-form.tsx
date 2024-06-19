@@ -223,11 +223,13 @@ const BasketForm = () => {
                         </button>
                       </div>
                       <div className="flex-shrink-0">
-                        <img
-                          src={product.variant?.images?.[0]?.url || ''}
-                          alt={product.name.en}
-                          className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
-                        />
+                        <Link to={`/product/${product.productId}`}>
+                          <img
+                            src={product.variant?.images?.[0]?.url || ''}
+                            alt={product.name.en}
+                            className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
+                          />
+                        </Link>
                       </div>
 
                       <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
@@ -235,12 +237,12 @@ const BasketForm = () => {
                           <div>
                             <div className="flex justify-between">
                               <h3 className="text-sm">
-                                <a
-                                  href={`/product/${product?.productSlug?.en}`}
+                                <Link
+                                  to={`/product/${product.productId}`}
                                   className="font-medium text-gray-700 hover:text-gray-800"
                                 >
                                   {product.name.en}
-                                </a>
+                                </Link>
                               </h3>
                             </div>
                             <div className="mt-1 flex text-sm">
