@@ -26,6 +26,7 @@ import { useStateContext } from '../../state/state-context';
 import { getCategoryValue, IPageCounter, IProductsVariant } from '../../models';
 import CatalogPagination from './catalog-pagination';
 import SalesImage from '../../../assets/budding-pop-pictures/sales.jpg';
+import OutOfStoreImage from '../../../assets/budding-pop-pictures/cry.gif';
 
 const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -617,88 +618,105 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                   </nav>
 
                   {/* product card */}
-                  <div className="mx-auto max-w-2xl px-4 pt-8 sm:px-6 sm:pt-12 lg:max-w-7xl lg:px-8">
-                    <h2 className="sr-only">Products</h2>
-                    <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-                      {products?.map((product) => (
-                        <Link
-                          key={product.id}
-                          to={
-                            selectedCategoryValue
-                              ? `/catalog/${getCategoryValue(selectedCategoryValue)}/${product.id}`
-                              : `/product/${product.id}`
-                          }
-                          className="group block border border-gray-100 rounded-lg shadow transition-transform hover:shadow-md"
+                  {products?.length === 0 ? (
+                    <div className="w-full h-full flex flex-col justify-around items-center">
+                      <div className="flex flex-col items-center">
+                        <h3 className="text-3xl md:text-5xl font-bold text-gray-700">No results.</h3>
+                        <img className="my-6" src={OutOfStoreImage} alt="product not found" />
+                        <p className="text-center text-gray-500">Tips: try changing category, price range or</p>
+                        <div
+                          onClick={() => handleResetFilters()}
+                          className="inline-block mt-4 py-3 px-8 text-white font-medium whitespace-nowrap rounded-md bg-green-600 hover:bg-green-700 cursor-pointer"
                         >
-                          <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-                            {product.variant?.images?.[0]?.url ? (
-                              <img
-                                src={product.variant.images[0].url}
-                                alt={product.name}
-                                className="h-full w-full object-cover object-center transition-transform duration-300 ease-in-out transform group-hover:scale-105"
-                              />
-                            ) : (
-                              <div className="h-full w-full flex items-center justify-center bg-gray-100">
-                                <span className="text-gray-500">No image available</span>
-                              </div>
-                            )}
-                          </div>
-                          <h3
-                            className="mt-4 mb-2 text-lg font-bold text-center text-gray-700"
-                            style={{ height: '3.3rem', overflow: 'hidden' }}
-                          >
-                            {product.name}
-                          </h3>
-
-                          <div className="mt-1 flex items-center justify-between px-4 py-2">
-                            {product.variant?.prices?.[0]?.discounted?.discount ? (
-                              <>
-                                <p className="text-lg font-medium text-red-600">
-                                  {formatPriceInEuro(product.variant.prices[0].discounted.value.centAmount)}
-                                </p>
-                                <p
-                                  className="text-lg font-medium text-green-600"
-                                  style={{ textDecoration: 'line-through' }}
-                                >
-                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount)}
-                                </p>
-                              </>
-                            ) : (
-                              product.variant?.prices?.[0]?.value?.centAmount && (
-                                <p className="text-lg font-medium text-green-600">
-                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount)}
-                                </p>
-                              )
-                            )}
-                            <button
-                              disabled={isDisabledButton}
-                              onClick={
-                                lineItems.find((item) => item.productId === product.id)
-                                  ? (e) => handleRemoveProductClick(e, product.id, 1)
-                                  : (e) => handleIconBasketClick(e, product.id)
-                              }
-                              className={`cursor-pointer ${lineItems.find((item) => item.productId === product.id) ? 'text-red-400' : 'text-green-600'}`}
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth="1.5"
-                                stroke="currentColor"
-                                className="w-6 h-6"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
-                                />
-                              </svg>
-                            </button>
-                          </div>
-                        </Link>
-                      ))}
+                          Reset filters
+                        </div>
+                      </div>
+                      <div></div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="mx-auto max-w-2xl px-4 pt-8 sm:px-6 sm:pt-12 lg:max-w-7xl lg:px-8">
+                      <h2 className="sr-only">Products</h2>
+                      <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+                        {products?.map((product) => (
+                          <Link
+                            key={product.id}
+                            to={
+                              selectedCategoryValue
+                                ? `/catalog/${getCategoryValue(selectedCategoryValue)}/${product.id}`
+                                : `/product/${product.id}`
+                            }
+                            className="group block border border-gray-100 rounded-lg shadow transition-transform hover:shadow-md"
+                          >
+                            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+                              {product.variant?.images?.[0]?.url ? (
+                                <img
+                                  src={product.variant.images[0].url}
+                                  alt={product.name}
+                                  className="h-full w-full object-cover object-center transition-transform duration-300 ease-in-out transform group-hover:scale-105"
+                                />
+                              ) : (
+                                <div className="h-full w-full flex items-center justify-center bg-gray-100">
+                                  <span className="text-gray-500">No image available</span>
+                                </div>
+                              )}
+                            </div>
+                            <h3
+                              className="mt-4 mb-2 text-lg font-bold text-center text-gray-700"
+                              style={{ height: '3.3rem', overflow: 'hidden' }}
+                            >
+                              {product.name}
+                            </h3>
+
+                            <div className="mt-1 flex items-center justify-between px-4 py-2">
+                              {product.variant?.prices?.[0]?.discounted?.discount ? (
+                                <>
+                                  <p className="text-lg font-medium text-red-600">
+                                    {formatPriceInEuro(product.variant.prices[0].discounted.value.centAmount)}
+                                  </p>
+                                  <p
+                                    className="text-lg font-medium text-green-600"
+                                    style={{ textDecoration: 'line-through' }}
+                                  >
+                                    {formatPriceInEuro(product.variant.prices[0].value.centAmount)}
+                                  </p>
+                                </>
+                              ) : (
+                                product.variant?.prices?.[0]?.value?.centAmount && (
+                                  <p className="text-lg font-medium text-green-600">
+                                    {formatPriceInEuro(product.variant.prices[0].value.centAmount)}
+                                  </p>
+                                )
+                              )}
+                              <button
+                                disabled={isDisabledButton}
+                                onClick={
+                                  lineItems.find((item) => item.productId === product.id)
+                                    ? (e) => handleRemoveProductClick(e, product.id, 1)
+                                    : (e) => handleIconBasketClick(e, product.id)
+                                }
+                                className={`cursor-pointer ${lineItems.find((item) => item.productId === product.id) ? 'text-red-400' : 'text-green-600'}`}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  strokeWidth="1.5"
+                                  stroke="currentColor"
+                                  className="w-6 h-6"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Pagination code here */}
