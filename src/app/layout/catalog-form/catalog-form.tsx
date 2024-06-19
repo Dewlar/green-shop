@@ -15,16 +15,18 @@ import { ChevronDownIcon, FunnelIcon, Squares2X2Icon } from '@heroicons/react/20
 import { toast } from 'react-toastify';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Cart, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
-import { classNames, formatPriceInEuro } from '../../api/helpers';
-import { ICategoryData, IClickedIconsState, ISortOption } from '../../api/types';
+import { Cart, LineItem, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
+import { classNames, formatPriceInEuro, isCart } from '../../api/helpers';
+import { ICategoryData, ISortOption } from '../../api/types';
 import { sizeFilters, sortOptionForCTP } from '../../constans';
 import getProductsFilter from '../../api/catalog/getProductsFilter';
 import getCategories from '../../api/catalog/getCategories';
-import { addProductToBasket } from '../../api/basket/BasketRepository';
+import { addProductToBasket, deleteProductInBasket, getBasket } from '../../api/basket/BasketRepository';
 import { useStateContext } from '../../state/state-context';
 import { getCategoryValue, IPageCounter, IProductsVariant } from '../../models';
 import CatalogPagination from './catalog-pagination';
+import SalesImage from '../../../assets/budding-pop-pictures/sales.jpg';
+import OutOfStoreImage from '../../../assets/budding-pop-pictures/cry.gif';
 
 const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -34,12 +36,12 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   const [selectedCategoryValue, setSelectedCategoryValue] = useState('');
   const [selectedSizeValue, setSelectedSizeValue] = useState('');
   const [selectedSizeLabel, setSelectedSizeLabel] = useState('');
+  const [selectedDiscounted, setSelectedDiscounted] = useState('');
   const [sortName, setSortName] = useState<string>('');
   const [sortMethod, setSortMethod] = useState<string>('name.en asc');
   const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionForCTP);
   const [priceRange, setPriceRange] = useState([0, 100000]);
   const [inputSearch, setInputSearch] = useState('');
-  const [clickedIcons, setClickedIcons] = useState<IClickedIconsState>({});
   const [categories, setCategories] = useState<ICategoryData[]>([]);
   const navigate = useNavigate();
   const location = useLocation();
@@ -48,6 +50,9 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
     offset: 0,
     itemsPerPage: 12,
   });
+  const [version, setVersion] = useState<number>();
+  const [lineItems, setLineItems] = useState<LineItem[]>([]);
+  const [isDisabledButton, setIsDisabledButton] = useState(false);
 
   const resetOffsetProducts = () => {
     setPageCounter((prev) => {
@@ -88,19 +93,51 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   };
 
   const handleResetFilters = () => {
+    resetOffsetProducts();
     handleCategoryClick('', '');
     handleSizeClick('', '');
     setPriceRange([0, 100000]);
+    setSelectedDiscounted('');
   };
 
-  const handleIconBasketClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, id: string) => {
+  const handleIconBasketClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
     e.stopPropagation();
     e.preventDefault();
     setProductId(id);
-    setClickedIcons((prevState) => ({
-      ...prevState,
-      [id]: !prevState[id],
-    }));
+  };
+
+  const handleRemoveProductClick = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    id: string,
+    quantity: number
+  ) => {
+    try {
+      e.preventDefault();
+      setIsDisabledButton(true);
+      const lineItemById = lineItems.find((item) => item.productId === id);
+
+      if (!lineItemById) {
+        toast.error('Product not found in cart.');
+        return;
+      }
+      const response = await deleteProductInBasket({ productId: lineItemById.id, quantity });
+
+      if (response && response.body && isCart(response.body)) {
+        setVersion(response.body.version);
+      }
+
+      if (response && response.body && isCart(response.body)) {
+        setTotalLineItemQuantity(response.body.totalLineItemQuantity ?? 0);
+        setVersion(response.body.version);
+      } else {
+        setTotalLineItemQuantity(0);
+      }
+      setProductId('');
+    } catch (error) {
+      toast.error('Error removing product from cart.');
+    } finally {
+      setIsDisabledButton(false);
+    }
   };
 
   useEffect(() => {
@@ -138,6 +175,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
           selectedCategoryId,
           selectedSizeValue,
           `variants.price.centAmount:range (${priceRange[0]} to ${priceRange[1]})`,
+          selectedDiscounted,
         ],
         sort: [sortMethod],
         limit: pageCounter.itemsPerPage,
@@ -178,12 +216,19 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
           return aPrice - bPrice;
         });
       }
-      // console.log(responseResult);
       setProducts(productsResult);
     };
 
     fetchProducts().catch(() => toast.error('Error fetching products.'));
-  }, [selectedCategoryId, selectedSizeValue, sortMethod, priceRange, inputSearch, pageCounter.offset]);
+  }, [
+    selectedCategoryId,
+    selectedSizeValue,
+    sortMethod,
+    priceRange,
+    inputSearch,
+    pageCounter.offset,
+    selectedDiscounted,
+  ]);
 
   useEffect(() => {
     if (!productId) return;
@@ -196,12 +241,12 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
           variantId: 1,
         });
 
-        if ('body' in response && response.body && 'totalLineItemQuantity' in response.body) {
+        if (response && response.body && isCart(response.body)) {
           setTotalLineItemQuantity(response.body.totalLineItemQuantity ?? 0);
+          setVersion(response.body.version);
         } else {
           setTotalLineItemQuantity(0);
         }
-        // console.log('addProductToBasket=>>>>>>>>>>>>', response);
       } catch (error) {
         toast.error('Error adding product to cart.');
       }
@@ -209,6 +254,28 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
 
     fetchProducts();
   }, [productId]);
+
+  useEffect(() => {
+    const fetchBasket = async () => {
+      try {
+        const response: ClientResponse<Cart | ClientResult> = await getBasket();
+
+        if (response && response.body && isCart(response.body)) {
+          if (response.body.version) {
+            setVersion(response.body.version);
+          }
+
+          if (response.body.lineItems) {
+            setLineItems(response.body.lineItems);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch basket:', error);
+      }
+    };
+
+    fetchBasket();
+  }, [version]);
 
   return (
     <div className="bg-white">
@@ -250,20 +317,20 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
 
                   {/* mobile menu */}
                   <form className="mobile-categories mt-4 border-t border-gray-200">
-                    <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleResetFilters()}>
-                      <div className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400">
-                        <span className="font-medium text-gray-900">Categories</span>
+                    <h3 className="my-3 flow-root cursor-pointer" onClick={() => handleResetFilters()}>
+                      <div className="flex w-full items-center justify-between bg-white p-4 text-sm text-gray-400">
+                        <span className="font-medium text-gray-900 hover:text-green-500">Categories</span>
                       </div>
                     </h3>
                     {categories.map((category) => (
                       <div
                         key={category.name}
-                        className={`border-b border-gray-200 py-6 ${selectedCategoryValue === category.name ? 'bg-gray-100' : ''}`}
+                        className={`mx-6 border-b border-gray-200 py-4 ${selectedCategoryValue === category.name ? 'bg-gray-50/10' : ''}`}
                         onClick={() => handleCategoryClick(category.id, category.name)}
                       >
                         <div className="flex items-center">
                           <label
-                            className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryValue === category.name ? 'text-green-600' : ''}`}
+                            className={`text-sm text-gray-600 cursor-pointer hover:text-green-500 ${selectedCategoryValue === category.name ? 'text-green-600 font-bold' : ''}`}
                           >
                             {category.name}
                           </label>
@@ -271,30 +338,30 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                       </div>
                     ))}
 
-                    <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleSizeClick('', '')}>
-                      <div className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400">
-                        <span className="font-medium text-gray-900">Size</span>
+                    <h3 className="mb-3 mt-6 flow-root cursor-pointer" onClick={() => handleSizeClick('', '')}>
+                      <div className="flex w-full items-center justify-between bg-white p-4 text-sm text-gray-400">
+                        <span className="font-medium text-gray-900 hover:text-green-500">Size</span>
                       </div>
                     </h3>
                     {sizeFilters.map((size) => (
                       <div
                         key={size.label}
-                        className={`border-b border-gray-200 py-6 cursor-pointer ${selectedSizeLabel === size.label ? 'bg-gray-100' : ''}`}
+                        className={`mx-6 border-b border-gray-200 py-4 cursor-pointer ${selectedSizeLabel === size.label ? 'bg-gray-50/10' : ''}`}
                         onClick={() => handleSizeClick(size.value, size.label)}
                       >
                         <div className="flex items-center">
                           <label
-                            className={`text-sm text-gray-600 cursor-pointer ${selectedSizeValue === size.value ? 'text-green-600' : ''}`}
+                            className={`text-sm text-gray-600 cursor-pointer hover:text-green-500 ${selectedSizeLabel === size.label ? 'text-green-600 font-bold' : ''}`}
                           >
-                            {size.label}
+                            Pot size: {size.label}
                           </label>
                         </div>
                       </div>
                     ))}
 
-                    <div className="price border-t border-gray-200 px-4 py-6">
+                    <div className="price px-4 py-6">
                       <h3 className="text-sm font-medium text-gray-900">Price</h3>
-                      <div className="mt-6 flex flex-col gap-2.5">
+                      <div className="mt-6 ml-2 flex flex-col gap-2.5">
                         <Range
                           step={100}
                           min={0}
@@ -305,7 +372,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                             setPriceRange(values);
                           }}
                           renderTrack={({ props, children }) => (
-                            <div {...props} className="h-1 bg-gray-200 rounded-md">
+                            <div {...props} className="mx-2 h-1 bg-gray-200 rounded-md">
                               {children}
                             </div>
                           )}
@@ -322,6 +389,22 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                         </div>
                       </div>
                     </div>
+                    <div
+                      onClick={() => {
+                        resetOffsetProducts();
+                        setSelectedDiscounted(`variants.prices.discounted:exists`);
+                      }}
+                      className="relative mt-4 px-6 h-52 cursor-pointer"
+                    >
+                      <div className="absolute top-8 left-1/2 transform -translate-x-1/2 p-4 bg-white border-2 rounded-xl">
+                        <h2 className=" text-5xl text-amber-400 font-bold">SALES!</h2>
+                      </div>
+                      <img
+                        className="h-full w-full object-cover object-center rounded-xl border-2"
+                        src={SalesImage}
+                        alt="sales"
+                      />
+                    </div>
                   </form>
                 </DialogPanel>
               </TransitionChild>
@@ -331,7 +414,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
 
         {/* desktop main section */}
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-baseline justify-end border-b border-gray-200 pb-5 pt-3">
+          <div className="flex items-baseline justify-end border-b border-gray-200 pb-[17px] pt-3">
             <div className="flex items-center">
               <div className="relative mr-4">
                 <input
@@ -360,7 +443,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                       />
                     </MenuButton>
                   </div>
-                  <div className="absolute -bottom-20 -left-10 inline-flex w-32 group justify-center whitespace-nowrap text-sm font-medium text-gray-700 hover:text-green-900">
+                  <div className="absolute -bottom-20 left-1 lg:-left-10 inline-flex w-32 group justify-center whitespace-nowrap text-sm font-medium text-gray-700 hover:text-green-900">
                     {sortName}
                   </div>
                 </div>
@@ -416,20 +499,20 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
           <section aria-labelledby="products-heading" className="pb-24 pt-6">
             <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
               <form className="hidden lg:block">
-                <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleResetFilters()}>
-                  <div className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400">
-                    <span className="font-medium text-gray-900">Categories</span>
+                <h3 className="my-3 flow-root cursor-pointer" onClick={() => handleResetFilters()}>
+                  <div className="flex w-full items-center justify-between pb-3 text-sm text-gray-400">
+                    <span className="font-medium text-gray-900 hover:text-green-500">Categories</span>
                   </div>
                 </h3>
                 {categories.map((category) => (
                   <div
                     key={category.name}
-                    className={`border-b border-gray-200 py-6 cursor-pointer ${selectedCategoryValue === category.name ? 'bg-gray-100' : ''}`}
+                    className={`ml-2 border-b border-gray-200 py-4 cursor-pointer ${selectedCategoryValue === category.name ? 'bg-gray-50/10' : ''}`}
                     onClick={() => handleCategoryClick(category.id, category.name)}
                   >
                     <div className="flex items-center">
                       <label
-                        className={`text-sm text-gray-600 cursor-pointer ${selectedCategoryValue === category.name ? 'text-green-600' : ''}`}
+                        className={`text-sm text-gray-600 cursor-pointer hover:text-green-500 ${selectedCategoryValue === category.name ? 'text-green-600 font-bold' : ''}`}
                       >
                         {category.name}
                       </label>
@@ -437,30 +520,30 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                   </div>
                 ))}
 
-                <h3 className="-my-3 flow-root cursor-pointer" onClick={() => handleSizeClick('', '')}>
-                  <div className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400">
-                    <span className="font-medium text-gray-900">Size</span>
+                <h3 className="mb-3 mt-6 flow-root cursor-pointer" onClick={() => handleSizeClick('', '')}>
+                  <div className="flex w-full items-center justify-between py-3 text-sm text-gray-400">
+                    <span className="font-medium text-gray-900 hover:text-green-500">Size</span>
                   </div>
                 </h3>
                 {sizeFilters.map((size) => (
                   <div
                     key={size.label}
-                    className={`border-b border-gray-200 py-6 cursor-pointer ${selectedSizeLabel === size.label ? 'bg-gray-100' : ''}`}
+                    className={`ml-2 border-b border-gray-200 py-4 cursor-pointer ${selectedSizeLabel === size.label ? 'bg-gray-50/10' : ''}`}
                     onClick={() => handleSizeClick(size.value, size.label)}
                   >
                     <div className="flex items-center">
                       <label
-                        className={`text-sm text-gray-600 cursor-pointer ${selectedSizeValue === size.value ? 'text-green-600' : ''}`}
+                        className={`text-sm text-gray-600 cursor-pointer hover:text-green-500 ${selectedSizeLabel === size.label ? 'text-green-600 font-bold' : ''}`}
                       >
-                        {size.label}
+                        Pot size: {size.label}
                       </label>
                     </div>
                   </div>
                 ))}
 
-                <div className="price border-t border-gray-200 py-6">
+                <div className="price py-6">
                   <h3 className="text-sm font-medium text-gray-900">Price</h3>
-                  <div className="mt-6 flex flex-col gap-2.5">
+                  <div className="mt-6 ml-2 flex flex-col gap-2.5">
                     <Range
                       step={100}
                       min={0}
@@ -471,7 +554,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                         setPriceRange(values);
                       }}
                       renderTrack={({ props, children }) => (
-                        <div {...props} className="h-1 bg-gray-200 rounded-md">
+                        <div {...props} className="mx-2 h-1 bg-gray-200 rounded-md">
                           {children}
                         </div>
                       )}
@@ -488,10 +571,26 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                     </div>
                   </div>
                 </div>
+                <div
+                  onClick={() => {
+                    resetOffsetProducts();
+                    setSelectedDiscounted(`variants.prices.discounted:exists`);
+                  }}
+                  className="relative mt-4 h-96 cursor-pointer"
+                >
+                  <div className="absolute top-8 left-1/2 transform -translate-x-1/2 p-4 bg-white border-2 rounded-xl">
+                    <h2 className=" text-5xl text-amber-400 font-bold">SALES!</h2>
+                  </div>
+                  <img
+                    className="h-full w-full object-cover object-center rounded-xl border-2"
+                    src={SalesImage}
+                    alt="sales"
+                  />
+                </div>
               </form>
 
               <div className="lg:col-span-3">
-                <div className="bg-white">
+                <div className="bg-white h-full">
                   <nav aria-label="breadcrumb" className="w-max">
                     <ol className="flex flex-wrap items-center w-full px-4 py-2 rounded-md bg-blue-gray-50 bg-opacity-60">
                       <li
@@ -519,83 +618,105 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                   </nav>
 
                   {/* product card */}
-                  <div className="mx-auto max-w-2xl px-4 pt-8 pb-16 sm:px-6 sm:pt-12 sm:pb-24 lg:max-w-7xl lg:px-8">
-                    <h2 className="sr-only">Products</h2>
-                    <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-                      {products?.map((product) => (
-                        <Link
-                          key={product.id}
-                          to={
-                            selectedCategoryValue
-                              ? `/catalog/${getCategoryValue(selectedCategoryValue)}/${product.id}`
-                              : `/product/${product.id}`
-                          }
-                          className="group block border border-gray-100 rounded-lg shadow transition-transform hover:shadow-md"
+                  {products?.length === 0 ? (
+                    <div className="w-full h-full flex flex-col justify-around items-center">
+                      <div className="flex flex-col items-center">
+                        <h3 className="text-3xl md:text-5xl font-bold text-gray-700">No results.</h3>
+                        <img className="my-6" src={OutOfStoreImage} alt="product not found" />
+                        <p className="text-center text-gray-500">Tips: try changing category, price range or</p>
+                        <div
+                          onClick={() => handleResetFilters()}
+                          className="inline-block mt-4 py-3 px-8 text-white font-medium whitespace-nowrap rounded-md bg-green-600 hover:bg-green-700 cursor-pointer"
                         >
-                          <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-                            {product.variant?.images?.[0]?.url ? (
-                              <img
-                                src={product.variant.images[0].url}
-                                alt={product.name}
-                                className="h-full w-full object-cover object-center transition-transform duration-300 ease-in-out transform group-hover:scale-105"
-                              />
-                            ) : (
-                              <div className="h-full w-full flex items-center justify-center bg-gray-100">
-                                <span className="text-gray-500">No image available</span>
-                              </div>
-                            )}
-                          </div>
-                          <h3
-                            className="mt-4 mb-2 text-lg font-bold text-center text-gray-700"
-                            style={{ height: '3.3rem', overflow: 'hidden' }}
-                          >
-                            {product.name}
-                          </h3>
-
-                          <div className="mt-1 flex items-center justify-between px-4 py-2">
-                            {product.variant?.prices?.[0]?.discounted?.discount ? (
-                              <>
-                                <p className="text-lg font-medium text-red-600">
-                                  {formatPriceInEuro(product.variant.prices[0].discounted.value.centAmount)}
-                                </p>
-                                <p
-                                  className="text-lg font-medium text-green-600"
-                                  style={{ textDecoration: 'line-through' }}
-                                >
-                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount)}
-                                </p>
-                              </>
-                            ) : (
-                              product.variant?.prices?.[0]?.value?.centAmount && (
-                                <p className="text-lg font-medium text-green-600">
-                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount)}
-                                </p>
-                              )
-                            )}
-                            <div
-                              onClick={(e) => handleIconBasketClick(e, product.id)}
-                              className={`cursor-pointer ${clickedIcons[product.id] ? 'pointer-events-none text-red-400' : 'text-green-600'}`}
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth="1.5"
-                                stroke="currentColor"
-                                className="w-6 h-6"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
-                                />
-                              </svg>
-                            </div>
-                          </div>
-                        </Link>
-                      ))}
+                          Reset filters
+                        </div>
+                      </div>
+                      <div></div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="mx-auto max-w-2xl px-4 pt-8 sm:px-6 sm:pt-12 lg:max-w-7xl lg:px-8">
+                      <h2 className="sr-only">Products</h2>
+                      <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+                        {products?.map((product) => (
+                          <Link
+                            key={product.id}
+                            to={
+                              selectedCategoryValue
+                                ? `/catalog/${getCategoryValue(selectedCategoryValue)}/${product.id}`
+                                : `/product/${product.id}`
+                            }
+                            className="group block border border-gray-100 rounded-lg shadow transition-transform hover:shadow-md"
+                          >
+                            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+                              {product.variant?.images?.[0]?.url ? (
+                                <img
+                                  src={product.variant.images[0].url}
+                                  alt={product.name}
+                                  className="h-full w-full object-cover object-center transition-transform duration-300 ease-in-out transform group-hover:scale-105"
+                                />
+                              ) : (
+                                <div className="h-full w-full flex items-center justify-center bg-gray-100">
+                                  <span className="text-gray-500">No image available</span>
+                                </div>
+                              )}
+                            </div>
+                            <h3
+                              className="mt-4 mb-2 text-lg font-bold text-center text-gray-700"
+                              style={{ height: '3.3rem', overflow: 'hidden' }}
+                            >
+                              {product.name}
+                            </h3>
+
+                            <div className="mt-1 flex items-center justify-between px-4 py-2">
+                              {product.variant?.prices?.[0]?.discounted?.discount ? (
+                                <>
+                                  <p className="text-lg font-medium text-red-600">
+                                    {formatPriceInEuro(product.variant.prices[0].discounted.value.centAmount)}
+                                  </p>
+                                  <p
+                                    className="text-lg font-medium text-green-600"
+                                    style={{ textDecoration: 'line-through' }}
+                                  >
+                                    {formatPriceInEuro(product.variant.prices[0].value.centAmount)}
+                                  </p>
+                                </>
+                              ) : (
+                                product.variant?.prices?.[0]?.value?.centAmount && (
+                                  <p className="text-lg font-medium text-green-600">
+                                    {formatPriceInEuro(product.variant.prices[0].value.centAmount)}
+                                  </p>
+                                )
+                              )}
+                              <button
+                                disabled={isDisabledButton}
+                                onClick={
+                                  lineItems.find((item) => item.productId === product.id)
+                                    ? (e) => handleRemoveProductClick(e, product.id, 1)
+                                    : (e) => handleIconBasketClick(e, product.id)
+                                }
+                                className={`cursor-pointer ${lineItems.find((item) => item.productId === product.id) ? 'text-red-400' : 'text-green-600'}`}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  strokeWidth="1.5"
+                                  stroke="currentColor"
+                                  className="w-6 h-6"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Pagination code here */}

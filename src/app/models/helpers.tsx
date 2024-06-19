@@ -22,9 +22,14 @@ export const getArrayWithPaginationNumber = (currentPage: number, totalPageCount
       paginationPageNumbers.push(1, 0, totalPageCount - 2, totalPageCount - 1, totalPageCount);
     }
   } else {
-    [...Array(totalPageCount)].forEach((_, i) => {
-      paginationPageNumbers.push(i + 1);
-    });
+    const pageCountArray = [...Array(totalPageCount)];
+    if (pageCountArray.length) {
+      pageCountArray.forEach((_, i) => {
+        paginationPageNumbers.push(i + 1);
+      });
+    } else {
+      paginationPageNumbers.push(1);
+    }
   }
 
   return paginationPageNumbers;
