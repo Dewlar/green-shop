@@ -15,13 +15,13 @@ import { ChevronDownIcon, FunnelIcon, Squares2X2Icon } from '@heroicons/react/20
 import { toast } from 'react-toastify';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Cart, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
-import { classNames, formatPriceInEuro } from '../../api/helpers';
-import { ICategoryData, IClickedIconsState, ISortOption } from '../../api/types';
+import { Cart, LineItem, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
+import { classNames, formatPriceInEuro, isCart } from '../../api/helpers';
+import { ICategoryData, ISortOption } from '../../api/types';
 import { sizeFilters, sortOptionForCTP } from '../../constans';
 import getProductsFilter from '../../api/catalog/getProductsFilter';
 import getCategories from '../../api/catalog/getCategories';
-import { addProductToBasket } from '../../api/basket/BasketRepository';
+import { addProductToBasket, deleteProductInBasket, getBasket } from '../../api/basket/BasketRepository';
 import { useStateContext } from '../../state/state-context';
 import { getCategoryValue, IPageCounter, IProductsVariant } from '../../models';
 import CatalogPagination from './catalog-pagination';
@@ -41,7 +41,6 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionForCTP);
   const [priceRange, setPriceRange] = useState([0, 100000]);
   const [inputSearch, setInputSearch] = useState('');
-  const [clickedIcons, setClickedIcons] = useState<IClickedIconsState>({});
   const [categories, setCategories] = useState<ICategoryData[]>([]);
   const navigate = useNavigate();
   const location = useLocation();
@@ -50,6 +49,9 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
     offset: 0,
     itemsPerPage: 12,
   });
+  const [version, setVersion] = useState<number>();
+  const [lineItems, setLineItems] = useState<LineItem[]>([]);
+  const [isDisabledButton, setIsDisabledButton] = useState(false);
 
   const resetOffsetProducts = () => {
     setPageCounter((prev) => {
@@ -97,14 +99,44 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
     setSelectedDiscounted('');
   };
 
-  const handleIconBasketClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, id: string) => {
+  const handleIconBasketClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
     e.stopPropagation();
     e.preventDefault();
     setProductId(id);
-    setClickedIcons((prevState) => ({
-      ...prevState,
-      [id]: !prevState[id],
-    }));
+  };
+
+  const handleRemoveProductClick = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    id: string,
+    quantity: number
+  ) => {
+    try {
+      e.preventDefault();
+      setIsDisabledButton(true);
+      const lineItemById = lineItems.find((item) => item.productId === id);
+
+      if (!lineItemById) {
+        toast.error('Product not found in cart.');
+        return;
+      }
+      const response = await deleteProductInBasket({ productId: lineItemById.id, quantity });
+
+      if (response && response.body && isCart(response.body)) {
+        setVersion(response.body.version);
+      }
+
+      if (response && response.body && isCart(response.body)) {
+        setTotalLineItemQuantity(response.body.totalLineItemQuantity ?? 0);
+        setVersion(response.body.version);
+      } else {
+        setTotalLineItemQuantity(0);
+      }
+      setProductId('');
+    } catch (error) {
+      toast.error('Error removing product from cart.');
+    } finally {
+      setIsDisabledButton(false);
+    }
   };
 
   useEffect(() => {
@@ -183,7 +215,6 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
           return aPrice - bPrice;
         });
       }
-      // console.log(responseResult);
       setProducts(productsResult);
     };
 
@@ -209,12 +240,12 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
           variantId: 1,
         });
 
-        if ('body' in response && response.body && 'totalLineItemQuantity' in response.body) {
+        if (response && response.body && isCart(response.body)) {
           setTotalLineItemQuantity(response.body.totalLineItemQuantity ?? 0);
+          setVersion(response.body.version);
         } else {
           setTotalLineItemQuantity(0);
         }
-        // console.log('addProductToBasket=>>>>>>>>>>>>', response);
       } catch (error) {
         toast.error('Error adding product to cart.');
       }
@@ -222,6 +253,28 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
 
     fetchProducts();
   }, [productId]);
+
+  useEffect(() => {
+    const fetchBasket = async () => {
+      try {
+        const response: ClientResponse<Cart | ClientResult> = await getBasket();
+
+        if (response && response.body && isCart(response.body)) {
+          if (response.body.version) {
+            setVersion(response.body.version);
+          }
+
+          if (response.body.lineItems) {
+            setLineItems(response.body.lineItems);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch basket:', error);
+      }
+    };
+
+    fetchBasket();
+  }, [version]);
 
   return (
     <div className="bg-white">
@@ -617,9 +670,14 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                                 </p>
                               )
                             )}
-                            <div
-                              onClick={(e) => handleIconBasketClick(e, product.id)}
-                              className={`cursor-pointer ${clickedIcons[product.id] ? 'pointer-events-none text-red-400' : 'text-green-600'}`}
+                            <button
+                              disabled={isDisabledButton}
+                              onClick={
+                                lineItems.find((item) => item.productId === product.id)
+                                  ? (e) => handleRemoveProductClick(e, product.id, 1)
+                                  : (e) => handleIconBasketClick(e, product.id)
+                              }
+                              className={`cursor-pointer ${lineItems.find((item) => item.productId === product.id) ? 'text-red-400' : 'text-green-600'}`}
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -635,7 +693,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                                   d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
                                 />
                               </svg>
-                            </div>
+                            </button>
                           </div>
                         </Link>
                       ))}

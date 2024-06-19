@@ -1,11 +1,5 @@
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
-import {
-  Cart,
-  CentPrecisionMoney,
-  LineItem,
-  MyCartUpdateAction,
-  ClientResponse as ClientResponse2,
-} from '@commercetools/platform-sdk';
+import { Cart, CentPrecisionMoney, LineItem, MyCartUpdateAction } from '@commercetools/platform-sdk';
 import RefreshTokenClient from '../RefreshTokenClient';
 import { getProjectKey } from '../helpers';
 import { ICurrentBasket } from '../types';
@@ -229,7 +223,6 @@ export const updateBasketQuantityProduct = async ({
     const client = new RefreshTokenClient();
     const apiRoot = client.getApiRoot();
     const { ID, version } = await createOrGetActiveBasket();
-    // const lineItem = await getLineItemFromBasketByID(productId);
 
     const result = await apiRoot
       .withProjectKey({
@@ -258,13 +251,13 @@ export const updateBasketQuantityProduct = async ({
   }
 };
 
-export const addDiscountCode = async (code: string): Promise<ClientResponse2<Cart> | ClientResult> => {
+export const addDiscountCode = async (code: string): Promise<ClientResponse<Cart | ClientResult>> => {
   try {
     const client = new RefreshTokenClient();
     const apiRoot = client.getApiRoot();
     const { ID, version } = await createOrGetActiveBasket();
 
-    const result: ClientResponse2<Cart> = await apiRoot
+    const result = await apiRoot
       .withProjectKey({
         projectKey,
       })
@@ -279,9 +272,9 @@ export const addDiscountCode = async (code: string): Promise<ClientResponse2<Car
       })
       .execute();
 
-    return result;
+    return result as ClientResponse<Cart>;
   } catch (error) {
-    return error as ClientResult;
+    return error as ClientResponse<ClientResult>;
   }
 };
 
@@ -333,7 +326,6 @@ export const removeDiscountCode = async (code: string): Promise<ClientResponse<C
 
     const isApplied = await isDiscountsApplied();
     if (!isApplied) {
-      // console.log('No discounts applied, skipping removal.');
       return {
         statusCode: 200,
         message: 'No discounts applied, skipping removal.',
