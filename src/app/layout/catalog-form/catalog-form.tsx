@@ -658,9 +658,14 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                                 ? `/catalog/${getCategoryValue(selectedCategoryValue)}/${product.id}`
                                 : `/product/${product.id}`
                             }
-                            className="group block border border-gray-100 rounded-lg shadow transition-transform hover:shadow-md"
+                            className="group flex flex-col border border-gray-100 rounded-lg shadow transition-transform hover:shadow-md"
                           >
-                            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+                            <div
+                              className={classNames(
+                                isProductCardWide ? '' : 'xl:aspect-h-8 xl:aspect-w-7',
+                                'aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200'
+                              )}
+                            >
                               {product.variant?.images?.[0]?.url ? (
                                 <img
                                   src={product.variant.images[0].url}
@@ -673,14 +678,14 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                                 </div>
                               )}
                             </div>
-                            <h3
-                              className="mt-4 mb-2 text-lg font-bold text-center text-gray-700"
-                              style={{ height: '3.3rem', overflow: 'hidden' }}
-                            >
+                            <h3 className="mt-4 mb-2 px-2 text-md overflow-hidden font-bold text-center text-gray-700">
                               {product.name}
                             </h3>
+                            <p className="px-2 my-1 text-sm threeLineTextClamp text-justify">
+                              {isProductCardWide ? product.description : ''}
+                            </p>
 
-                            <div className="mt-1 flex items-center justify-between px-4 py-2">
+                            <div className="mt-auto flex items-center justify-between px-4 py-2">
                               {product.variant?.prices?.[0]?.discounted?.discount ? (
                                 <>
                                   <p className="text-lg font-medium text-red-600">
