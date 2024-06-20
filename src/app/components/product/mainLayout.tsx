@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Disclosure } from '@headlessui/react';
 import { HeartIcon, MinusIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Attribute, Cart, Image, LineItem, Price, Product, ProductData } from '@commercetools/platform-sdk';
+import {
+  Attribute,
+  Cart,
+  Image,
+  LineItem,
+  Price,
+  Product,
+  ProductData,
+  ProductVariant,
+} from '@commercetools/platform-sdk';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
@@ -9,6 +18,7 @@ import SliderMain from './slider/sliderLayout';
 import SizeBtn from './sizeBtn';
 import { addProductToBasket, deleteProductInBasket, getBasket } from '../../api/basket/BasketRepository';
 import { useStateContext } from '../../state/state-context';
+import { StringArrayObject } from '../../models';
 import { isCart } from '../../api/helpers';
 
 const ProductMain = (data: Product) => {
@@ -19,15 +29,24 @@ const ProductMain = (data: Product) => {
   const price: Price[] = productData?.variants[selectedSize]?.prices || [];
   const images: Image[] = data?.masterData?.current?.masterVariant?.images || [];
   const attributes: Attribute[] = productData?.masterVariant?.attributes || [];
+  const variants: ProductVariant[] = productData?.variants || [];
   const getPrice = price[0]?.value?.centAmount;
   const getDiscountPrice = price[0]?.discounted?.value?.centAmount;
   const totalPrice = `${getPrice / 100} €`;
   const isDiscount = price.length !== 0 && getDiscountPrice ? `${getDiscountPrice / 100} €` : '';
-  const sizes = [
-    { name: 'S', bgColor: 'bg-green-200', hoverSize: 'hover:bg-green-300' },
-    { name: 'M', bgColor: 'bg-green-500', hoverSize: 'hover:bg-green-600' },
-    { name: 'L', bgColor: 'bg-green-700', hoverSize: 'hover:bg-green-800' },
-  ];
+  const sizes: StringArrayObject = {
+    S: ['bg-green-200', 'hover:bg-green-300'],
+    M: ['bg-green-500', 'hover:bg-green-600'],
+    L: ['bg-green-700', 'hover:bg-green-800'],
+  };
+  const getSizes = variants.map((variant: ProductVariant) => {
+    const allAttributes: Attribute[] = variant?.attributes || [];
+    if (allAttributes[6]) {
+      const sizeValue: string = allAttributes[6].value[0];
+      return { name: sizeValue, bgColor: sizes[sizeValue][0], hoverSize: sizes[sizeValue][1] };
+    }
+    return undefined;
+  });
   const [productId, setProductId] = useState('');
   const { setTotalLineItemQuantity } = useStateContext();
   const [version, setVersion] = useState<number>();
@@ -173,16 +192,19 @@ const ProductMain = (data: Product) => {
                   <h3 className="text-sm text-gray-600">Size</h3>
                   <div className="mt-2">
                     <div className="flex items-center space-x-3">
-                      {sizes.map((size, index) => (
-                        <div key={index}>
-                          <SizeBtn
-                            label={size.name}
-                            setSelectedSize={setSelectedSize}
-                            color={size.bgColor}
-                            colorHover={size.hoverSize}
-                          ></SizeBtn>
-                        </div>
-                      ))}
+                      {getSizes.map(
+                        (size, index) =>
+                          size && (
+                            <div key={index}>
+                              <SizeBtn
+                                label={size?.name}
+                                setSelectedSize={setSelectedSize}
+                                color={size?.bgColor}
+                                colorHover={size?.hoverSize}
+                              ></SizeBtn>
+                            </div>
+                          )
+                      )}
                     </div>
                   </div>
                 </div>
