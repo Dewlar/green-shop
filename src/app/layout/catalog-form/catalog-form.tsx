@@ -53,6 +53,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   const [version, setVersion] = useState<number>();
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
   const [isDisabledButton, setIsDisabledButton] = useState(false);
+  const [isProductCardWide, setIsProductCardWide] = useState(true);
 
   const resetOffsetProducts = () => {
     setPageCounter((prev) => {
@@ -480,7 +481,14 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                 </Transition>
               </Menu>
 
-              <button type="button" className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7">
+              <button
+                type="button"
+                className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7"
+                onClick={() => {
+                  setIsProductCardWide(!isProductCardWide);
+                  console.log(isProductCardWide);
+                }}
+              >
                 <span className="sr-only">View grid</span>
                 <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -636,7 +644,12 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                   ) : (
                     <div className="mx-auto max-w-2xl px-4 pt-8 sm:px-6 sm:pt-12 lg:max-w-7xl lg:px-8">
                       <h2 className="sr-only">Products</h2>
-                      <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+                      <div
+                        className={classNames(
+                          isProductCardWide ? 'lg:grid-cols-2 xl:grid-cols-3' : 'lg:grid-cols-3 xl:grid-cols-4',
+                          'grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 xl:gap-x-8'
+                        )}
+                      >
                         {products?.map((product) => (
                           <Link
                             key={product.id}
