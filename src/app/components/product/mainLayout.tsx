@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Disclosure } from '@headlessui/react';
 import { HeartIcon, MinusIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Attribute, Cart, Image, LineItem, Price, Product, ProductData, ProductVariant } from '@commercetools/platform-sdk';
+import {
+  Attribute,
+  Cart,
+  Image,
+  LineItem,
+  Price,
+  Product,
+  ProductData,
+  ProductVariant,
+} from '@commercetools/platform-sdk';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
