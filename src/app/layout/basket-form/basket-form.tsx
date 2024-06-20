@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { XMarkIcon as XMarkIconMini } from '@heroicons/react/20/solid';
-import { Cart, LineItem, ClientResponse as ClientResponse2, CentPrecisionMoney } from '@commercetools/platform-sdk';
+import { Cart, LineItem, DiscountCodeInfo } from '@commercetools/platform-sdk';
 import { toast } from 'react-toastify';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import { Link } from 'react-router-dom';
@@ -9,32 +9,24 @@ import {
   clearBasket,
   deleteProductInBasket,
   getBasket,
-  getLineItemsFromBasket,
-  getTotalPrice,
   removeDiscountCode,
   updateBasketQuantityProduct,
 } from '../../api/basket/BasketRepository';
-import { formatPriceInEuro } from '../../api/helpers';
+import { formatPriceInEuro, isCart } from '../../api/helpers';
 import { useStateContext } from '../../state/state-context';
 
 const BasketForm = () => {
-  const [currentBasket, setCurrentBasket] = useState<ClientResponse<Cart | ClientResult> | undefined>(undefined);
-  console.log('currentBasket', currentBasket);
+  const [version, setVersion] = useState<number>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>();
-  const [subTotalPrice, setSubTotalPrice] = useState<number>();
   const [discountOnTotalPrice, setDiscountOnTotalPrice] = useState<number>(0);
   const [quantityProduct, setQuantityProduct] = useState(1);
   const [inputPromoCode, setInputPromoCode] = useState('');
-  const [promoCode, setPromoCode] = useState('');
   const [isPromoValid, setIsPromoValid] = useState(false);
-  const [isDisabledButtonPromoCode, setIsDisabledButtonPromoCode] = useState(false);
-  const [discountId, setDiscountId] = useState<string | null>(null);
-  const discountFixed = 0;
+  const [discountCodes, setDiscountCodes] = useState<DiscountCodeInfo[]>([]);
 
-  const { totalLineItemQuantity, setTotalLineItemQuantity, discountCodes, setDiscountCodes } = useStateContext();
-  console.log('discountCodes!!!!!!!!!!!!!!!!!!', discountCodes);
+  const { setTotalLineItemQuantity } = useStateContext();
 
   const handleQuantityChange = async (
     productId: string,
@@ -55,13 +47,12 @@ const BasketForm = () => {
 
       if (newQuantity) {
         try {
-          const response = await updateBasketQuantityProduct({
+          await updateBasketQuantityProduct({
             productId,
             quantity: newQuantity,
           });
 
           setQuantityProduct(newQuantity);
-          console.log('Quantity updated successfully:', response);
         } catch (error) {
           console.error('Error updating quantity:', error);
         }
@@ -74,39 +65,52 @@ const BasketForm = () => {
   const handleClearBasketClick = async () => {
     try {
       const response = await clearBasket();
-      setLineItems((response as ClientResponse<Cart>).body?.lineItems ?? []);
-      setIsModalOpen(false);
-      setTotalLineItemQuantity(0);
-      setDiscountCodes([]);
+      if (response && response.body && isCart(response.body)) {
+        setVersion(response.body.version);
+        setLineItems((response as ClientResponse<Cart>).body?.lineItems ?? []);
+        setIsModalOpen(false);
+        setTotalLineItemQuantity(0);
+        // setDiscountCodes([]);
+      }
     } catch (error) {
       toast.error('Error removing product from cart.');
     }
-    removeDiscountCode('plant-coupon').then(() => {
-      setPromoCode('');
-      setDiscountId('');
-    });
+    const response = await removeDiscountCode('plant-coupon');
+    if (response && response.body && isCart(response.body)) {
+      setVersion(response.body.version);
+    }
   };
 
   const handleRemoveProductClick = async (productId: string, quantity: number) => {
     try {
       const response = await deleteProductInBasket({ productId, quantity });
-      setLineItems((response as ClientResponse<Cart>).body?.lineItems ?? []);
+      if (response && response.body && isCart(response.body)) {
+        setVersion(response.body.version);
+        setLineItems(response.body.lineItems);
+      }
     } catch (error) {
       toast.error('Error removing product from cart.');
     }
   };
 
-  const handlePromoCodeClick = () => {
+  const handlePromoCodeClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     if (isPromoValid) {
-      setIsDisabledButtonPromoCode(true);
-      setPromoCode('plant-coupon');
+      try {
+        const response: ClientResponse<Cart | ClientResult> = await addDiscountCode('plant-coupon');
+        if (response && response.body && isCart(response.body)) {
+          setVersion(response.body.version);
+          setInputPromoCode('');
+        }
+      } catch (error) {
+        toast.error('Error fetching');
+      }
     }
   };
 
   const handlePromoChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     setInputPromoCode(input);
-    setIsDisabledButtonPromoCode(false);
 
     if (input.trim() === 'plant-coupon') {
       setIsPromoValid(true);
@@ -115,34 +119,50 @@ const BasketForm = () => {
     }
   };
 
-  const handleRemovePromoCodeClick = () => {
-    setIsDisabledButtonPromoCode(false);
-    removeDiscountCode(promoCode).then(() => {
-      setPromoCode('');
-      setDiscountId('');
-    });
+  const handleRemovePromoCodeClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    try {
+      const response: ClientResponse<Cart | ClientResult> = await removeDiscountCode('plant-coupon');
+      if (response && response.body && isCart(response.body)) {
+        setVersion(response.body.version);
+        setDiscountOnTotalPrice(response.body.discountOnTotalPrice?.discountedAmount.centAmount ?? 0);
+        setIsPromoValid(false);
+      }
+    } catch (error) {
+      toast.error('Error fetching');
+    }
   };
 
   useEffect(() => {
     const fetchBasket = async () => {
       try {
         const response: ClientResponse<Cart | ClientResult> = await getBasket();
-        setCurrentBasket(response);
 
-        if ('body' in response && response.body && 'discountCodes' in response.body) {
-          setDiscountCodes(response?.body?.discountCodes ?? []);
-        }
+        if (response && response.body && isCart(response.body)) {
+          if (response.body.version) {
+            setVersion(response.body.version);
+          }
 
-        if ('body' in response && response.body && 'discountOnTotalPrice' in response.body) {
-          setDiscountOnTotalPrice(response?.body?.discountOnTotalPrice?.discountedAmount.centAmount ?? 0);
-        }
+          if (response.body.lineItems) {
+            setLineItems(response.body.lineItems);
+            setTotalLineItemQuantity(response.body.lineItems.length);
+          }
 
-        if ('body' in response && response.body && 'totalPrice' in response.body) {
-          setTotalPrice(response?.body?.totalPrice?.centAmount ?? 0);
-        }
+          if (response.body.discountCodes) {
+            setDiscountCodes(response.body.discountCodes);
+          }
 
-        if ('body' in response && response.body && 'totalLineItemQuantity' in response.body) {
-          setTotalLineItemQuantity(response.body.totalLineItemQuantity ?? 0);
+          if (response.body.discountOnTotalPrice) {
+            setDiscountOnTotalPrice(response?.body?.discountOnTotalPrice?.discountedAmount.centAmount ?? 0);
+          }
+
+          if (response.body.totalPrice) {
+            setTotalPrice(response?.body?.totalPrice?.centAmount ?? 0);
+          }
+
+          if (response.body.totalLineItemQuantity) {
+            setTotalLineItemQuantity(response.body.totalLineItemQuantity ?? 0);
+          }
         }
       } catch (error) {
         console.error('Failed to fetch basket:', error);
@@ -150,68 +170,7 @@ const BasketForm = () => {
     };
 
     fetchBasket();
-  }, [quantityProduct, lineItems, promoCode, isDisabledButtonPromoCode]);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response: LineItem[] = await getLineItemsFromBasket();
-        setLineItems(response);
-      } catch (error) {
-        toast.error('Error adding product to cart.');
-      }
-    };
-
-    fetchProducts();
-  }, [quantityProduct]);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setSubTotalPrice((totalPrice ?? 0) + (discountOnTotalPrice ?? 0));
-        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@', totalPrice, discountOnTotalPrice);
-      } catch (error) {
-        toast.error('Error adding product to cart.');
-      }
-    };
-
-    fetchProducts();
-  }, [totalPrice, discountOnTotalPrice]);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response: CentPrecisionMoney | undefined = await getTotalPrice();
-        setTotalPrice(response?.centAmount);
-      } catch (error) {
-        toast.error('Error adding product to cart.');
-      }
-    };
-
-    fetchProducts();
-  }, [lineItems, quantityProduct, promoCode, discountId, isDisabledButtonPromoCode, discountOnTotalPrice]);
-
-  useEffect(() => {
-    if (!promoCode) return;
-
-    const fetchProducts = async () => {
-      try {
-        const response: ClientResponse2<Cart> | ClientResult = await addDiscountCode(promoCode);
-
-        const { discountCodes: discountCodes0 } = response.body as Cart;
-        if (discountCodes0.length > 0) {
-          const discountCodeId = discountCodes0[0].discountCode.id;
-          setDiscountId(discountCodeId);
-        } else {
-          setDiscountId(null);
-        }
-      } catch (error) {
-        toast.error('Error fetching categories.');
-      }
-    };
-
-    fetchProducts();
-  }, [promoCode]);
+  }, [quantityProduct, version]);
 
   return (
     <div className="bg-white">
@@ -230,7 +189,7 @@ const BasketForm = () => {
         </div>
 
         <form className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
-          {totalLineItemQuantity === 0 ? (
+          {lineItems.length === 0 ? (
             <section className="lg:col-span-12">
               <div className="relative flex flex-col items-center text-center py-6 sm:py-10">
                 <p className="text-lg font-medium text-gray-700">Your cart is empty yet.</p>
@@ -264,11 +223,13 @@ const BasketForm = () => {
                         </button>
                       </div>
                       <div className="flex-shrink-0">
-                        <img
-                          src={product.variant?.images?.[0]?.url || ''}
-                          alt={product.name.en}
-                          className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
-                        />
+                        <Link to={`/product/${product.productId}`}>
+                          <img
+                            src={product.variant?.images?.[0]?.url || ''}
+                            alt={product.name.en}
+                            className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
+                          />
+                        </Link>
                       </div>
 
                       <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
@@ -276,12 +237,12 @@ const BasketForm = () => {
                           <div>
                             <div className="flex justify-between">
                               <h3 className="text-sm">
-                                <a
-                                  href={`/product/${product?.productSlug?.en}`}
+                                <Link
+                                  to={`/product/${product.productId}`}
                                   className="font-medium text-gray-700 hover:text-gray-800"
                                 >
                                   {product.name.en}
-                                </a>
+                                </Link>
                               </h3>
                             </div>
                             <div className="mt-1 flex text-sm">
@@ -371,13 +332,24 @@ const BasketForm = () => {
                   <dl className="mt-6 space-y-4">
                     <div className="flex items-center justify-between">
                       <dt className="text-sm text-gray-600">Subtotal</dt>
-                      <dd className="text-sm font-medium text-gray-900">{formatPriceInEuro(subTotalPrice ?? 0)}</dd>
+                      <dd className="text-sm font-medium text-gray-900">
+                        {formatPriceInEuro((totalPrice ?? 0) + (discountOnTotalPrice ?? 0))}
+                      </dd>
                     </div>
                     <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                       <dt className="flex items-center text-sm text-gray-600">
                         <span>Discount</span>
                       </dt>
-                      <dd className="text-sm font-medium text-gray-900">{discountFixed.toFixed(2)} €</dd>
+                      <dd className="text-sm font-medium text-gray-900">
+                        {formatPriceInEuro(
+                          lineItems.reduce((total, item) => {
+                            if (item.price.discounted && item.price.discounted.value.centAmount) {
+                              return total + item.price.value.centAmount - item.price.discounted.value.centAmount;
+                            }
+                            return total;
+                          }, 0)
+                        )}
+                      </dd>
                     </div>
                     <div className="promo-code flex items-center justify-between border-t border-gray-200 pt-4">
                       <dt className="flex text-sm text-gray-600 items-center justify-center">
@@ -387,28 +359,31 @@ const BasketForm = () => {
                             type="text"
                             value={inputPromoCode}
                             onChange={handlePromoChangeInput}
-                            placeholder="Enter promo code"
+                            disabled={discountCodes.length > 0}
+                            placeholder={discountCodes.length > 0 ? 'Promo code is applied' : 'Enter promo code'}
                             className="block w-full disabled:bg-gray-200 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6"
                           />
                         </div>
                         <div className="flex space-x-2">
                           <button
                             onClick={handlePromoCodeClick}
-                            disabled={isDisabledButtonPromoCode}
-                            className={`ml-2 flex items-center justify-center w-8 h-8 rounded-full ${isPromoValid && !isDisabledButtonPromoCode ? 'bg-green-500 text-white hover:bg-green-700' : 'bg-gray-400 text-gray-700'}`}
+                            disabled={discountCodes.length > 0}
+                            className={`ml-2 flex items-center justify-center w-8 h-8 rounded-full ${discountCodes.length === 0 && isPromoValid ? 'bg-green-500 text-white' : 'bg-gray-400 text-gray-700'}`}
                           >
                             ✔
                           </button>
                           <button
                             onClick={handleRemovePromoCodeClick}
-                            disabled={!isDisabledButtonPromoCode}
-                            className={`ml-2 flex items-center justify-center w-8 h-8 rounded-full ${isDisabledButtonPromoCode ? 'bg-red-500 text-white hover:bg-red-700' : 'bg-gray-400 text-gray-700'}`}
+                            disabled={discountCodes.length === 0}
+                            className={`ml-2 flex items-center justify-center w-8 h-8 rounded-full ${discountCodes.length > 0 ? 'bg-red-500 text-white hover:bg-red-700' : 'bg-gray-400 text-gray-700'}`}
                           >
                             ✖
                           </button>
                         </div>
                       </dt>
-                      <dd className="text-sm font-medium text-gray-900">{formatPriceInEuro(discountOnTotalPrice)}</dd>
+                      <dd className="text-sm font-medium text-gray-900 ml-2">
+                        {formatPriceInEuro(discountOnTotalPrice)}
+                      </dd>
                     </div>
                     <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                       <dt className="text-base font-medium text-gray-900">Order total</dt>

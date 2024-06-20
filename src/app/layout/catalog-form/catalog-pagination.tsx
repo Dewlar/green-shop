@@ -67,7 +67,7 @@ const CatalogPagination: FC<Props> = ({ pageCounter, setPageCounter }) => {
         </div>
         <button
           onClick={handleNext}
-          disabled={currentPage === totalPages}
+          disabled={currentPage === totalPages || paginationPageNumbers.length === 1}
           className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:bg-gray-300"
         >
           Next
@@ -77,10 +77,11 @@ const CatalogPagination: FC<Props> = ({ pageCounter, setPageCounter }) => {
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700">
-            Showing <span className="font-medium">{(currentPage - 1) * pageCounter.itemsPerPage + 1}</span> to{' '}
+            Plants <span className="font-medium">{(currentPage - 1) * pageCounter.itemsPerPage + 1}</span>-
             <span className="font-medium">
               {Math.min(currentPage * pageCounter.itemsPerPage, pageCounter.totalProducts)}
-            </span>{' '}
+            </span>
+            {' of '}
             <span className="font-medium">{pageCounter.totalProducts}</span> results
           </p>
         </div>
@@ -121,7 +122,7 @@ const CatalogPagination: FC<Props> = ({ pageCounter, setPageCounter }) => {
             })}
             <button
               onClick={handleNext}
-              disabled={currentPage === totalPages}
+              disabled={currentPage === totalPages || paginationPageNumbers.length === 1}
               className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:bg-gray-300"
             >
               <span className="sr-only">Next</span>

@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Disclosure } from '@headlessui/react';
 import { HeartIcon, MinusIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Attribute, Cart, Image, Price, Product, ProductData, ProductVariant } from '@commercetools/platform-sdk';
+import { Attribute, Cart, Image, LineItem, Price, Product, ProductData, ProductVariant } from '@commercetools/platform-sdk';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import SliderMain from './slider/sliderLayout';
 import SizeBtn from './sizeBtn';
-import { addProductToBasket } from '../../api/basket/BasketRepository';
+import { addProductToBasket, deleteProductInBasket, getBasket } from '../../api/basket/BasketRepository';
 import { useStateContext } from '../../state/state-context';
 import { StringArrayObject } from '../../models';
+import { isCart } from '../../api/helpers';
 
 const ProductMain = (data: Product) => {
   const [selectedSize, setSelectedSize] = useState(0);
@@ -38,8 +39,10 @@ const ProductMain = (data: Product) => {
     return undefined;
   });
   const [productId, setProductId] = useState('');
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const { setTotalLineItemQuantity } = useStateContext();
+  const [version, setVersion] = useState<number>();
+  const [lineItems, setLineItems] = useState<LineItem[]>([]);
+  const [isDisabledButton, setIsDisabledButton] = useState(false);
 
   function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
@@ -48,7 +51,40 @@ const ProductMain = (data: Product) => {
   const handleIconBasketClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
     e.preventDefault();
     setProductId(id);
-    setIsButtonDisabled(true);
+  };
+
+  const handleRemoveProductClick = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    id: string,
+    quantity: number
+  ) => {
+    try {
+      e.preventDefault();
+      setIsDisabledButton(true);
+      const lineItemById = lineItems.find((item) => item.productId === id);
+
+      if (!lineItemById) {
+        toast.error('Product not found in cart.');
+        return;
+      }
+      const response = await deleteProductInBasket({ productId: lineItemById.id, quantity });
+
+      if (response && response.body && isCart(response.body)) {
+        setVersion(response.body.version);
+      }
+
+      if (response && response.body && isCart(response.body)) {
+        setTotalLineItemQuantity(response.body.totalLineItemQuantity ?? 0);
+        setVersion(response.body.version);
+      } else {
+        setTotalLineItemQuantity(0);
+      }
+      setProductId('');
+    } catch (error) {
+      toast.error('Error removing product from cart.');
+    } finally {
+      setIsDisabledButton(false);
+    }
   };
 
   useEffect(() => {
@@ -62,8 +98,9 @@ const ProductMain = (data: Product) => {
           variantId: 1,
         });
 
-        if ('body' in response && response.body && 'totalLineItemQuantity' in response.body) {
+        if (response && response.body && isCart(response.body)) {
           setTotalLineItemQuantity(response.body.totalLineItemQuantity ?? 0);
+          setVersion(response.body.version);
         } else {
           setTotalLineItemQuantity(0);
         }
@@ -74,6 +111,28 @@ const ProductMain = (data: Product) => {
 
     fetchProducts();
   }, [productId]);
+
+  useEffect(() => {
+    const fetchBasket = async () => {
+      try {
+        const response: ClientResponse<Cart | ClientResult> = await getBasket();
+
+        if (response && response.body && isCart(response.body)) {
+          if (response.body.version) {
+            setVersion(response.body.version);
+          }
+
+          if (response.body.lineItems) {
+            setLineItems(response.body.lineItems);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch basket:', error);
+      }
+    };
+
+    fetchBasket();
+  }, [version]);
 
   return (
     <div className="bg-white mb-8">
@@ -143,13 +202,19 @@ const ProductMain = (data: Product) => {
                 <div className="mt-10 flex">
                   <button
                     type="submit"
-                    onClick={(e) => handleIconBasketClick(e, data.id)}
+                    disabled={isDisabledButton}
+                    onClick={
+                      lineItems.find((item) => item.productId === data.id)
+                        ? (e) => handleRemoveProductClick(e, data.id, 1)
+                        : (e) => handleIconBasketClick(e, data.id)
+                    }
                     className={`flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full ${
-                      isButtonDisabled ? 'bg-gray-400' : 'bg-green-600 hover:bg-green-700'
+                      lineItems.find((item) => item.productId === data.id)
+                        ? 'bg-gray-400'
+                        : 'bg-green-600 hover:bg-green-700'
                     }`}
-                    disabled={isButtonDisabled}
                   >
-                    Add to bag
+                    {lineItems.find((item) => item.productId === data.id) ? 'Delete from cart' : 'Add to cart'}
                   </button>
 
                   <button
