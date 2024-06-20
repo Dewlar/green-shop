@@ -39,7 +39,7 @@ const Trending = () => {
         <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-0 lg:gap-x-8">
           {favoriteProducts.slice(0, 4).map((product) => (
             <div key={product.id} className="group relative">
-              <div className="h-56 w-full overflow-hidden rounded-md group-hover:opacity-75 lg:h-72 xl:h-80">
+              <div className="aspect-h-8 aspect-w-7 w-full overflow-hidden rounded-md group-hover:opacity-75">
                 <img
                   src={
                     product.masterVariant.images?.[0]?.url
