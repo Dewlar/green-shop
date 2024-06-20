@@ -31,6 +31,7 @@ const Footer = () => {
       const response: ClientResponse<ProductProjectionPagedQueryResponse> = await getProductsFilter({
         filter: [`variants.attributes.Favorite:"true"`],
         limit: 4,
+        markMatchingVariants: true,
       });
       const responseResult = response.body?.results;
       if (responseResult) {
