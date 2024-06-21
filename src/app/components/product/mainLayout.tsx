@@ -286,10 +286,17 @@ const ProductMain = (data: Product) => {
         </div>
       </main>
       {showModalSlider ? (
-        <div className="fixed flex w-screen h-screen top-0 left-0 backdrop-blur-sm bg-slate-700 z-50 bg-opacity-50">
-          <div className="relative m-auto w-90 max-w-2xl opacity-100">
+        <div
+          className="fixed flex w-screen h-screen top-0 left-0 backdrop-blur-sm bg-slate-700 z-50 bg-opacity-50"
+          onClick={(e) => {
+            if (e.target instanceof HTMLElement && e.target.classList.contains('bg-slate-700')) {
+              setModalSlider(false);
+            }
+          }}
+        >
+          <div className="relative m-auto w-90 max-w-2xl max-h-[95vh] opacity-100 bg-slate-100 p-8 rounded-xl">
             <SliderMain data={data}></SliderMain>
-            <button className="absolute top-2.5 right-2.5">
+            <button className="absolute top-0 right-0">
               <XMarkIcon
                 className="h-10 w-10 text-green-400 hover:text-green-800 cursor-pointer"
                 onClick={() => setModalSlider(false)}
