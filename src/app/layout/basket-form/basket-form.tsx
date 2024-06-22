@@ -19,6 +19,7 @@ const BasketForm = () => {
   const [version, setVersion] = useState<number>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
+  console.log('lineItems', lineItems);
   const [totalPrice, setTotalPrice] = useState<number>();
   const [discountOnTotalPrice, setDiscountOnTotalPrice] = useState<number>(0);
   const [quantityProduct, setQuantityProduct] = useState(1);
@@ -233,8 +234,8 @@ const BasketForm = () => {
                       </div>
 
                       <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
-                        <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
-                          <div>
+                        <div className="relative pr-9 grid grid-cols-2 gap-x-6 sm:pr-0">
+                          <div className="space-y-4">
                             <div className="flex justify-between">
                               <h3 className="text-sm">
                                 <Link
@@ -252,7 +253,6 @@ const BasketForm = () => {
                                 </p>
                               )}
                             </div>
-
                             {product.variant?.prices?.[0]?.discounted?.discount ? (
                               <>
                                 <p className="text-lg font-medium text-red-600">
@@ -283,7 +283,7 @@ const BasketForm = () => {
                             <div className="flex items-center">
                               <button
                                 type="button"
-                                className="px-3 py-1 border border-gray-300 rounded-l-md hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="px-3 py-1 border border-gray-300 rounded-l-md hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
                                 onClick={() => handleQuantityChange(product.id, product.quantity, 'decrement')}
                                 disabled={product.quantity === 1}
                               >
@@ -300,7 +300,7 @@ const BasketForm = () => {
                               />
                               <button
                                 type="button"
-                                className="px-3 py-1 border border-gray-300 rounded-r-md hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                className="px-3 py-1 border border-gray-300 rounded-r-md hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-green-500"
                                 onClick={() => handleQuantityChange(product.id, product.quantity, 'increment')}
                               >
                                 +
