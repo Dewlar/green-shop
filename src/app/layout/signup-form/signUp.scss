@@ -9,6 +9,9 @@
     flex-direction: column;
     justify-content: flex-start;
     min-height: 90px;
+    input {
+      border-radius: 0.375rem;
+    }
   }
   
   #modal,
@@ -22,6 +25,17 @@
     top: 50%;
     transform: translate(-50%, -50%);
   }
+  
+  // @media screen and (min-width: 1200px) {
+  //   .sliderWrapper {
+  //     width: 70%;
+  //   }
+  // }
+  // @media screen and (min-width: 501px) {
+  //   .sliderWrapper {
+  //     width: 70%;
+  //   }
+  // }
   
   @media screen and (max-width: 800px) {
     .signUpForm {
@@ -47,6 +61,14 @@
       }
     }
     .modalWindow {
+      width: 70vw;
+    }
+  }
+  @media screen and (max-width: 550px) {
+    #default-carousel {
+      width: 80vw;
+    }
+    .one-img {
       width: 70vw;
     }
   }
@@ -81,4 +103,8 @@
       align-items: start;
     }
   }
-  
+  @media screen and (min-height: 840px) {
+    #default-carousel {
+      width: fit-content;
+    }
+  }

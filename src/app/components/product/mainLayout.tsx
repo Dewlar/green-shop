@@ -1,7 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Disclosure } from '@headlessui/react';
-import { HeartIcon, MinusIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Attribute, Cart, Image, LineItem, Price, Product, ProductData } from '@commercetools/platform-sdk';
+import { ExclamationTriangleIcon, MinusIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import {
+  Attribute,
+  Cart,
+  Image,
+  LineItem,
+  Price,
+  Product,
+  ProductData,
+  ProductVariant,
+} from '@commercetools/platform-sdk';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
@@ -9,6 +18,7 @@ import SliderMain from './slider/sliderLayout';
 import SizeBtn from './sizeBtn';
 import { addProductToBasket, deleteProductInBasket, getBasket } from '../../api/basket/BasketRepository';
 import { useStateContext } from '../../state/state-context';
+import { StringArrayObject } from '../../models';
 import { isCart } from '../../api/helpers';
 
 const ProductMain = (data: Product) => {
@@ -19,20 +29,32 @@ const ProductMain = (data: Product) => {
   const price: Price[] = productData?.variants[selectedSize]?.prices || [];
   const images: Image[] = data?.masterData?.current?.masterVariant?.images || [];
   const attributes: Attribute[] = productData?.masterVariant?.attributes || [];
+  const variants: ProductVariant[] = productData?.variants || [];
   const getPrice = price[0]?.value?.centAmount;
   const getDiscountPrice = price[0]?.discounted?.value?.centAmount;
   const totalPrice = `${getPrice / 100} €`;
   const isDiscount = price.length !== 0 && getDiscountPrice ? `${getDiscountPrice / 100} €` : '';
-  const sizes = [
-    { name: 'S', bgColor: 'bg-green-200', hoverSize: 'hover:bg-green-300' },
-    { name: 'M', bgColor: 'bg-green-500', hoverSize: 'hover:bg-green-600' },
-    { name: 'L', bgColor: 'bg-green-700', hoverSize: 'hover:bg-green-800' },
-  ];
+  const dangerObject = attributes.some((item) => item.name === 'Danger');
+  const sizes: StringArrayObject = {
+    S: ['bg-green-200', 'hover:bg-green-300'],
+    M: ['bg-green-500', 'hover:bg-green-600'],
+    L: ['bg-green-700', 'hover:bg-green-800'],
+  };
+  const getSizes = variants.map((variant: ProductVariant) => {
+    const allAttributes: Attribute[] = variant?.attributes || [];
+    const sizeObject = allAttributes.filter((item) => item.name === 'Size');
+    if (sizeObject.length > 0) {
+      const sizeValue: string = sizeObject[0].value[0];
+      return { name: sizeValue, bgColor: sizes[sizeValue][0], hoverSize: sizes[sizeValue][1] };
+    }
+    return undefined;
+  });
   const [productId, setProductId] = useState('');
   const { setTotalLineItemQuantity } = useStateContext();
   const [version, setVersion] = useState<number>();
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
   const [isDisabledButton, setIsDisabledButton] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
@@ -128,9 +150,11 @@ const ProductMain = (data: Product) => {
     <div className="bg-white mb-8">
       <main className="mx-auto max-w-7xl sm:px-6 sm:pt-16 lg:px-8">
         <div className="mx-auto max-w-2xl lg:max-w-none">
-          <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
+          <div className="lg:grid lg:grid-cols-2 lg:gap-x-8">
             {productData?.masterVariant?.images && productData?.masterVariant?.images?.length === 1 ? (
-              <img src={images[0].url} onClick={() => setModalSlider(true)}></img>
+              <div className="mx-auto flex justify-center">
+                <img className="one-img max-w-[460px]" src={images[0].url} onClick={() => setModalSlider(true)} />
+              </div>
             ) : (
               <SliderMain data={data} setModalSlider={setModalSlider}></SliderMain>
             )}
@@ -173,16 +197,19 @@ const ProductMain = (data: Product) => {
                   <h3 className="text-sm text-gray-600">Size</h3>
                   <div className="mt-2">
                     <div className="flex items-center space-x-3">
-                      {sizes.map((size, index) => (
-                        <div key={index}>
-                          <SizeBtn
-                            label={size.name}
-                            setSelectedSize={setSelectedSize}
-                            color={size.bgColor}
-                            colorHover={size.hoverSize}
-                          ></SizeBtn>
-                        </div>
-                      ))}
+                      {getSizes.map(
+                        (size, index) =>
+                          size && (
+                            <div key={index}>
+                              <SizeBtn
+                                label={size?.name}
+                                setSelectedSize={setSelectedSize}
+                                color={size?.bgColor}
+                                colorHover={size?.hoverSize}
+                              ></SizeBtn>
+                            </div>
+                          )
+                      )}
                     </div>
                   </div>
                 </div>
@@ -203,14 +230,22 @@ const ProductMain = (data: Product) => {
                   >
                     {lineItems.find((item) => item.productId === data.id) ? 'Delete from cart' : 'Add to cart'}
                   </button>
-
-                  <button
-                    type="button"
-                    className="ml-4 flex items-center justify-center rounded-md px-3 py-3 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
-                  >
-                    <HeartIcon className="h-6 w-6 flex-shrink-0" aria-hidden="true" />
-                    <span className="sr-only">Add to favorites</span>
-                  </button>
+                  {dangerObject && (
+                    <div
+                      onMouseEnter={() => setIsHovered(true)}
+                      onMouseLeave={() => setIsHovered(false)}
+                      className="relative hover-container ml-4 flex items-center justify-center rounded-md px-3 py-3 bg-green-200"
+                    >
+                      <ExclamationTriangleIcon className="h-12 w-12 flex-shrink-0" aria-hidden="true" />
+                      <span className="sr-only">Danger</span>
+                      {isHovered && (
+                        <div className="block cursor-default absolute bottom-0 text-center left-0 w-fit p-1 bg-green-200 text-gray-700 text-xs text-left border border-gray-300 rounded shadow-lg z-50">
+                          <h3 className="font-bold">Danger plant!</h3>
+                          <p className="mt-1">Special conditions required!</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </form>
 
@@ -264,12 +299,19 @@ const ProductMain = (data: Product) => {
         </div>
       </main>
       {showModalSlider ? (
-        <div className="fixed flex w-screen h-screen top-0 left-0 backdrop-blur-sm bg-slate-700 z-50 bg-opacity-50">
-          <div className="relative m-auto w-90 max-w-2xl opacity-100">
+        <div
+          className="fixed flex w-screen h-screen top-0 left-0 backdrop-blur-sm bg-slate-700 z-50 bg-opacity-50"
+          onClick={(e) => {
+            if (e.target instanceof HTMLElement && e.target.classList.contains('bg-slate-700')) {
+              setModalSlider(false);
+            }
+          }}
+        >
+          <div className="relative m-auto w-90 max-w-2xl max-h-[95vh] opacity-100 p-8 rounded-xl">
             <SliderMain data={data}></SliderMain>
-            <button className="absolute top-2.5 right-2.5">
+            <button className="absolute top-1 right-0">
               <XMarkIcon
-                className="h-10 w-10 text-green-400 hover:text-green-800 cursor-pointer"
+                className="h-9 w-9 text-white bg-green-600 hover:bg-green-800 cursor-pointer rounded-full"
                 onClick={() => setModalSlider(false)}
               ></XMarkIcon>
             </button>

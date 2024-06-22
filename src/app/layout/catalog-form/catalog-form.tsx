@@ -27,6 +27,7 @@ import { getCategoryValue, IPageCounter, IProductsVariant } from '../../models';
 import CatalogPagination from './catalog-pagination';
 import SalesImage from '../../../assets/budding-pop-pictures/sales.jpg';
 import OutOfStoreImage from '../../../assets/budding-pop-pictures/cry.gif';
+import { getProductsAll } from '../../api/catalog/getProductsAll';
 
 const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -40,7 +41,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   const [sortName, setSortName] = useState<string>('');
   const [sortMethod, setSortMethod] = useState<string>('name.en asc');
   const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionForCTP);
-  const [priceRange, setPriceRange] = useState([0, 100000]);
+  const [priceRange, setPriceRange] = useState([0, 1000]);
   const [inputSearch, setInputSearch] = useState('');
   const [categories, setCategories] = useState<ICategoryData[]>([]);
   const navigate = useNavigate();
@@ -53,6 +54,8 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   const [version, setVersion] = useState<number>();
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
   const [isDisabledButton, setIsDisabledButton] = useState(false);
+  const [maxPrice, setMaxPrice] = useState(1000);
+  const [isProductCardWide, setIsProductCardWide] = useState(true);
 
   const resetOffsetProducts = () => {
     setPageCounter((prev) => {
@@ -96,7 +99,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
     resetOffsetProducts();
     handleCategoryClick('', '');
     handleSizeClick('', '');
-    setPriceRange([0, 100000]);
+    setPriceRange([0, maxPrice]);
     setSelectedDiscounted('');
   };
 
@@ -161,12 +164,34 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
 
       if (location.state?.isExternal) {
         handleSizeClick('', '');
-        setPriceRange([0, 100000]);
+        setPriceRange([0, maxPrice]);
       }
     };
 
     fetchCategories().catch(() => toast.error('Error fetching categories.'));
   }, [selectedCategoryId, movedCategory]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const response = await getProductsAll();
+
+      return response.body.results?.reduce((max, product) => {
+        const price: number = product.variants.reduce((maxVarPrice, variant) => {
+          const variantPrice = variant?.prices?.[0]?.value?.centAmount ?? 0;
+
+          return variantPrice > maxVarPrice ? variantPrice : maxVarPrice;
+        }, 0);
+        return price > max ? price : max;
+      }, 0);
+    };
+
+    fetchProducts()
+      .then((maxPriceOfAllProduct) => {
+        setMaxPrice(maxPriceOfAllProduct);
+        setPriceRange([0, maxPriceOfAllProduct]);
+      })
+      .catch((error) => toast.error(error.message));
+  }, []);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -365,7 +390,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                         <Range
                           step={100}
                           min={0}
-                          max={100000}
+                          max={maxPrice}
                           values={priceRange}
                           onChange={(values) => {
                             resetOffsetProducts();
@@ -480,7 +505,14 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                 </Transition>
               </Menu>
 
-              <button type="button" className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7">
+              <button
+                type="button"
+                className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7"
+                onClick={() => {
+                  setIsProductCardWide(!isProductCardWide);
+                  // console.log(isProductCardWide);
+                }}
+              >
                 <span className="sr-only">View grid</span>
                 <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -547,7 +579,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                     <Range
                       step={100}
                       min={0}
-                      max={100000}
+                      max={maxPrice}
                       values={priceRange}
                       onChange={(values) => {
                         resetOffsetProducts();
@@ -636,7 +668,12 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                   ) : (
                     <div className="mx-auto max-w-2xl px-4 pt-8 sm:px-6 sm:pt-12 lg:max-w-7xl lg:px-8">
                       <h2 className="sr-only">Products</h2>
-                      <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+                      <div
+                        className={classNames(
+                          isProductCardWide ? 'lg:grid-cols-2 xl:grid-cols-3' : 'lg:grid-cols-3 xl:grid-cols-4',
+                          'grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 xl:gap-x-8'
+                        )}
+                      >
                         {products?.map((product) => (
                           <Link
                             key={product.id}
@@ -645,9 +682,14 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                                 ? `/catalog/${getCategoryValue(selectedCategoryValue)}/${product.id}`
                                 : `/product/${product.id}`
                             }
-                            className="group block border border-gray-100 rounded-lg shadow transition-transform hover:shadow-md"
+                            className="group flex flex-col border border-gray-100 rounded-lg shadow transition-transform hover:shadow-md"
                           >
-                            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+                            <div
+                              className={classNames(
+                                isProductCardWide ? '' : 'xl:aspect-h-8 xl:aspect-w-7',
+                                'aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200'
+                              )}
+                            >
                               {product.variant?.images?.[0]?.url ? (
                                 <img
                                   src={product.variant.images[0].url}
@@ -660,14 +702,14 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                                 </div>
                               )}
                             </div>
-                            <h3
-                              className="mt-4 mb-2 text-lg font-bold text-center text-gray-700"
-                              style={{ height: '3.3rem', overflow: 'hidden' }}
-                            >
+                            <h3 className="mt-4 mb-2 px-2 text-md overflow-hidden font-bold text-center text-gray-700">
                               {product.name}
                             </h3>
+                            <p className="px-2 my-1 text-sm threeLineTextClamp text-justify">
+                              {isProductCardWide ? product.description : ''}
+                            </p>
 
-                            <div className="mt-1 flex items-center justify-between px-4 py-2">
+                            <div className="mt-auto flex items-center justify-between px-4 py-2">
                               {product.variant?.prices?.[0]?.discounted?.discount ? (
                                 <>
                                   <p className="text-lg font-medium text-red-600">

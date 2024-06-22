@@ -14,8 +14,8 @@ export const getProductsAll = async () => {
     .withProjectKey({
       projectKey,
     })
-    .products()
-    .get()
+    .productProjections() // .products() was changed to .productProjections(), because products have no prices
+    .get({ queryArgs: { limit: 500 } })
     .execute();
   return result;
 };
