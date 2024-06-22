@@ -67,6 +67,8 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   };
   const { setTotalLineItemQuantity } = useStateContext();
 
+  const [open, setOpen] = useState(false);
+
   const handleInputSearch = (value: string) => {
     resetOffsetProducts();
     setInputSearch(value);
@@ -101,6 +103,13 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
     handleSizeClick('', '');
     setPriceRange([0, maxPrice]);
     setSelectedDiscounted('');
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      setOpen(false);
+      handleResetFilters();
+    }
   };
 
   const handleIconBasketClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
@@ -440,23 +449,68 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
         {/* desktop main section */}
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-baseline justify-end border-b border-gray-200 pb-[17px] pt-3">
+            {/* Search */}
             <div className="flex items-center">
+              <MagnifyingGlassIcon
+                className="h-5 w-5 text-gray-400 cursor-pointer"
+                aria-hidden="true"
+                onClick={() => {
+                  setOpen(true);
+                  setInputSearch('');
+                }}
+              />
               <div className="relative mr-4">
-                <input
-                  type="text"
-                  value={inputSearch}
-                  onChange={(e) => handleInputSearch(e.target.value)}
-                  onBlur={() => {
-                    setInputSearch('');
-                    handleCategoryClick('', '');
-                  }}
-                  placeholder="Search"
-                  className="block w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                />
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                </div>
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
+                <Transition show={open}>
+                  <Dialog className="relative z-10" onClose={() => setOpen(false)}>
+                    <Transition
+                      enter="ease-out duration-300"
+                      enterFrom="opacity-0"
+                      enterTo="opacity-100"
+                      leave="ease-in duration-200"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
+                      <div
+                        className="fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity"
+                        onClick={() => setOpen(false)}
+                      />
+                    </Transition>
+
+                    <div className="fixed inset-0 z-10 w-screen overflow-y-auto p-4 sm:p-6 md:p-20">
+                      <Transition
+                        enter="ease-out duration-300"
+                        enterFrom="opacity-0 scale-95"
+                        enterTo="opacity-100 scale-100"
+                        leave="ease-in duration-200"
+                        leaveFrom="opacity-100 scale-100"
+                        leaveTo="opacity-0 scale-95"
+                      >
+                        <DialogPanel className="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
+                          <div className="relative">
+                            <input
+                              type="text"
+                              value={inputSearch}
+                              onChange={(e) => handleInputSearch(e.target.value)}
+                              onBlur={() => {
+                                setOpen(false);
+                                handleResetFilters();
+                              }}
+                              onKeyDown={handleKeyDown}
+                              placeholder="Search"
+                              className="block w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                            />
+                          </div>
+                        </DialogPanel>
+                      </Transition>
+                    </div>
+                  </Dialog>
+                </Transition>
               </div>
+            </div>
+
+            {/* Sort */}
+            <div className="flex items-center">
               <Menu as="div" className="relative inline-block text-left">
                 <div className="flex relative">
                   <div>
@@ -504,7 +558,9 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                   </MenuItems>
                 </Transition>
               </Menu>
+            </div>
 
+            <div className="flex items-center">
               <button
                 type="button"
                 className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7"
