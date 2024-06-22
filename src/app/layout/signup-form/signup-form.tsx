@@ -36,6 +36,9 @@ const SignupForm = () => {
   const watchCity = useWatch({ control, name: 'addresses.0.city' });
   const watchStreet = useWatch({ control, name: 'addresses.0.streetName' });
   const watchZip = useWatch({ control, name: 'addresses.0.postalCode' });
+  const classInput =
+    'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-500 sm:text-sm sm:leading-6';
+  const classLabel = 'block text-sm font-medium leading-6 text-gray-900';
 
   useEffect(() => {
     setSelectedShippingCountry(true);
@@ -165,7 +168,7 @@ const SignupForm = () => {
           <h1 className="text-lg">Registration</h1>
           <Link
             to="/login"
-            className="rounded-md select-none bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-700"
+            className="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-sm rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none"
           >
             Log In
           </Link>
@@ -173,53 +176,85 @@ const SignupForm = () => {
 
         <div className="sectionRegister col-span-2 grid grid-cols-2 gap-x-4 gap-y-0">
           <div className="inputWrapper">
-            <label htmlFor="name">Name</label>
+            <label className={classLabel} htmlFor="name">
+              Name
+            </label>
             <Controller
               name="firstName"
               control={control}
               rules={validationRules.name}
-              render={({ field }) => <input {...field} name="name" type="text" placeholder="Name" id="name" />}
+              render={({ field }) => (
+                <input {...field} name="name" className={classInput} type="text" placeholder="Name" id="name" />
+              )}
             />
             {errors.firstName && <div className="text-xs sm:text-sm text-red-500">{errors.firstName.message}</div>}
           </div>
           <div className="inputWrapper">
-            <label htmlFor="surname">Surname</label>
+            <label className={classLabel} htmlFor="surname">
+              Surname
+            </label>
             <Controller
               name="lastName"
               control={control}
               rules={validationRules.surname}
-              render={({ field }) => <input {...field} name="surname" type="text" placeholder="Surname" id="surname" />}
+              render={({ field }) => (
+                <input
+                  {...field}
+                  name="surname"
+                  className={classInput}
+                  type="text"
+                  placeholder="Surname"
+                  id="surname"
+                />
+              )}
             />
             {errors.lastName && <div className="text-xs sm:text-sm text-red-500">{errors.lastName.message}</div>}
           </div>
           <div className="inputWrapper">
-            <label htmlFor="birth">Birth</label>
+            <label className={classLabel} htmlFor="birth">
+              Birth
+            </label>
             <Controller
               name="dateOfBirth"
               control={control}
               rules={validationRules.dateOfBirth}
-              render={({ field }) => <input {...field} name="birth" type="date" placeholder="Birth" id="birth" />}
+              render={({ field }) => (
+                <input {...field} name="birth" className={classInput} type="date" placeholder="Birth" id="birth" />
+              )}
             />
             {errors.dateOfBirth && <div className="text-xs sm:text-sm text-red-500">{errors.dateOfBirth.message}</div>}
           </div>
           <div className="inputWrapper">
-            <label htmlFor="email">Email</label>
+            <label className={classLabel} htmlFor="email">
+              Email
+            </label>
             <Controller
               name="email"
               control={control}
               rules={validationRules.email}
-              render={({ field }) => <input {...field} name="email" type="text" placeholder="Email" id="email" />}
+              render={({ field }) => (
+                <input {...field} name="email" className={classInput} type="text" placeholder="Email" id="email" />
+              )}
             />
             {errors.email && <div className="text-xs sm:text-sm text-red-500">{errors.email.message}</div>}
           </div>
           <div className="inputWrapper">
-            <label htmlFor="password">Password</label>
+            <label className={classLabel} htmlFor="password">
+              Password
+            </label>
             <Controller
               name="password"
               control={control}
               rules={validationRules.password}
               render={({ field }) => (
-                <input {...field} name="password" type="password" placeholder="Password" id="password" />
+                <input
+                  {...field}
+                  name="password"
+                  className={classInput}
+                  type="password"
+                  placeholder="Password"
+                  id="password"
+                />
               )}
             />
             {errors.password && <div className="text-xs sm:text-sm text-red-500">{errors.password.message}</div>}
@@ -227,7 +262,13 @@ const SignupForm = () => {
           <div className="inputWrapper">
             <div className="flex flex-col items-end justify-center gap-2 mt-auto mb-auto">
               <div className="flex justify-between h-fit w-fit right-0 bottom-36">
-                <label className="switch-btn text-xs w-fit mr-5 h-fit">Add Shipping address</label>
+                <label className="flex-none font-medium text-sm text-gray-600 mr-2.5">
+                  Add{' '}
+                  <span className={classNames(isShipping ? 'text-green-500' : '', ' transition-colors duration-200')}>
+                    Shipping{' '}
+                  </span>
+                  address
+                </label>
                 <Switch
                   checked={isShipping}
                   onChange={() => {
@@ -249,7 +290,15 @@ const SignupForm = () => {
                 </Switch>
               </div>
               <div className="flex justify-between h-fit w-fit right-0 bottom-36">
-                <label className="switch-btn text-xs w-fit mr-5 h-fit">Set Address as default</label>
+                <label className="flex-none font-medium text-sm text-gray-600 mr-2.5">
+                  Set{' '}
+                  <span
+                    className={classNames(isDefaultBilling ? 'text-green-500' : '', ' transition-colors duration-200')}
+                  >
+                    Billing{' '}
+                  </span>
+                  as default
+                </label>
                 <Switch
                   checked={isDefaultBilling}
                   onChange={setDefaultBilling}
@@ -268,7 +317,15 @@ const SignupForm = () => {
                 </Switch>
               </div>
               <div className="flex  justify-between w-fit h-fit right-0 bottom-28">
-                <label className="switch-btn text-xs w-fit mr-5 h-fit">Set Shipping Address as default</label>
+                <label className="flex-none font-medium text-sm text-gray-600 mr-2.5">
+                  Set{' '}
+                  <span
+                    className={classNames(isDefaultShipping ? 'text-green-500' : '', ' transition-colors duration-200')}
+                  >
+                    Shipping{' '}
+                  </span>
+                  as default
+                </label>
                 <Switch
                   checked={isDefaultShipping}
                   onChange={setDefaultShipping}
@@ -291,7 +348,9 @@ const SignupForm = () => {
         </div>
         <div className="sectionRegister">
           <div className="inputWrapper">
-            <label htmlFor="country">Country</label>
+            <label className={classLabel} htmlFor="country">
+              Country
+            </label>
             <Controller
               name="addresses.0.country"
               control={control}
@@ -319,36 +378,48 @@ const SignupForm = () => {
             )}
           </div>
           <div className="inputWrapper">
-            <label htmlFor="city">Town/city</label>
+            <label className={classLabel} htmlFor="city">
+              Town/city
+            </label>
             <Controller
               name="addresses.0.city"
               control={control}
               rules={validationRules.city}
-              render={({ field }) => <input {...field} name="city" type="text" placeholder="Town/city" id="city" />}
+              render={({ field }) => (
+                <input {...field} name="city" className={classInput} type="text" placeholder="Town/city" id="city" />
+              )}
             />
             {errors.addresses?.[0]?.city && (
               <div className="text-xs sm:text-sm text-red-500">{errors.addresses?.[0]?.city.message}</div>
             )}
           </div>
           <div className="inputWrapper">
-            <label htmlFor="street">Street</label>
+            <label className={classLabel} htmlFor="street">
+              Street
+            </label>
             <Controller
               name="addresses.0.streetName"
               control={control}
               rules={validationRules.streetName}
-              render={({ field }) => <input {...field} name="street" type="text" placeholder="Street" id="street" />}
+              render={({ field }) => (
+                <input {...field} name="street" className={classInput} type="text" placeholder="Street" id="street" />
+              )}
             />
             {errors.addresses?.[0]?.streetName && (
               <div className="text-xs sm:text-sm text-red-500">{errors.addresses?.[0]?.streetName.message}</div>
             )}
           </div>
           <div className="inputWrapper">
-            <label htmlFor="zip">Zip</label>
+            <label className={classLabel} htmlFor="zip">
+              Zip
+            </label>
             <Controller
               name="addresses.0.postalCode"
               control={control}
               rules={validationRules.postalCode(watchCountryBilling)}
-              render={({ field }) => <input {...field} name="zip" type="text" placeholder="Zip" id="zip" />}
+              render={({ field }) => (
+                <input {...field} name="zip" className={classInput} type="text" placeholder="Zip" id="zip" />
+              )}
             />
             {errors.addresses?.[0]?.postalCode && (
               <div className="text-xs sm:text-sm text-red-500">{errors.addresses?.[0]?.postalCode.message}</div>
@@ -357,7 +428,9 @@ const SignupForm = () => {
         </div>
         <div className="sectionRegister">
           <div className="inputWrapper">
-            <label htmlFor="shippingCountry">Shipping Country</label>
+            <label className={classLabel} htmlFor="shippingCountry">
+              Shipping Country
+            </label>
             <Controller
               name="addresses.1.country"
               control={control}
@@ -386,7 +459,9 @@ const SignupForm = () => {
             )}
           </div>
           <div className="inputWrapper">
-            <label htmlFor="shippingCity">Shipping City</label>
+            <label className={classLabel} htmlFor="shippingCity">
+              Shipping City
+            </label>
             <Controller
               name="addresses.1.city"
               control={control}
@@ -394,7 +469,7 @@ const SignupForm = () => {
               render={({ field }) => (
                 <input
                   {...field}
-                  className={classNames(!isShipping ? 'bg-gray-200' : '', 'shippingCity')}
+                  className={classNames(!isShipping ? 'bg-gray-200' : '', `shippingCity ${classInput}`)}
                   disabled={!isShipping}
                   name="shippingCity"
                   type="text"
@@ -408,7 +483,9 @@ const SignupForm = () => {
             )}
           </div>
           <div className="inputWrapper">
-            <label htmlFor="shippingStreet">Shipping Street</label>
+            <label className={classLabel} htmlFor="shippingStreet">
+              Shipping Street
+            </label>
             <Controller
               name="addresses.1.streetName"
               control={control}
@@ -416,7 +493,7 @@ const SignupForm = () => {
               render={({ field }) => (
                 <input
                   {...field}
-                  className={classNames(!isShipping ? 'bg-gray-200' : '', 'shippingStreet')}
+                  className={classNames(!isShipping ? 'bg-gray-200' : '', `shippingStreet ${classInput}`)}
                   disabled={!isShipping}
                   name="shippingStreet"
                   type="text"
@@ -430,7 +507,9 @@ const SignupForm = () => {
             )}
           </div>
           <div className="inputWrapper">
-            <label htmlFor="shippingZip">Shipping Zip</label>
+            <label className={classLabel} htmlFor="shippingZip">
+              Shipping Zip
+            </label>
             <Controller
               name="addresses.1.postalCode"
               control={control}
@@ -438,7 +517,7 @@ const SignupForm = () => {
               render={({ field }) => (
                 <input
                   {...field}
-                  className={classNames(!isShipping ? 'bg-gray-200' : '', 'shippingZip')}
+                  className={classNames(!isShipping ? 'bg-gray-200' : '', `shippingZip ${classInput}`)}
                   disabled={!isShipping}
                   name="shippingZip"
                   type="text"

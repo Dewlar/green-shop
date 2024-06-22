@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Disclosure } from '@headlessui/react';
-import { HeartIcon, MinusIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { ExclamationTriangleIcon, MinusIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import {
   Attribute,
   Cart,
@@ -34,6 +34,7 @@ const ProductMain = (data: Product) => {
   const getDiscountPrice = price[0]?.discounted?.value?.centAmount;
   const totalPrice = `${getPrice / 100} €`;
   const isDiscount = price.length !== 0 && getDiscountPrice ? `${getDiscountPrice / 100} €` : '';
+  const dangerObject = attributes.some((item) => item.name === 'Danger');
   const sizes: StringArrayObject = {
     S: ['bg-green-200', 'hover:bg-green-300'],
     M: ['bg-green-500', 'hover:bg-green-600'],
@@ -42,10 +43,8 @@ const ProductMain = (data: Product) => {
   const getSizes = variants.map((variant: ProductVariant) => {
     const allAttributes: Attribute[] = variant?.attributes || [];
     const sizeObject = allAttributes.filter((item) => item.name === 'Size');
-    console.log(sizeObject);
     if (sizeObject.length > 0) {
       const sizeValue: string = sizeObject[0].value[0];
-      console.log(sizeValue);
       return { name: sizeValue, bgColor: sizes[sizeValue][0], hoverSize: sizes[sizeValue][1] };
     }
     return undefined;
@@ -55,6 +54,7 @@ const ProductMain = (data: Product) => {
   const [version, setVersion] = useState<number>();
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
   const [isDisabledButton, setIsDisabledButton] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
@@ -150,10 +150,10 @@ const ProductMain = (data: Product) => {
     <div className="bg-white mb-8">
       <main className="mx-auto max-w-7xl sm:px-6 sm:pt-16 lg:px-8">
         <div className="mx-auto max-w-2xl lg:max-w-none">
-          <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
+          <div className="lg:grid lg:grid-cols-2 lg:gap-x-8">
             {productData?.masterVariant?.images && productData?.masterVariant?.images?.length === 1 ? (
-              <div className="mx-auto">
-                <img className="max-w-[460px]" src={images[0].url} onClick={() => setModalSlider(true)} />
+              <div className="mx-auto flex justify-center">
+                <img className="one-img max-w-[460px]" src={images[0].url} onClick={() => setModalSlider(true)} />
               </div>
             ) : (
               <SliderMain data={data} setModalSlider={setModalSlider}></SliderMain>
@@ -230,14 +230,22 @@ const ProductMain = (data: Product) => {
                   >
                     {lineItems.find((item) => item.productId === data.id) ? 'Delete from cart' : 'Add to cart'}
                   </button>
-
-                  <button
-                    type="button"
-                    className="ml-4 flex items-center justify-center rounded-md px-3 py-3 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
-                  >
-                    <HeartIcon className="h-6 w-6 flex-shrink-0" aria-hidden="true" />
-                    <span className="sr-only">Add to favorites</span>
-                  </button>
+                  {dangerObject && (
+                    <div
+                      onMouseEnter={() => setIsHovered(true)}
+                      onMouseLeave={() => setIsHovered(false)}
+                      className="relative hover-container ml-4 flex items-center justify-center rounded-md px-3 py-3 bg-green-200"
+                    >
+                      <ExclamationTriangleIcon className="h-12 w-12 flex-shrink-0" aria-hidden="true" />
+                      <span className="sr-only">Danger</span>
+                      {isHovered && (
+                        <div className="block cursor-default absolute bottom-0 text-center left-0 w-fit p-1 bg-green-200 text-gray-700 text-xs text-left border border-gray-300 rounded shadow-lg z-50">
+                          <h3 className="font-bold">Danger plant!</h3>
+                          <p className="mt-1">Special conditions required!</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </form>
 
