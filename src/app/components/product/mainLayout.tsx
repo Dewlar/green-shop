@@ -41,8 +41,11 @@ const ProductMain = (data: Product) => {
   };
   const getSizes = variants.map((variant: ProductVariant) => {
     const allAttributes: Attribute[] = variant?.attributes || [];
-    if (allAttributes[6]) {
-      const sizeValue: string = allAttributes[6].value[0];
+    const sizeObject = allAttributes.filter((item) => item.name === 'Size');
+    console.log(sizeObject);
+    if (sizeObject.length > 0) {
+      const sizeValue: string = sizeObject[0].value[0];
+      console.log(sizeValue);
       return { name: sizeValue, bgColor: sizes[sizeValue][0], hoverSize: sizes[sizeValue][1] };
     }
     return undefined;
@@ -149,7 +152,9 @@ const ProductMain = (data: Product) => {
         <div className="mx-auto max-w-2xl lg:max-w-none">
           <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
             {productData?.masterVariant?.images && productData?.masterVariant?.images?.length === 1 ? (
-              <img src={images[0].url} onClick={() => setModalSlider(true)}></img>
+              <div className="mx-auto">
+                <img className="max-w-[460px]" src={images[0].url} onClick={() => setModalSlider(true)} />
+              </div>
             ) : (
               <SliderMain data={data} setModalSlider={setModalSlider}></SliderMain>
             )}
@@ -286,12 +291,19 @@ const ProductMain = (data: Product) => {
         </div>
       </main>
       {showModalSlider ? (
-        <div className="fixed flex w-screen h-screen top-0 left-0 backdrop-blur-sm bg-slate-700 z-50 bg-opacity-50">
-          <div className="relative m-auto w-90 max-w-2xl opacity-100">
+        <div
+          className="fixed flex w-screen h-screen top-0 left-0 backdrop-blur-sm bg-slate-700 z-50 bg-opacity-50"
+          onClick={(e) => {
+            if (e.target instanceof HTMLElement && e.target.classList.contains('bg-slate-700')) {
+              setModalSlider(false);
+            }
+          }}
+        >
+          <div className="relative m-auto w-90 max-w-2xl max-h-[95vh] opacity-100 p-8 rounded-xl">
             <SliderMain data={data}></SliderMain>
-            <button className="absolute top-2.5 right-2.5">
+            <button className="absolute top-1 right-0">
               <XMarkIcon
-                className="h-10 w-10 text-green-400 hover:text-green-800 cursor-pointer"
+                className="h-9 w-9 text-white bg-green-600 hover:bg-green-800 cursor-pointer rounded-full"
                 onClick={() => setModalSlider(false)}
               ></XMarkIcon>
             </button>

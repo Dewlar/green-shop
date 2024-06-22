@@ -28,9 +28,11 @@ const SliderMain: React.FC<ModalSlider> = ({ data, setModalSlider }) => {
   }, [indexSlide]);
 
   return (
-    <div className="flex flex-col-reverse">
+    <div
+      className={`flex flex-col-reverse overflow-hidden py-1 ${!setModalSlider ? '' : 'w-fit'} lg:justify-self-center`}
+    >
       <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid grid-flow-col grid-cols-[20%] auto-cols-[20%] grid-rows-1 place-content-center gap-6">
           {imagesOfSlides.map((image, index) => (
             <span
               key={index}
@@ -62,7 +64,11 @@ const SliderMain: React.FC<ModalSlider> = ({ data, setModalSlider }) => {
           ))}
         </div>
       </div>
-      <div id="default-carousel" className="relative w-5/6 mt-0 ml-auto mb-0 mr-auto" data-carousel="slide">
+      <div
+        id="default-carousel"
+        className={`relative ${!setModalSlider ? 'w-[50vh]' : 'w-[23vw]'} mt-0 ml-auto mb-0 mr-auto`}
+        data-carousel="slide"
+      >
         <div className="w-100 h-100 flex" onClick={() => (setModalSlider ? setModalSlider(true) : null)}>
           <div className="relative overflow-hidden rounded-lg w-100 h-100 flex">
             {imagesOfSlides?.map((image, index) => (
