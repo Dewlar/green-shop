@@ -154,6 +154,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
 
   useEffect(() => {
     const fetchCategories = async () => {
+      setInputSearch('');
       const response = await getCategories();
       setCategories(response);
 
@@ -457,6 +458,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                 onClick={() => {
                   setOpen(true);
                   setInputSearch('');
+                  handleResetFilters();
                 }}
               />
               <div className="relative mr-4">
