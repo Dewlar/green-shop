@@ -213,7 +213,7 @@ const ProductMain = (data: Product) => {
                     </div>
                   </div>
                 </div>
-                <div className="mt-10 flex">
+                <div className="mt-10 flex gap-3.5">
                   <button
                     type="submit"
                     disabled={isDisabledButton}
@@ -222,7 +222,7 @@ const ProductMain = (data: Product) => {
                         ? (e) => handleRemoveProductClick(e, data.id, 1)
                         : (e) => handleIconBasketClick(e, data.id)
                     }
-                    className={`flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium h-14 text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full ${
+                    className={`flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full ${
                       lineItems.find((item) => item.productId === data.id)
                         ? 'bg-gray-400'
                         : 'bg-green-600 hover:bg-green-700'
@@ -234,12 +234,15 @@ const ProductMain = (data: Product) => {
                     <div
                       onMouseEnter={() => setIsHovered(true)}
                       onMouseLeave={() => setIsHovered(false)}
-                      className="relative hover-container h-14 ml-4 flex items-center justify-center rounded-md px-3 py-3 bg-green-200"
+                      className="relative hover-container rounded-md"
                     >
-                      <ExclamationTriangleIcon className="h-12 w-12 flex-shrink-0" aria-hidden="true" />
+                      <ExclamationTriangleIcon
+                        className="animate-pulse h-full w-full max-w-[50px] text-red-600"
+                        aria-hidden="true"
+                      />
                       <span className="sr-only">Danger</span>
                       {isHovered && (
-                        <div className="block cursor-default absolute bottom-0 text-center left-0 w-fit p-1 bg-green-200 text-gray-700 text-xs text-left border border-gray-300 rounded shadow-lg z-50">
+                        <div className="block cursor-default absolute bottom-0 left-1/2 transform -translate-x-1/2 text-center w-fit p-1 bg-red-600 text-white text-xs border border-gray-300 rounded shadow-lg z-50">
                           <h3 className="font-bold">Danger plant!</h3>
                           <p className="mt-1">Special conditions required!</p>
                         </div>
