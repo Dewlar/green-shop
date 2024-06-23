@@ -152,7 +152,7 @@ const ProductMain = (data: Product) => {
         <div className="mx-auto max-w-2xl lg:max-w-none">
           <div className="lg:grid lg:grid-cols-2 lg:gap-x-8">
             {productData?.masterVariant?.images && productData?.masterVariant?.images?.length === 1 ? (
-              <div className="mx-auto flex justify-center">
+              <div className="mx-auto flex justify-center h-fit">
                 <img className="one-img max-w-[460px]" src={images[0].url} onClick={() => setModalSlider(true)} />
               </div>
             ) : (
@@ -213,7 +213,7 @@ const ProductMain = (data: Product) => {
                     </div>
                   </div>
                 </div>
-                <div className="mt-10 flex">
+                <div className="mt-10 flex gap-3.5">
                   <button
                     type="submit"
                     disabled={isDisabledButton}
@@ -234,12 +234,15 @@ const ProductMain = (data: Product) => {
                     <div
                       onMouseEnter={() => setIsHovered(true)}
                       onMouseLeave={() => setIsHovered(false)}
-                      className="relative hover-container ml-4 flex items-center justify-center rounded-md px-3 py-3 bg-green-200"
+                      className="relative hover-container rounded-md"
                     >
-                      <ExclamationTriangleIcon className="h-12 w-12 flex-shrink-0" aria-hidden="true" />
+                      <ExclamationTriangleIcon
+                        className="animate-pulse h-full w-full max-w-[50px] text-red-600"
+                        aria-hidden="true"
+                      />
                       <span className="sr-only">Danger</span>
                       {isHovered && (
-                        <div className="block cursor-default absolute bottom-0 text-center left-0 w-fit p-1 bg-green-200 text-gray-700 text-xs text-left border border-gray-300 rounded shadow-lg z-50">
+                        <div className="block cursor-default absolute bottom-0 left-1/2 transform -translate-x-1/2 text-center w-fit p-1 bg-red-600 text-white text-xs border border-gray-300 rounded shadow-lg z-50">
                           <h3 className="font-bold">Danger plant!</h3>
                           <p className="mt-1">Special conditions required!</p>
                         </div>
