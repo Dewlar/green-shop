@@ -749,11 +749,21 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                               )}
                             >
                               {product.variant?.images?.[0]?.url ? (
-                                <img
-                                  src={product.variant.images[0].url}
-                                  alt={product.name}
-                                  className="h-full w-full object-cover object-center transition-transform duration-300 ease-in-out transform group-hover:scale-105"
-                                />
+                                <div>
+                                  {' '}
+                                  <img
+                                    src={product.variant.images[0].url}
+                                    alt={product.name}
+                                    className="h-full w-full object-cover object-center transition-transform duration-300 ease-in-out transform group-hover:scale-105"
+                                  />
+                                  {product.variant?.attributes?.find((item) => item.name === 'Danger') ? (
+                                    <div className="absolute right-[-15px] top-[-15px] z-[1] overflow-hidden w-[260px] h-[200px] text-right">
+                                      <div className="absolute top-[35px] right-[-75px] bg-red-500 shadow-lg shadow-red-600 text-base font-normal font-tahoma text-white text-center transform rotate-45 p-2.5 h-10 w-full">
+                                        Danger plant!
+                                      </div>
+                                    </div>
+                                  ) : null}
+                                </div>
                               ) : (
                                 <div className="h-full w-full flex items-center justify-center bg-gray-100">
                                   <span className="text-gray-500">No image available</span>
