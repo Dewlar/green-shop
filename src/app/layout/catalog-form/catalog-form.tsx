@@ -10,7 +10,7 @@ import {
   Transition,
   TransitionChild,
 } from '@headlessui/react';
-import { ExclamationTriangleIcon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon, FunnelIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
 import { toast } from 'react-toastify';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
@@ -56,7 +56,6 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   const [isDisabledButton, setIsDisabledButton] = useState(false);
   const [maxPrice, setMaxPrice] = useState(1000);
   const [isProductCardWide, setIsProductCardWide] = useState(true);
-  const [isHovered, setIsHovered] = useState(false);
 
   const resetOffsetProducts = () => {
     setPageCounter((prev) => {
@@ -220,7 +219,6 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
         markMatchingVariants: true,
       });
       const responseResult = response.body?.results;
-      console.log('current CATALOG', responseResult);
 
       setPageCounter((prev) => {
         return {
@@ -762,28 +760,8 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                                 </div>
                               )}
                             </div>
-                            <h3 className="relative mt-4 mb-2 px-2 text-md overflow-hidden font-bold text-center text-gray-700">
-                              {product.variant?.attributes?.find((item) => item.name === 'Danger') || '' ? (
-                                <div className="flex justify-between items-center space-x-4">
-                                  <div>{product.name}</div>
-                                  <div
-                                    onMouseEnter={() => setIsHovered(true)}
-                                    onMouseLeave={() => setIsHovered(false)}
-                                    className="hover-container flex items-center justify-center rounded-md px-3 py-3 bg-green-200"
-                                  >
-                                    <ExclamationTriangleIcon className="h-6 w-6 flex-shrink-0" aria-hidden="true" />
-                                    <span className="sr-only">Danger</span>
-                                    {isHovered && (
-                                      <div className="h-12 w-12 block cursor-default absolute top-0 right-0 text-center w-fit p-1 bg-green-200 text-gray-700 text-xs text-left border border-gray-300 rounded shadow-lg z-50">
-                                        <h3 className="font-bold">Danger plant!</h3>
-                                        <p className="mt-1">Special conditions required!</p>
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                              ) : (
-                                product.name
-                              )}
+                            <h3 className="mt-4 mb-2 px-2 text-md overflow-hidden font-bold text-center text-gray-700">
+                              {product.name}
                             </h3>
                             <p className="px-2 my-1 text-sm threeLineTextClamp text-justify">
                               {isProductCardWide ? product.description : ''}
