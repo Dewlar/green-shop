@@ -152,7 +152,7 @@ const ProductMain = (data: Product) => {
         <div className="mx-auto max-w-2xl lg:max-w-none">
           <div className="lg:grid lg:grid-cols-2 lg:gap-x-8">
             {productData?.masterVariant?.images && productData?.masterVariant?.images?.length === 1 ? (
-              <div className="mx-auto flex justify-center">
+              <div className="mx-auto flex justify-center h-fit">
                 <img className="one-img max-w-[460px]" src={images[0].url} onClick={() => setModalSlider(true)} />
               </div>
             ) : (
@@ -222,7 +222,7 @@ const ProductMain = (data: Product) => {
                         ? (e) => handleRemoveProductClick(e, data.id, 1)
                         : (e) => handleIconBasketClick(e, data.id)
                     }
-                    className={`flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full ${
+                    className={`flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium h-14 text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full ${
                       lineItems.find((item) => item.productId === data.id)
                         ? 'bg-gray-400'
                         : 'bg-green-600 hover:bg-green-700'
@@ -234,7 +234,7 @@ const ProductMain = (data: Product) => {
                     <div
                       onMouseEnter={() => setIsHovered(true)}
                       onMouseLeave={() => setIsHovered(false)}
-                      className="relative hover-container ml-4 flex items-center justify-center rounded-md px-3 py-3 bg-green-200"
+                      className="relative hover-container h-14 ml-4 flex items-center justify-center rounded-md px-3 py-3 bg-green-200"
                     >
                       <ExclamationTriangleIcon className="h-12 w-12 flex-shrink-0" aria-hidden="true" />
                       <span className="sr-only">Danger</span>

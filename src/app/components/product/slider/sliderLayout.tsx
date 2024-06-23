@@ -29,7 +29,7 @@ const SliderMain: React.FC<ModalSlider> = ({ data, setModalSlider }) => {
 
   return (
     <div
-      className={`flex sliderWrapper flex-col-reverse overflow-hidden py-1 ${!setModalSlider ? '' : 'w-fit xl:w-[70%] min-[501px]:w-[70%]'} lg:justify-self-center mx-auto`}
+      className={`flex sliderWrapper flex-col-reverse overflow-hidden py-1 ${!setModalSlider ? '' : 'w-fit xl:w-[70%] min-[501px]:w-[70%]'} lg:justify-self-center mx-auto h-fit`}
     >
       <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
         <div className="grid grid-flow-col grid-cols-[20%] auto-cols-[20%] grid-rows-1 place-content-center gap-6">
