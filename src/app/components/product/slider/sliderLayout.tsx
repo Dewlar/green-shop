@@ -28,15 +28,14 @@ const SliderMain: React.FC<ModalSlider> = ({ data, setModalSlider }) => {
   }, [indexSlide]);
 
   return (
-    <div
-      className={`flex sliderWrapper flex-col-reverse overflow-hidden py-1 ${!setModalSlider ? '' : 'w-fit xl:w-[70%] min-[501px]:w-[70%]'} lg:justify-self-center mx-auto`}
-    >
-      <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
-        <div className="grid grid-flow-col grid-cols-[20%] auto-cols-[20%] grid-rows-1 place-content-center gap-6">
+    <div className="flex flex-col-reverse justify-end">
+      {/* photos variant */}
+      <div className="mx-auto mt-6 w-full max-w-2xl lg:max-w-none">
+        <div className="grid grid-flow-col gap-6 justify-center">
           {imagesOfSlides.map((image, index) => (
             <span
               key={index}
-              className={`relative flex imageRef h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4`}
+              className={`relative flex imageRef h-24 aspect-1 sm:aspect-[6/5] cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4`}
             >
               <div>
                 <span className="sr-only">{`image${index}`}</span>
@@ -64,17 +63,14 @@ const SliderMain: React.FC<ModalSlider> = ({ data, setModalSlider }) => {
           ))}
         </div>
       </div>
-      <div
-        id="default-carousel"
-        className={`relative ${!setModalSlider ? 'w-[50vh]' : ''} mt-0 ml-auto mb-0 mr-auto`}
-        data-carousel="slide"
-      >
-        <div className="w-100 h-100 flex" onClick={() => (setModalSlider ? setModalSlider(true) : null)}>
-          <div className="relative overflow-hidden rounded-lg w-100 h-100 flex">
+      {/* slider - carousel */}
+      <div id="" className={`relative mx-auto ${!setModalSlider ? 'w-full max-w-lg' : 'w-96'}`} data-carousel="slide">
+        <div className="flex" onClick={() => (setModalSlider ? setModalSlider(true) : null)}>
+          <div className="relative aspect-[9/10] h-full w-full overflow-hidden rounded-lg flex">
             {imagesOfSlides?.map((image, index) => (
               <img
                 src={`${image.url}`}
-                className={`block w-max-auto h-full shrink-0 grow-0 transition-[translate] ease-in-out duration-700`}
+                className={`block object-cover w-full h-full shrink-0 grow-0 transition-[translate] ease-in-out duration-700`}
                 alt="..."
                 key={index}
                 style={{ translate: `${-100 * indexSlide}%` }}

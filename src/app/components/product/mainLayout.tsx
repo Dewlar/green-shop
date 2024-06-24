@@ -152,7 +152,7 @@ const ProductMain = (data: Product) => {
         <div className="mx-auto max-w-2xl lg:max-w-none">
           <div className="lg:grid lg:grid-cols-2 lg:gap-x-8">
             {productData?.masterVariant?.images && productData?.masterVariant?.images?.length === 1 ? (
-              <div className="mx-auto flex justify-center">
+              <div className="mx-auto flex justify-center h-fit">
                 <img className="one-img max-w-[460px]" src={images[0].url} onClick={() => setModalSlider(true)} />
               </div>
             ) : (
@@ -213,7 +213,7 @@ const ProductMain = (data: Product) => {
                     </div>
                   </div>
                 </div>
-                <div className="mt-10 flex">
+                <div className="mt-10 flex gap-3.5">
                   <button
                     type="submit"
                     disabled={isDisabledButton}
@@ -222,11 +222,12 @@ const ProductMain = (data: Product) => {
                         ? (e) => handleRemoveProductClick(e, data.id, 1)
                         : (e) => handleIconBasketClick(e, data.id)
                     }
-                    className={`flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full ${
-                      lineItems.find((item) => item.productId === data.id)
-                        ? 'bg-gray-400'
-                        : 'bg-green-600 hover:bg-green-700'
-                    }`}
+                    className={`flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full 
+                      ${
+                        lineItems.find((item) => item.productId === data.id)
+                          ? 'bg-gray-400'
+                          : 'bg-green-600 hover:bg-green-700'
+                      }`}
                   >
                     {lineItems.find((item) => item.productId === data.id) ? 'Delete from cart' : 'Add to cart'}
                   </button>
@@ -234,12 +235,15 @@ const ProductMain = (data: Product) => {
                     <div
                       onMouseEnter={() => setIsHovered(true)}
                       onMouseLeave={() => setIsHovered(false)}
-                      className="relative hover-container ml-4 flex items-center justify-center rounded-md px-3 py-3 bg-green-200"
+                      className="relative hover-container rounded-md"
                     >
-                      <ExclamationTriangleIcon className="h-12 w-12 flex-shrink-0" aria-hidden="true" />
+                      <ExclamationTriangleIcon
+                        className="animate-pulse h-full w-full max-w-[50px] text-red-600"
+                        aria-hidden="true"
+                      />
                       <span className="sr-only">Danger</span>
                       {isHovered && (
-                        <div className="block cursor-default absolute bottom-0 text-center left-0 w-fit p-1 bg-green-200 text-gray-700 text-xs text-left border border-gray-300 rounded shadow-lg z-50">
+                        <div className="block cursor-default absolute bottom-0 left-1/2 transform -translate-x-1/2 text-center w-fit p-1 bg-red-600 text-white text-xs border border-gray-300 rounded shadow-lg z-50">
                           <h3 className="font-bold">Danger plant!</h3>
                           <p className="mt-1">Special conditions required!</p>
                         </div>
@@ -300,22 +304,29 @@ const ProductMain = (data: Product) => {
       </main>
       {showModalSlider ? (
         <div
-          className="fixed flex w-screen h-screen top-0 left-0 backdrop-blur-sm bg-slate-700 z-50 bg-opacity-50"
+          className="fixed inset-0 flex justify-center items-center px-2 backdrop-blur-sm bg-slate-700 z-50 bg-opacity-50"
           onClick={(e) => {
             if (e.target instanceof HTMLElement && e.target.classList.contains('bg-slate-700')) {
               setModalSlider(false);
             }
           }}
         >
-          <div className="relative m-auto w-90 max-w-2xl max-h-[95vh] opacity-100 p-8 rounded-xl">
+          <div className="relative">
             <SliderMain data={data}></SliderMain>
-            <button className="absolute top-1 right-0">
+            <button className="hidden md:block absolute -top-10 -right-10">
               <XMarkIcon
                 className="h-9 w-9 text-white bg-green-600 hover:bg-green-800 cursor-pointer rounded-full"
                 onClick={() => setModalSlider(false)}
               ></XMarkIcon>
             </button>
           </div>
+          {/* <div className="m-auto h-full max-w-xl opacity-100 p-16"></div> */}
+          <button className="block md:hidden absolute top-4 right-4">
+            <XMarkIcon
+              className="h-9 w-9 text-white bg-green-600 hover:bg-green-800 cursor-pointer rounded-full"
+              onClick={() => setModalSlider(false)}
+            ></XMarkIcon>
+          </button>
         </div>
       ) : null}
     </div>
