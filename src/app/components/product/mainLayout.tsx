@@ -222,11 +222,12 @@ const ProductMain = (data: Product) => {
                         ? (e) => handleRemoveProductClick(e, data.id, 1)
                         : (e) => handleIconBasketClick(e, data.id)
                     }
-                    className={`flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full ${
-                      lineItems.find((item) => item.productId === data.id)
-                        ? 'bg-gray-400'
-                        : 'bg-green-600 hover:bg-green-700'
-                    }`}
+                    className={`flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full 
+                      ${
+                        lineItems.find((item) => item.productId === data.id)
+                          ? 'bg-gray-400'
+                          : 'bg-green-600 hover:bg-green-700'
+                      }`}
                   >
                     {lineItems.find((item) => item.productId === data.id) ? 'Delete from cart' : 'Add to cart'}
                   </button>
@@ -303,22 +304,29 @@ const ProductMain = (data: Product) => {
       </main>
       {showModalSlider ? (
         <div
-          className="fixed flex w-screen h-screen top-0 left-0 backdrop-blur-sm bg-slate-700 z-50 bg-opacity-50"
+          className="fixed inset-0 flex justify-center items-center px-2 backdrop-blur-sm bg-slate-700 z-50 bg-opacity-50"
           onClick={(e) => {
             if (e.target instanceof HTMLElement && e.target.classList.contains('bg-slate-700')) {
               setModalSlider(false);
             }
           }}
         >
-          <div className="relative m-auto w-90 max-w-2xl max-h-[95vh] opacity-100 p-8 rounded-xl">
+          <div className="relative">
             <SliderMain data={data}></SliderMain>
-            <button className="absolute top-1 right-0">
+            <button className="hidden md:block absolute -top-10 -right-10">
               <XMarkIcon
                 className="h-9 w-9 text-white bg-green-600 hover:bg-green-800 cursor-pointer rounded-full"
                 onClick={() => setModalSlider(false)}
               ></XMarkIcon>
             </button>
           </div>
+          {/* <div className="m-auto h-full max-w-xl opacity-100 p-16"></div> */}
+          <button className="block md:hidden absolute top-4 right-4">
+            <XMarkIcon
+              className="h-9 w-9 text-white bg-green-600 hover:bg-green-800 cursor-pointer rounded-full"
+              onClick={() => setModalSlider(false)}
+            ></XMarkIcon>
+          </button>
         </div>
       ) : null}
     </div>
