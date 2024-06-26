@@ -1,0 +1,9 @@
+node_modules/
+
+*.json
+
+dist/*
+
+*.config.js
+*.md
+*.webmanifest
