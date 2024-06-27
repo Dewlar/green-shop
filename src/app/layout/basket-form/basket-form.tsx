@@ -223,18 +223,25 @@ const BasketForm = () => {
                           <XMarkIconMini className="h-5 w-5" aria-hidden="true" />
                         </button>
                       </div>
-                      <div className="flex-shrink-0">
+                      <div className="relative flex-shrink-0">
                         <Link to={`/product/${product.productId}`}>
                           <img
                             src={product.variant?.images?.[0]?.url || ''}
                             alt={product.name.en}
-                            className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
+                            className="h-32 w-32 rounded-md object-cover object-center sm:h-48 sm:w-48"
                           />
                         </Link>
+                        {product.variant?.attributes?.find((item) => item.name === 'Danger') ? (
+                          <div className="absolute right-0 top-0 z-[1] overflow-hidden w-full h-full text-right">
+                            <div className="absolute bottom-0 left-0 bg-red-600 s text-base font-normal font-tahoma text-white text-center transform h-6 w-full">
+                              Attention!
+                            </div>
+                          </div>
+                        ) : null}
                       </div>
 
                       <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
-                        <div className="relative pr-9 grid grid-cols-2 gap-x-6 sm:pr-0">
+                        <div className="relative pr-9 grid sm:grid-cols-2 gap-x-6 sm:pr-0">
                           <div className="space-y-4">
                             <div className="flex justify-between">
                               <h3 className="text-sm">
