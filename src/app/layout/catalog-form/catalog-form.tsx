@@ -43,6 +43,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionForCTP);
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [inputSearch, setInputSearch] = useState('');
+  const [inputSearchByFilter, setInputSearchByFilter] = useState('');
   const [categories, setCategories] = useState<ICategoryData[]>([]);
   const navigate = useNavigate();
   const location = useLocation();
@@ -56,6 +57,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   const [isDisabledButton, setIsDisabledButton] = useState(false);
   const [maxPrice, setMaxPrice] = useState(1000);
   const [isProductCardWide, setIsProductCardWide] = useState(true);
+  const { setTotalLineItemQuantity } = useStateContext();
 
   const resetOffsetProducts = () => {
     setPageCounter((prev) => {
@@ -65,11 +67,19 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
       };
     });
   };
-  const { setTotalLineItemQuantity } = useStateContext();
 
   const handleInputSearch = (value: string) => {
     resetOffsetProducts();
     setInputSearch(value);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      resetOffsetProducts();
+      setInputSearch(inputSearch);
+      setInputSearchByFilter(inputSearch);
+      (event.target as HTMLInputElement).blur();
+    }
   };
 
   const handleSizeClick = (sizeValue: string, sizeLabel: string) => {
@@ -101,6 +111,8 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
     handleSizeClick('', '');
     setPriceRange([0, maxPrice]);
     setSelectedDiscounted('');
+    setInputSearch('');
+    setInputSearchByFilter('');
   };
 
   const handleIconBasketClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
@@ -205,7 +217,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
         sort: [sortMethod],
         limit: pageCounter.itemsPerPage,
         offset: pageCounter.offset,
-        search: inputSearch,
+        search: inputSearchByFilter || inputSearch,
         markMatchingVariants: true,
       });
       const responseResult = response.body?.results;
@@ -440,90 +452,110 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
         {/* desktop main section */}
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-baseline justify-end border-b border-gray-200 pb-[17px] pt-3">
+            {/* Search */}
             <div className="flex items-center">
               <div className="relative mr-4">
                 <input
                   type="text"
                   value={inputSearch}
                   onChange={(e) => handleInputSearch(e.target.value)}
-                  onBlur={() => {
-                    setInputSearch('');
-                    handleCategoryClick('', '');
+                  onBlur={(e) => {
+                    handleInputSearch(e.target.value);
+                    setInputSearchByFilter(inputSearch);
                   }}
+                  onKeyDown={handleKeyDown}
                   placeholder="Search"
-                  className="block w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                 />
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                 </div>
+                {inputSearch && (
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                    <XMarkIcon
+                      className="h-5 w-5 text-gray-400 cursor-pointer"
+                      aria-hidden="true"
+                      onClick={() => {
+                        setInputSearch('');
+                        setInputSearchByFilter('');
+                      }}
+                    />
+                  </div>
+                )}
               </div>
-              <Menu as="div" className="relative inline-block text-left">
-                <div className="flex relative">
-                  <div>
-                    <MenuButton className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-green-900">
-                      Sort
-                      <ChevronDownIcon
-                        className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                        aria-hidden="true"
-                      />
-                    </MenuButton>
-                  </div>
-                  <div className="absolute -bottom-20 left-1 lg:-left-10 inline-flex w-32 group justify-center whitespace-nowrap text-sm font-medium text-gray-700 hover:text-green-900">
-                    {sortName}
-                  </div>
-                </div>
 
-                <Transition
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
-                >
-                  <MenuItems className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <div className="py-1">
-                      {sortOptions.map((option) => (
-                        <MenuItem key={option.name}>
-                          {({ focus }) => (
-                            <a
-                              href={option.href}
-                              className={classNames(
-                                option.current ? 'font-medium text-gray-900 bg-green-100' : 'text-gray-500',
-                                focus ? 'bg-green-100' : '',
-                                'block px-4 py-2 text-sm'
-                              )}
-                              onClick={() => handleSortClick(option)}
-                            >
-                              {option.name}
-                            </a>
-                          )}
-                        </MenuItem>
-                      ))}
+              {/* Sort */}
+              <div className="flex items-center">
+                <Menu as="div" className="relative inline-block text-left">
+                  <div className="flex relative">
+                    <div>
+                      <MenuButton className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-green-900">
+                        Sort
+                        <ChevronDownIcon
+                          className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                          aria-hidden="true"
+                        />
+                      </MenuButton>
                     </div>
-                  </MenuItems>
-                </Transition>
-              </Menu>
+                    <div className="absolute -bottom-20 left-1 lg:-left-10 inline-flex w-32 group justify-center whitespace-nowrap text-sm font-medium text-gray-700 hover:text-green-900">
+                      {sortName}
+                    </div>
+                  </div>
 
-              <button
-                type="button"
-                className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7"
-                onClick={() => {
-                  setIsProductCardWide(!isProductCardWide);
-                  // console.log(isProductCardWide);
-                }}
-              >
-                <span className="sr-only">View grid</span>
-                <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
-                onClick={() => setMobileFiltersOpen(true)}
-              >
-                <span className="sr-only">Filters</span>
-                <FunnelIcon className="h-5 w-5" aria-hidden="true" />
-              </button>
+                  <Transition
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <MenuItems className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <div className="py-1">
+                        {sortOptions.map((option) => (
+                          <MenuItem key={option.name}>
+                            {({ focus }) => (
+                              <a
+                                href={option.href}
+                                className={classNames(
+                                  option.current ? 'font-medium text-gray-900 bg-green-100' : 'text-gray-500',
+                                  focus ? 'bg-green-100' : '',
+                                  'block px-4 py-2 text-sm'
+                                )}
+                                onClick={() => handleSortClick(option)}
+                              >
+                                {option.name}
+                              </a>
+                            )}
+                          </MenuItem>
+                        ))}
+                      </div>
+                    </MenuItems>
+                  </Transition>
+                </Menu>
+              </div>
+
+              <div className="flex items-center">
+                <button
+                  type="button"
+                  className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7"
+                  onClick={() => {
+                    setIsProductCardWide(!isProductCardWide);
+                    // console.log(isProductCardWide);
+                  }}
+                >
+                  <span className="sr-only">View grid</span>
+                  <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
+                  onClick={() => setMobileFiltersOpen(true)}
+                >
+                  <span className="sr-only">Filters</span>
+                  <FunnelIcon className="h-5 w-5" aria-hidden="true" />
+                </button>
+              </div>
             </div>
           </div>
 
@@ -691,11 +723,21 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                               )}
                             >
                               {product.variant?.images?.[0]?.url ? (
-                                <img
-                                  src={product.variant.images[0].url}
-                                  alt={product.name}
-                                  className="h-full w-full object-cover object-center transition-transform duration-300 ease-in-out transform group-hover:scale-105"
-                                />
+                                <div>
+                                  {' '}
+                                  <img
+                                    src={product.variant.images[0].url}
+                                    alt={product.name}
+                                    className="h-full w-full object-cover object-center transition-transform duration-300 ease-in-out transform group-hover:scale-105"
+                                  />
+                                  {product.variant?.attributes?.find((item) => item.name === 'Danger') ? (
+                                    <div className="absolute right-[-15px] top-[-15px] z-[1] overflow-hidden w-[260px] h-[200px] text-right">
+                                      <div className="absolute top-[35px] right-[-75px] bg-red-500 shadow-lg shadow-red-600 text-base font-normal font-tahoma text-white text-center transform rotate-45 p-2.5 h-10 w-full">
+                                        Danger plant!
+                                      </div>
+                                    </div>
+                                  ) : null}
+                                </div>
                               ) : (
                                 <div className="h-full w-full flex items-center justify-center bg-gray-100">
                                   <span className="text-gray-500">No image available</span>
