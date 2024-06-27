@@ -31,7 +31,7 @@ export interface ApiLoginResult {
 }
 
 export const getProjectKey = (): string => {
-  return process.env.CTP_PROJECT_KEY || 'greenshop';
+  return process.env.CTP_PROJECT_KEY || 'green-shop-260624';
 };
 
 export const getApiURL = (): string => {
@@ -43,15 +43,15 @@ export const getAuthURL = (): string => {
 };
 
 export const getClientSecret = (): string => {
-  return process.env.CTP_CLIENT_SECRET || 'T1YLMv_Ze4asmp713AHKIDfTMBee5YUH';
+  return process.env.CTP_CLIENT_SECRET || 'KvwpLIXTRYKizjdyAriwHRsr0pvxSoTo';
 };
 
 export const getClientId = (): string => {
-  return process.env.CTP_CLIENT_ID || 'z7wOaxnQxzxn43JHrM-0VY3g';
+  return process.env.CTP_CLIENT_ID || 'WqnjGBMAOyvr7dfHbVDDyWaI';
 };
 
 export const getScopes = (): string[] => {
-  return process.env.CTP_SCOPES?.split(' ') || ['manage_project:greenshop'];
+  return process.env.CTP_SCOPES?.split(' ') || ['manage_project:green-shop-260624'];
 };
 
 export function getExistingTokenFlowOptions(token: string): ExistingTokenFlowOptions {
