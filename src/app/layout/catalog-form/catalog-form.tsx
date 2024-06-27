@@ -43,6 +43,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   const [sortOptions, setSortOptions] = useState<ISortOption[]>(sortOptionForCTP);
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [inputSearch, setInputSearch] = useState('');
+  const [inputSearchByFilter, setInputSearchByFilter] = useState('');
   const [categories, setCategories] = useState<ICategoryData[]>([]);
   const navigate = useNavigate();
   const location = useLocation();
@@ -56,6 +57,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
   const [isDisabledButton, setIsDisabledButton] = useState(false);
   const [maxPrice, setMaxPrice] = useState(1000);
   const [isProductCardWide, setIsProductCardWide] = useState(true);
+  const { setTotalLineItemQuantity } = useStateContext();
 
   const resetOffsetProducts = () => {
     setPageCounter((prev) => {
@@ -65,13 +67,19 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
       };
     });
   };
-  const { setTotalLineItemQuantity } = useStateContext();
-
-  const [open, setOpen] = useState(false);
 
   const handleInputSearch = (value: string) => {
     resetOffsetProducts();
     setInputSearch(value);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      resetOffsetProducts();
+      setInputSearch(inputSearch);
+      setInputSearchByFilter(inputSearch);
+      (event.target as HTMLInputElement).blur();
+    }
   };
 
   const handleSizeClick = (sizeValue: string, sizeLabel: string) => {
@@ -103,13 +111,8 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
     handleSizeClick('', '');
     setPriceRange([0, maxPrice]);
     setSelectedDiscounted('');
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      setOpen(false);
-      handleResetFilters();
-    }
+    setInputSearch('');
+    setInputSearchByFilter('');
   };
 
   const handleIconBasketClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
@@ -154,7 +157,6 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
 
   useEffect(() => {
     const fetchCategories = async () => {
-      setInputSearch('');
       const response = await getCategories();
       setCategories(response);
 
@@ -215,7 +217,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
         sort: [sortMethod],
         limit: pageCounter.itemsPerPage,
         offset: pageCounter.offset,
-        search: inputSearch,
+        search: inputSearchByFilter || inputSearch,
         markMatchingVariants: true,
       });
       const responseResult = response.body?.results;
@@ -452,136 +454,108 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
           <div className="flex items-baseline justify-end border-b border-gray-200 pb-[17px] pt-3">
             {/* Search */}
             <div className="flex items-center">
-              <MagnifyingGlassIcon
-                className="h-5 w-5 text-gray-400 cursor-pointer"
-                aria-hidden="true"
-                onClick={() => {
-                  setOpen(true);
-                  setInputSearch('');
-                  handleResetFilters();
-                }}
-              />
               <div className="relative mr-4">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
-                <Transition show={open}>
-                  <Dialog className="relative z-10" onClose={() => setOpen(false)}>
-                    <Transition
-                      enter="ease-out duration-300"
-                      enterFrom="opacity-0"
-                      enterTo="opacity-100"
-                      leave="ease-in duration-200"
-                      leaveFrom="opacity-100"
-                      leaveTo="opacity-0"
-                    >
-                      <div
-                        className="fixed inset-0 bg-gray-500 bg-opacity-25 transition-opacity"
-                        onClick={() => setOpen(false)}
-                      />
-                    </Transition>
-
-                    <div className="fixed inset-0 z-10 w-screen overflow-y-auto p-4 sm:p-6 md:p-20">
-                      <Transition
-                        enter="ease-out duration-300"
-                        enterFrom="opacity-0 scale-95"
-                        enterTo="opacity-100 scale-100"
-                        leave="ease-in duration-200"
-                        leaveFrom="opacity-100 scale-100"
-                        leaveTo="opacity-0 scale-95"
-                      >
-                        <DialogPanel className="mx-auto max-w-xl transform divide-y divide-gray-100 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-black ring-opacity-5 transition-all">
-                          <div className="relative">
-                            <input
-                              type="text"
-                              value={inputSearch}
-                              onChange={(e) => handleInputSearch(e.target.value)}
-                              onBlur={() => {
-                                setOpen(false);
-                                handleResetFilters();
-                              }}
-                              onKeyDown={handleKeyDown}
-                              placeholder="Search"
-                              className="block w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                            />
-                          </div>
-                        </DialogPanel>
-                      </Transition>
-                    </div>
-                  </Dialog>
-                </Transition>
-              </div>
-            </div>
-
-            {/* Sort */}
-            <div className="flex items-center">
-              <Menu as="div" className="relative inline-block text-left">
-                <div className="flex relative">
-                  <div>
-                    <MenuButton className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-green-900">
-                      Sort
-                      <ChevronDownIcon
-                        className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                        aria-hidden="true"
-                      />
-                    </MenuButton>
-                  </div>
-                  <div className="absolute -bottom-20 left-1 lg:-left-10 inline-flex w-32 group justify-center whitespace-nowrap text-sm font-medium text-gray-700 hover:text-green-900">
-                    {sortName}
-                  </div>
+                <input
+                  type="text"
+                  value={inputSearch}
+                  onChange={(e) => handleInputSearch(e.target.value)}
+                  onBlur={(e) => {
+                    handleInputSearch(e.target.value);
+                    setInputSearchByFilter(inputSearch);
+                  }}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Search"
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                 </div>
+                {inputSearch && (
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                    <XMarkIcon
+                      className="h-5 w-5 text-gray-400 cursor-pointer"
+                      aria-hidden="true"
+                      onClick={() => {
+                        setInputSearch('');
+                        setInputSearchByFilter('');
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
 
-                <Transition
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
-                >
-                  <MenuItems className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <div className="py-1">
-                      {sortOptions.map((option) => (
-                        <MenuItem key={option.name}>
-                          {({ focus }) => (
-                            <a
-                              href={option.href}
-                              className={classNames(
-                                option.current ? 'font-medium text-gray-900 bg-green-100' : 'text-gray-500',
-                                focus ? 'bg-green-100' : '',
-                                'block px-4 py-2 text-sm'
-                              )}
-                              onClick={() => handleSortClick(option)}
-                            >
-                              {option.name}
-                            </a>
-                          )}
-                        </MenuItem>
-                      ))}
+              {/* Sort */}
+              <div className="flex items-center">
+                <Menu as="div" className="relative inline-block text-left">
+                  <div className="flex relative">
+                    <div>
+                      <MenuButton className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-green-900">
+                        Sort
+                        <ChevronDownIcon
+                          className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                          aria-hidden="true"
+                        />
+                      </MenuButton>
                     </div>
-                  </MenuItems>
-                </Transition>
-              </Menu>
-            </div>
+                    <div className="absolute -bottom-20 left-1 lg:-left-10 inline-flex w-32 group justify-center whitespace-nowrap text-sm font-medium text-gray-700 hover:text-green-900">
+                      {sortName}
+                    </div>
+                  </div>
 
-            <div className="flex items-center">
-              <button
-                type="button"
-                className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7"
-                onClick={() => {
-                  setIsProductCardWide(!isProductCardWide);
-                  // console.log(isProductCardWide);
-                }}
-              >
-                <span className="sr-only">View grid</span>
-                <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
-                onClick={() => setMobileFiltersOpen(true)}
-              >
-                <span className="sr-only">Filters</span>
-                <FunnelIcon className="h-5 w-5" aria-hidden="true" />
-              </button>
+                  <Transition
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <MenuItems className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <div className="py-1">
+                        {sortOptions.map((option) => (
+                          <MenuItem key={option.name}>
+                            {({ focus }) => (
+                              <a
+                                href={option.href}
+                                className={classNames(
+                                  option.current ? 'font-medium text-gray-900 bg-green-100' : 'text-gray-500',
+                                  focus ? 'bg-green-100' : '',
+                                  'block px-4 py-2 text-sm'
+                                )}
+                                onClick={() => handleSortClick(option)}
+                              >
+                                {option.name}
+                              </a>
+                            )}
+                          </MenuItem>
+                        ))}
+                      </div>
+                    </MenuItems>
+                  </Transition>
+                </Menu>
+              </div>
+
+              <div className="flex items-center">
+                <button
+                  type="button"
+                  className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7"
+                  onClick={() => {
+                    setIsProductCardWide(!isProductCardWide);
+                    // console.log(isProductCardWide);
+                  }}
+                >
+                  <span className="sr-only">View grid</span>
+                  <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
+                  onClick={() => setMobileFiltersOpen(true)}
+                >
+                  <span className="sr-only">Filters</span>
+                  <FunnelIcon className="h-5 w-5" aria-hidden="true" />
+                </button>
+              </div>
             </div>
           </div>
 
