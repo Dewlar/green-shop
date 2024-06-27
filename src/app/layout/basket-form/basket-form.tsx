@@ -241,18 +241,16 @@ const BasketForm = () => {
                       </div>
 
                       <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
-                        <div className="relative pr-9 grid sm:grid-cols-2 gap-x-6 sm:pr-0">
-                          <div className="space-y-4">
-                            <div className="flex justify-between">
-                              <h3 className="text-sm">
-                                <Link
-                                  to={`/product/${product.productId}`}
-                                  className="font-medium text-gray-700 hover:text-gray-800"
-                                >
-                                  {product.name.en}
-                                </Link>
-                              </h3>
-                            </div>
+                        <h3 className="text-sm">
+                          <Link
+                            to={`/product/${product.productId}`}
+                            className="font-medium text-gray-700 hover:text-gray-800"
+                          >
+                            {product.name.en}
+                          </Link>
+                        </h3>
+                        <div className="relative flex pr-9 justify-between sm:pr-0">
+                          <div className="flex flex-col space-y-4">
                             <div className="mt-1 flex text-sm">
                               {(product.variant?.attributes?.find((attr) => attr.name === 'Size')?.value[0] || '') && (
                                 <p className="ml-4 border-l border-gray-200 pl-4 text-gray-500">
@@ -260,30 +258,6 @@ const BasketForm = () => {
                                 </p>
                               )}
                             </div>
-                            {product.variant?.prices?.[0]?.discounted?.discount ? (
-                              <>
-                                <p className="text-lg font-medium text-red-600">
-                                  {formatPriceInEuro(
-                                    product.variant.prices[0].discounted.value.centAmount * product.quantity
-                                  )}
-                                </p>
-                                <p
-                                  className="text-lg font-medium text-green-600"
-                                  style={{ textDecoration: 'line-through' }}
-                                >
-                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount * product.quantity)}
-                                </p>
-                              </>
-                            ) : (
-                              product.variant?.prices?.[0]?.value?.centAmount && (
-                                <p className="text-lg font-medium text-green-600">
-                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount * product.quantity)}
-                                </p>
-                              )
-                            )}
-                          </div>
-
-                          <div className="mt-4 sm:mt-0 sm:pr-9">
                             <label htmlFor={`quantity-${productIdx}`} className="sr-only">
                               Quantity, {product.name.en}
                             </label>
@@ -313,6 +287,30 @@ const BasketForm = () => {
                                 +
                               </button>
                             </div>
+                          </div>
+
+                          <div className="mt-4 mt-auto sm:pr-9">
+                            {product.variant?.prices?.[0]?.discounted?.discount ? (
+                              <>
+                                <p className="mt-2 text-lg font-medium text-red-600">
+                                  {formatPriceInEuro(
+                                    product.variant.prices[0].discounted.value.centAmount * product.quantity
+                                  )}
+                                </p>
+                                <p
+                                  className="mt-2 text-lg font-medium text-green-600"
+                                  style={{ textDecoration: 'line-through' }}
+                                >
+                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount * product.quantity)}
+                                </p>
+                              </>
+                            ) : (
+                              product.variant?.prices?.[0]?.value?.centAmount && (
+                                <p className="mt-2 text-lg font-medium text-green-600">
+                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount * product.quantity)}
+                                </p>
+                              )
+                            )}
                           </div>
                         </div>
                       </div>
