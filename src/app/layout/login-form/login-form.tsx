@@ -1,100 +1,35 @@
-import React, { MouseEvent, useState } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { HttpErrorType } from '@commercetools/sdk-client-v2';
 import { Link, useNavigate } from 'react-router-dom';
+import { Controller, useForm } from 'react-hook-form';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import CustomerController from '../../api/CustomerController';
 import { useStateContext } from '../../state/state-context';
-import { LocalStorageKeysEnum, storageSet } from '../../api/helpers';
+import { LocalStorageKeysEnum, storageSet, UserCredentialData } from '../../api/helpers';
+import { validationRules } from '../../components/signup/regExp';
 
 const LoginForm = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [emailErrors, setEmailErrors] = useState<string[]>([]);
-  const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
   const [showPassword, setShowPassword] = useState(false);
-
   const { setIsAuth, setAuthData, setCustomerData } = useStateContext();
   const navigate = useNavigate();
 
-  const validateEmail = (email: string): string[] => {
-    const errors: string[] = [];
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const latinCharsRegex = /^[a-zA-Z0-9._%+-@]+$/;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<UserCredentialData>({
+    mode: 'onChange',
+    defaultValues: { email: '', password: '' },
+  });
 
-    if (!email) {
-      errors.push('Email is required.');
-    }
-
-    // if (!latinCharsRegex.test(email)) {
-    //   errors.push('Email address should only contain Latin characters.');
-    // }
-
-    if (!emailRegex.test(email) || !latinCharsRegex.test(email)) {
-      errors.push('Invalid email address format.');
-    }
-
-    if (!email.includes('@')) {
-      errors.push('Email address must contain the "@" symbol.');
-    }
-
-    if (email.trim() !== email) {
-      errors.push('Email address should not contain leading or trailing spaces.');
-    }
-
-    const [, domainPart] = email.split('@');
-    if (!domainPart) {
-      errors.push('Email address must contain a domain name (e.g., example.com).');
-    }
-
-    if (domainPart && !domainPart.includes('.')) {
-      errors.push('Email address domain must contain a dot (e.g., example.com).');
-    }
-
-    return errors;
-  };
-
-  const validatePassword = (pw: string): string[] => {
-    const errors: string[] = [];
-    if (pw.length < 8) {
-      errors.push('Password must be at least 8 characters long.');
-    }
-    if (!/[A-Z]/.test(pw)) {
-      errors.push('Password must contain at least one uppercase letter.');
-    }
-    if (!/[a-z]/.test(pw)) {
-      errors.push('Password must contain at least one lowercase letter.');
-    }
-    if (!/\d/.test(pw)) {
-      errors.push('Password must contain at least one number.');
-    }
-    if (!/[@$!%*?&]/.test(pw)) {
-      errors.push('Password must contain at least one special character.');
-    }
-    if (pw.trim() !== pw) {
-      errors.push('Email address should not contain leading or trailing spaces.');
-    }
-    return errors;
-  };
-
-  const handleLogin = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    const emailValidationErrors = validateEmail(username);
-    const passwordValidationErrors = validatePassword(password);
-
-    setEmailErrors(emailValidationErrors);
-    setPasswordErrors(passwordValidationErrors);
-
-    if (emailValidationErrors.length > 0 || passwordValidationErrors.length > 0) {
-      return;
-    }
-
+  const onSubmit = (data: UserCredentialData) => {
     const customerController = new CustomerController();
 
     customerController
       .createAnonymousCustomer()
       .then(() => {
-        return customerController.loginCustomer({ email: username, password });
+        return customerController.loginCustomer({ email: data.email, password: data.password });
       })
       .then((response) => {
         if (response.apiResult.statusCode === 200 && response.token) {
@@ -110,21 +45,8 @@ const LoginForm = () => {
         }
       })
       .catch(() => {
-        // console.error('Error during login:', error);
         toast.error('Error during login. Please try again.');
       });
-  };
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const email = e.target.value;
-    setUsername(email);
-    setEmailErrors(validateEmail(email));
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const pw = e.target.value;
-    setPassword(pw);
-    setPasswordErrors(validatePassword(pw));
   };
 
   const toggleShowPassword = () => {
@@ -146,28 +68,27 @@ const LoginForm = () => {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" action="#" method="POST">
+        <form className="space-y-7" action="#" method="POST">
           <div>
             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
               Email address
             </label>
-            <div className="mt-2">
-              <input
-                onChange={handleEmailChange}
-                id="email"
+            <div className="mt-2 relative">
+              <Controller
                 name="email"
-                type="text"
-                autoComplete="email"
-                required
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
+                control={control}
+                rules={validationRules.email}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    id="email"
+                    type="email"
+                    autoComplete="email"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
+                  />
+                )}
               />
-              {emailErrors.length > 0 && (
-                <div className="text-red-600">
-                  {emailErrors.map((error, index) => (
-                    <div key={index}>{error}</div>
-                  ))}
-                </div>
-              )}
+              {errors.email && <p className="absolute -bottom-5 left-0 text-red-500 text-xs">{errors.email.message}</p>}
             </div>
           </div>
 
@@ -176,44 +97,47 @@ const LoginForm = () => {
               <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
                 Password
               </label>
-              <div>
-                <input
-                  type="checkbox"
-                  id="show-password"
-                  checked={showPassword}
-                  onChange={toggleShowPassword}
-                  className={showPassword ? 'bg-green-500' : ''}
-                />
-                <label htmlFor="show-password" className="ml-2 text-sm leading-6 text-gray-900">
-                  Show Password
-                </label>
-              </div>
             </div>
-            <div className="mt-2">
-              <input
-                onChange={handlePasswordChange}
-                id="password"
-                name="password"
-                type={showPassword ? 'text' : 'password'}
-                autoComplete="current-password"
-                required
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
-              />
-              {passwordErrors.length > 0 && (
-                <div className="text-red-600">
-                  {passwordErrors.map((error, index) => (
-                    <div key={index}>{error}</div>
-                  ))}
-                </div>
+            <div className="mt-2 relative">
+              <div className="relative">
+                <Controller
+                  name="password"
+                  control={control}
+                  rules={validationRules.password}
+                  render={({ field }) => (
+                    <input
+                      {...field}
+                      id="password"
+                      type={showPassword ? 'text' : 'password'}
+                      autoComplete="current-password"
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
+                    />
+                  )}
+                />
+                <button
+                  type="button"
+                  onClick={toggleShowPassword}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+                >
+                  {showPassword ? (
+                    <EyeSlashIcon className="h-5 w-5" aria-hidden="true" />
+                  ) : (
+                    <EyeIcon className="h-5 w-5" aria-hidden="true" />
+                  )}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="absolute -bottom-5 left-0 text-red-500 text-xs">{errors.password.message}</p>
               )}
             </div>
           </div>
 
           <div>
             <button
-              onClick={handleLogin}
+              onClick={handleSubmit(onSubmit)}
               type="submit"
-              className="flex w-full justify-center rounded-md bg-green-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-500 focus-visible:outline-none"
+              disabled={!isValid}
+              className="flex w-full justify-center rounded-md bg-green-600 disabled:bg-gray-400 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-500 focus-visible:outline-none"
             >
               Sign in
             </button>
@@ -221,7 +145,7 @@ const LoginForm = () => {
         </form>
         <p className="mt-10 text-center text-sm text-gray-500">
           Not have an account?{' '}
-          <Link to="/signup" className="text-sm font-medium text-indigo-600 hover:text-gray-700">
+          <Link to="/signup" className="text-sm font-medium text-green-500 hover:text-green-700">
             Sign up
           </Link>
         </p>
