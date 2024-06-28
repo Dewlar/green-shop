@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { XMarkIcon as XMarkIconMini } from '@heroicons/react/20/solid';
 import { Cart, LineItem, DiscountCodeInfo } from '@commercetools/platform-sdk';
 import { toast } from 'react-toastify';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
+import { TrashIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 import {
   addDiscountCode,
@@ -213,14 +213,14 @@ const BasketForm = () => {
                 <ul role="list" className="divide-y divide-gray-200 border-b border-t border-gray-200">
                   {lineItems.map((product, productIdx) => (
                     <li key={product.id} className="flex py-6 sm:py-10 relative">
-                      <div className="absolute right-3 top-3">
+                      <div className="absolute right-8 top-8">
                         <button
                           type="button"
                           className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
                           onClick={() => handleRemoveProductClick(product.id, product.quantity)}
                         >
                           <span className="sr-only">Remove</span>
-                          <XMarkIconMini className="h-5 w-5" aria-hidden="true" />
+                          <TrashIcon className="h-5 w-5" aria-hidden="true" />
                         </button>
                       </div>
                       <div className="relative flex-shrink-0">
@@ -233,7 +233,7 @@ const BasketForm = () => {
                         </Link>
                         {product.variant?.attributes?.find((item) => item.name === 'Danger') ? (
                           <div className="absolute right-0 top-0 z-[1] overflow-hidden w-full h-full text-right">
-                            <div className="absolute bottom-0 left-0 bg-red-600 s text-base font-normal font-tahoma text-white text-center transform h-6 w-full">
+                            <div className="absolute bottom-0 left-0 bg-red-600 s text-base font-normal font-tahoma text-white text-center transform h-6 w-full rounded-b-md">
                               Attention!
                             </div>
                           </div>
