@@ -64,7 +64,7 @@ const MultiCarousel = () => {
             Growing <br /> happiness
           </h2>
         </div>
-        <img className="w-full h-full object-cover" src="./assets/carousel/caorusel_banner_1.png" alt="" />
+        <img className="w-full h-full object-cover" src="/assets/carousel/caorusel_banner_1.png" alt="" />
       </div>
       <div className="relative w-full max-h-96 h-full mx-auto block">
         <div className="absolute inset-0 items-center justify-end flex z-10 px-2 lg:px-8">
@@ -72,7 +72,7 @@ const MultiCarousel = () => {
             Get House Plants <br /> to fill your life with joy
           </h2>
         </div>
-        <img className="w-full h-full object-cover" src="./assets/carousel/caorusel_banner_2.png" alt="" />
+        <img className="w-full h-full object-cover" src="/assets/carousel/caorusel_banner_2.png" alt="" />
       </div>
       <div className="relative w-full max-h-96 h-full mx-auto block">
         <div className="absolute inset-0 flex justify-center items-center z-10">
@@ -80,7 +80,7 @@ const MultiCarousel = () => {
             Pet <br /> friendly
           </h2>
         </div>
-        <img className="w-full h-full object-cover" src="./assets/carousel/caorusel_banner_3.jpg" alt="" />
+        <img className="w-full h-full object-cover" src="/assets/carousel/caorusel_banner_3.jpg" alt="" />
       </div>
       <div className="relative w-full max-h-96 h-full mx-auto block">
         <div className="absolute inset-0 flex justify-center items-end z-10">
@@ -88,7 +88,7 @@ const MultiCarousel = () => {
             Raised with love and care
           </h2>
         </div>
-        <img className="w-full h-full object-cover" src="./assets/carousel/caorusel_banner_45.jpg" alt="" />
+        <img className="w-full h-full object-cover" src="/assets/carousel/caorusel_banner_45.jpg" alt="" />
       </div>
       <div className="relative w-full max-h-96 h-full mx-auto block">
         <div className="absolute inset-0 flex flex-col justify-end items-center z-10 pb-6 sm:pb-12">
@@ -98,7 +98,7 @@ const MultiCarousel = () => {
           </p>
           <p className="text-white font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl">via our plants</p>
         </div>
-        <img className="w-full h-full object-cover" src="./assets/carousel/caorusel_banner_5.jpg" alt="" />
+        <img className="w-full h-full object-cover" src="/assets/carousel/caorusel_banner_5.jpg" alt="" />
       </div>
     </Carousel>
   );
