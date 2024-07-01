@@ -28,6 +28,7 @@ import CatalogPagination from './catalog-pagination';
 import SalesImage from '../../../assets/budding-pop-pictures/sales.jpg';
 import OutOfStoreImage from '../../../assets/budding-pop-pictures/cry.gif';
 import { getProductsAll } from '../../api/catalog/getProductsAll';
+import MultiCarousel from './multi-carousel';
 
 const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -316,6 +317,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
 
   return (
     <div className="bg-white">
+      <MultiCarousel></MultiCarousel>
       <div>
         <Transition show={mobileFiltersOpen}>
           <Dialog className="relative z-40 lg:hidden" onClose={setMobileFiltersOpen}>

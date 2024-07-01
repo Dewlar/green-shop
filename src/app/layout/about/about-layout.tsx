@@ -9,7 +9,7 @@ const AboutLayout = () => {
           <div
             className="absolute inset-y-0 right-1/2 -z-10 -mr-96 w-[200%] origin-top-right skew-x-[-30deg] bg-white shadow-xl shadow-teal-200/30 ring-1 ring-teal-100 sm:-mr-80 lg:-mr-96"
             aria-hidden="true"
-          />
+          ></div>
           <div className="mx-auto max-w-7xl px-6 py-32 sm:pt-28 sm:pb-40 lg:px-8">
             <div className="mx-auto lg:mx-0 grid lg:max-w-none lg:grid-cols-2 lg:gap-x-16 lg:gap-y-6 xl:grid-cols-1 xl:grid-rows-1 xl:gap-x-8">
               <h1 className="max-w-2xl text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:col-span-2 xl:col-auto">
