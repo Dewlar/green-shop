@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { XMarkIcon as XMarkIconMini } from '@heroicons/react/20/solid';
 import { Cart, LineItem, DiscountCodeInfo } from '@commercetools/platform-sdk';
 import { toast } from 'react-toastify';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
+import { TrashIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 import {
   addDiscountCode,
@@ -213,39 +213,44 @@ const BasketForm = () => {
                 <ul role="list" className="divide-y divide-gray-200 border-b border-t border-gray-200">
                   {lineItems.map((product, productIdx) => (
                     <li key={product.id} className="flex py-6 sm:py-10 relative">
-                      <div className="absolute right-3 top-3">
+                      <div className="absolute right-8 top-8">
                         <button
                           type="button"
                           className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
                           onClick={() => handleRemoveProductClick(product.id, product.quantity)}
                         >
                           <span className="sr-only">Remove</span>
-                          <XMarkIconMini className="h-5 w-5" aria-hidden="true" />
+                          <TrashIcon className="h-5 w-5" aria-hidden="true" />
                         </button>
                       </div>
-                      <div className="flex-shrink-0">
+                      <div className="relative flex-shrink-0">
                         <Link to={`/product/${product.productId}`}>
                           <img
                             src={product.variant?.images?.[0]?.url || ''}
                             alt={product.name.en}
-                            className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
+                            className="h-32 w-32 rounded-md object-cover object-center sm:h-48 sm:w-48"
                           />
                         </Link>
+                        {product.variant?.attributes?.find((item) => item.name === 'Danger') ? (
+                          <div className="absolute right-0 top-0 z-[1] overflow-hidden w-full h-full text-right">
+                            <div className="absolute bottom-0 left-0 bg-red-600 s text-base font-normal font-tahoma text-white text-center transform h-6 w-full rounded-b-md">
+                              Attention!
+                            </div>
+                          </div>
+                        ) : null}
                       </div>
 
                       <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
-                        <div className="relative pr-9 grid grid-cols-2 gap-x-6 sm:pr-0">
-                          <div className="space-y-4">
-                            <div className="flex justify-between">
-                              <h3 className="text-sm">
-                                <Link
-                                  to={`/product/${product.productId}`}
-                                  className="font-medium text-gray-700 hover:text-gray-800"
-                                >
-                                  {product.name.en}
-                                </Link>
-                              </h3>
-                            </div>
+                        <h3 className="text-sm">
+                          <Link
+                            to={`/product/${product.productId}`}
+                            className="font-medium text-gray-700 hover:text-gray-800"
+                          >
+                            {product.name.en}
+                          </Link>
+                        </h3>
+                        <div className="relative flex pr-9 justify-between sm:pr-0">
+                          <div className="flex flex-col space-y-4">
                             <div className="mt-1 flex text-sm">
                               {(product.variant?.attributes?.find((attr) => attr.name === 'Size')?.value[0] || '') && (
                                 <p className="ml-4 border-l border-gray-200 pl-4 text-gray-500">
@@ -253,30 +258,6 @@ const BasketForm = () => {
                                 </p>
                               )}
                             </div>
-                            {product.variant?.prices?.[0]?.discounted?.discount ? (
-                              <>
-                                <p className="text-lg font-medium text-red-600">
-                                  {formatPriceInEuro(
-                                    product.variant.prices[0].discounted.value.centAmount * product.quantity
-                                  )}
-                                </p>
-                                <p
-                                  className="text-lg font-medium text-green-600"
-                                  style={{ textDecoration: 'line-through' }}
-                                >
-                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount * product.quantity)}
-                                </p>
-                              </>
-                            ) : (
-                              product.variant?.prices?.[0]?.value?.centAmount && (
-                                <p className="text-lg font-medium text-green-600">
-                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount * product.quantity)}
-                                </p>
-                              )
-                            )}
-                          </div>
-
-                          <div className="mt-4 sm:mt-0 sm:pr-9">
                             <label htmlFor={`quantity-${productIdx}`} className="sr-only">
                               Quantity, {product.name.en}
                             </label>
@@ -306,6 +287,30 @@ const BasketForm = () => {
                                 +
                               </button>
                             </div>
+                          </div>
+
+                          <div className="mt-4 mt-auto sm:pr-9">
+                            {product.variant?.prices?.[0]?.discounted?.discount ? (
+                              <>
+                                <p className="mt-2 text-lg font-medium text-red-600">
+                                  {formatPriceInEuro(
+                                    product.variant.prices[0].discounted.value.centAmount * product.quantity
+                                  )}
+                                </p>
+                                <p
+                                  className="mt-2 text-lg font-medium text-green-600"
+                                  style={{ textDecoration: 'line-through' }}
+                                >
+                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount * product.quantity)}
+                                </p>
+                              </>
+                            ) : (
+                              product.variant?.prices?.[0]?.value?.centAmount && (
+                                <p className="mt-2 text-lg font-medium text-green-600">
+                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount * product.quantity)}
+                                </p>
+                              )
+                            )}
                           </div>
                         </div>
                       </div>
