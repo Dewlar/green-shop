@@ -733,9 +733,9 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                                   />
                                   {product.variant?.attributes?.find((item) => item.name === 'Danger') ? (
                                     <div className="absolute inset-0 z-10 overflow-hidden flex items-end">
-                                      <p className="absolute top-[15%] left-[-25%] bg-red-600 s text-base text-white text-center transform -rotate-45 p-2.5 h-10 w-full">
+                                      <div className="absolute top-10 left-10 bg-red-600 text-base text-white text-center transform -rotate-45 -translate-x-1/2 -translate-y-1/2 py-2 w-full">
                                         Attention!
-                                      </p>
+                                      </div>
                                     </div>
                                   ) : null}
                                 </>
