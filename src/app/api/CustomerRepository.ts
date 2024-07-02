@@ -73,7 +73,6 @@ class CustomerRepository {
         customer: this.authApiResponse,
       };
     } catch (error) {
-      // console.error('Login Error:', error);
       return {
         apiResult: error as HttpErrorType,
         token: null,

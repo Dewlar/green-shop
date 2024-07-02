@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { ProductProjection, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import getProductsFilter from '../../api/catalog/getProductsFilter';
-// import { formatPriceInEuro } from '../../api/helpers';
 
 const Trending = () => {
   const [favoriteProducts, setFavoriteProducts] = useState<ProductProjection[]>([]);
@@ -59,11 +58,6 @@ const Trending = () => {
               <p className="threeLineTextClamp mt-2 text-sm text-gray-500 text-justify">
                 {product.description ? product.description.en.toString() : 'description'}
               </p>
-              {/* <p className="mt-2 text-sm font-medium text-green-600 text-right pr-4"> */}
-              {/*  {product.masterVariant.prices?.[0].value.centAmount */}
-              {/*    ? formatPriceInEuro(product.masterVariant.prices[0].value.centAmount) */}
-              {/*    : '11'} */}
-              {/* </p> */}
             </div>
           ))}
         </div>

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { HttpErrorType } from '@commercetools/sdk-client-v2';
 import { toast } from 'react-toastify';
 import { ModalError } from '../../models';
-import { LocalStorageKeysEnum, storageSet } from '../../api/helpers';
+import { SessionStorageKeysEnum, storageSet } from '../../api/helpers';
 import { useStateContext } from '../../state/state-context';
 import CustomerController from '../../api/CustomerController';
 import TokenService from '../../api/TokenService';
@@ -20,14 +20,14 @@ const MyModal = ({ className, classText, errorText, type, login, password }: Mod
     modalText!.innerHTML = '';
     if (type === 'Success') {
       tokenService.removeToken();
-      storageSet(LocalStorageKeysEnum.IS_AUTH, false);
+      storageSet(SessionStorageKeysEnum.IS_AUTH, false);
       const customerController = new CustomerController();
       customerController.createAnonymousCustomer().then(() => {
         customerController
           .loginCustomer({ email: login, password })
           .then((response) => {
             if (response.apiResult.statusCode === 200 && response.token) {
-              storageSet(LocalStorageKeysEnum.IS_AUTH, true);
+              storageSet(SessionStorageKeysEnum.IS_AUTH, true);
 
               setIsAuth(true);
               setAuthData(response.token);

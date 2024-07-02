@@ -543,7 +543,6 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                   className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7"
                   onClick={() => {
                     setIsProductCardWide(!isProductCardWide);
-                    // console.log(isProductCardWide);
                   }}
                 >
                   <span className="sr-only">View grid</span>
