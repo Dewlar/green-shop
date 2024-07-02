@@ -32,12 +32,10 @@ const AboutLayout = () => {
               />
             </div>
           </div>
-          {/* <div className="absolute inset-x-0 bottom-0 -z-10 h-24 bg-gradient-to-t from-teal-900/50 sm:h-32" /> */}
         </div>
 
         {/* Team info section */}
         <div className="relative bg-white pb-16 sm:pb-24 xl:pb-32">
-          {/* <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-t from-teal-900/70 sm:h-32" /> */}
           <div className="bg-teal-900/70 pb-20 sm:pb-24 xl:pb-0">
             <div className="mx-auto flex max-w-7xl flex-col items-center gap-x-8 gap-y-10 px-6 sm:gap-y-8 lg:px-8 xl:flex-row xl:items-stretch">
               <div className="-mt-8 w-full max-w-2xl xl:-mb-8 xl:w-96 xl:flex-none">

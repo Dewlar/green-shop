@@ -353,8 +353,6 @@ export const removeDiscountCode = async (code: string): Promise<ClientResponse<C
       })
       .execute();
 
-    // console.log('Discount code removed successfully');
-
     return result as ClientResponse<Cart>;
   } catch (error) {
     console.error('Error removing discount code:', error);

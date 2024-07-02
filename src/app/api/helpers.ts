@@ -116,18 +116,18 @@ export function getAuthMiddlewareOptions(userData: UserCredentialData): Password
 
 export const storageKey = 'greenshop';
 
-export enum LocalStorageKeysEnum {
+export enum SessionStorageKeysEnum {
   'IS_AUTH' = 'IS_AUTH',
 }
 
 export function storageGet<T>(key: string): T | null {
-  const item = localStorage.getItem(`${storageKey}_${key}`);
+  const item = sessionStorage.getItem(`${storageKey}_${key}`);
   return item ? (JSON.parse(item) as T) : null;
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
 export const storageSet = (key: string, data: any): void => {
-  localStorage.setItem(`${storageKey}_${key}`, JSON.stringify(data));
+  sessionStorage.setItem(`${storageKey}_${key}`, JSON.stringify(data));
 };
 
 export const createCustomerData = (data: IApiResponse): ICustomerData => {

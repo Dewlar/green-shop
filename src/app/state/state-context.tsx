@@ -1,10 +1,9 @@
 import React, { createContext, useState, useContext, ReactNode, FC, useEffect } from 'react';
-// import { useLocation, useNavigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { Customer, ClientResponse, DiscountCodeInfo } from '@commercetools/platform-sdk';
 import CustomerController from '../api/CustomerController';
 import TokenService from '../api/TokenService';
-import { LocalStorageKeysEnum, storageGet, storageSet } from '../api/helpers';
+import { SessionStorageKeysEnum, storageGet, storageSet } from '../api/helpers';
 import { ICategoryData } from '../api/types';
 import { clearBasket } from '../api/basket/BasketRepository';
 
@@ -31,7 +30,7 @@ export interface IState {
 }
 
 function getInitialState() {
-  const isAuth = storageGet<boolean>(LocalStorageKeysEnum.IS_AUTH);
+  const isAuth = storageGet<boolean>(SessionStorageKeysEnum.IS_AUTH);
 
   return {
     isAuth: isAuth ?? false,
@@ -78,18 +77,17 @@ export const StateProvider: FC<Props> = ({ children }) => {
   const savedToken = new TokenService();
   const customerController = new CustomerController();
   const navigate = useNavigate();
-  // const location = useLocation();
 
   useEffect(() => {
     if (savedToken.get().token !== '') {
-      setIsAuth(storageGet<boolean>(LocalStorageKeysEnum.IS_AUTH) ?? false);
+      setIsAuth(storageGet<boolean>(SessionStorageKeysEnum.IS_AUTH) ?? false);
       setAuthData(savedToken.get());
     } else customerController.createAnonymousCustomer();
   }, []);
 
   const logout = () => {
     savedToken.removeToken();
-    storageSet(LocalStorageKeysEnum.IS_AUTH, false);
+    storageSet(SessionStorageKeysEnum.IS_AUTH, false);
     customerController.createAnonymousCustomer();
     setIsAuth(false);
     // setAuthData - example of using the set function in useState, if the new state depends on the previous state, to avoid side effects

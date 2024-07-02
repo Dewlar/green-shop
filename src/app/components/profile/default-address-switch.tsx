@@ -10,13 +10,6 @@ interface IProps {
 }
 
 const DefaultAddressSwitch: FC<IProps> = ({ title, isEdit, isDefaultAddress, setIsDefaultAddress }) => {
-  // const disabledClasses = (): string => {
-  //   if (isEdit) {
-  //     return 'cursor-auto';
-  //   }
-  //   return isDefaultAddress ? 'bg-green-500' : 'bg-gray-200';
-  // };
-
   return (
     <Field as="div" className="flex">
       <Label as="dt" className="flex-none font-medium text-sm text-gray-600" passive>

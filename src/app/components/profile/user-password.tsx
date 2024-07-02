@@ -6,7 +6,7 @@ import { Controller, useForm } from 'react-hook-form';
 import CustomerController from '../../api/CustomerController';
 import ButtonEditUpdate from './button-edit-update';
 import { useStateContext } from '../../state/state-context';
-import { LocalStorageKeysEnum, storageSet } from '../../api/helpers';
+import { SessionStorageKeysEnum, storageSet } from '../../api/helpers';
 import TokenService from '../../api/TokenService';
 import PasswordInput from './password-input';
 import { validationRules } from '../signup/regExp';
@@ -25,21 +25,13 @@ const initialPasswords: IPassword = {
 
 const UserPassword: FC<IProps> = ({ email }) => {
   const [isEdit, setIsEdit] = useState(true);
-  // const [passwords, setPasswords] = useState(initialPasswords);
   const { setIsAuth, setAuthData } = useStateContext();
   const [showPassword, setShowPassword] = useState(false);
 
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-  //   setPasswords((prev) => ({
-  //     ...prev,
-  //     [name]: value,
-  //   }));
-  // };
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
     reset,
   } = useForm<IPassword>({
     mode: 'onChange',
@@ -47,9 +39,6 @@ const UserPassword: FC<IProps> = ({ email }) => {
   });
 
   const onSubmit = (data: IPassword) => {
-    // e.preventDefault();
-    console.log('is form valide? -> ', isValid);
-
     let currentVersion;
 
     const changePass = async (): Promise<void> => {
@@ -69,7 +58,7 @@ const UserPassword: FC<IProps> = ({ email }) => {
 
       const tokenService = new TokenService();
       tokenService.removeToken();
-      storageSet(LocalStorageKeysEnum.IS_AUTH, false);
+      storageSet(SessionStorageKeysEnum.IS_AUTH, false);
       await customerController.createAnonymousCustomer().then(() => {
         customerController
           .loginCustomer({
@@ -78,7 +67,7 @@ const UserPassword: FC<IProps> = ({ email }) => {
           })
           .then((response) => {
             if (response.apiResult.statusCode === 200 && response.token) {
-              storageSet(LocalStorageKeysEnum.IS_AUTH, true);
+              storageSet(SessionStorageKeysEnum.IS_AUTH, true);
               setIsAuth(true);
               setAuthData(response.token);
             } else {
@@ -94,13 +83,11 @@ const UserPassword: FC<IProps> = ({ email }) => {
 
     changePass()
       .then(() => {
-        // setPasswords(initialPasswords);
         reset();
         setShowPassword(false);
         toast.success('Password changed successfully');
       })
       .catch((err: HttpErrorType) => {
-        // setPasswords(initialPasswords);
         reset();
         setShowPassword(false);
         toast.error(`Can't change password. Reason: ${err.message}`);

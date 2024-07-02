@@ -40,7 +40,7 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
     reset,
     setValue,
   } = useForm<Address>({
@@ -58,7 +58,6 @@ const AddressForm: FC<IProps> = ({ address, customerData, setCustomerData }) => 
   }, [isChangeCountry, selectedCountry, setValue]);
 
   const onSubmit = async (data: Address) => {
-    console.log('form valid -> ', isValid);
     if (isEdit) {
       if (address.isNew) {
         const customerController = new CustomerController();

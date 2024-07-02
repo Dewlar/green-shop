@@ -1,6 +1,5 @@
 import { Address } from '@commercetools/platform-sdk';
 import { ProductVariant } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product';
-// import { StringObject } from './interfaces';
 
 export interface IUserInfo {
   email: string;

@@ -153,7 +153,12 @@ const ProductMain = (data: Product) => {
           <div className="lg:grid lg:grid-cols-2 lg:gap-x-8">
             {productData?.masterVariant?.images && productData?.masterVariant?.images?.length === 1 ? (
               <div className="mx-auto flex justify-center h-fit">
-                <img className="one-img max-w-[460px]" src={images[0].url} onClick={() => setModalSlider(true)} />
+                <img
+                  className="one-img max-w-[460px]"
+                  src={images[0].url}
+                  onClick={() => setModalSlider(true)}
+                  alt=""
+                />
               </div>
             ) : (
               <SliderMain data={data} setModalSlider={setModalSlider}></SliderMain>
@@ -320,7 +325,6 @@ const ProductMain = (data: Product) => {
               ></XMarkIcon>
             </button>
           </div>
-          {/* <div className="m-auto h-full max-w-xl opacity-100 p-16"></div> */}
           <button className="block md:hidden absolute top-4 right-4">
             <XMarkIcon
               className="h-9 w-9 text-white bg-green-600 hover:bg-green-800 cursor-pointer rounded-full"

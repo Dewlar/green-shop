@@ -26,7 +26,7 @@ const UserInfo: FC<Props> = ({ userInfo, setUserInfo }) => {
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
     reset,
   } = useForm<IUserInfo>({
     mode: 'onChange',
@@ -38,7 +38,6 @@ const UserInfo: FC<Props> = ({ userInfo, setUserInfo }) => {
   }, [userInfo, reset]);
 
   const onSubmit = (data: IUserInfo) => {
-    console.log(isValid);
     if (isEdit) {
       let currentVersion;
 
@@ -88,7 +87,6 @@ const UserInfo: FC<Props> = ({ userInfo, setUserInfo }) => {
           toast.success('Saving was successful');
         })
         .catch((error) => {
-          // setFormValues(userInfo);
           toast.error(error.message);
         });
     }

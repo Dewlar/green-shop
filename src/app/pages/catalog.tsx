@@ -6,7 +6,6 @@ import CatalogForm from '../layout/catalog-form/catalog-form';
 
 const Catalog = () => {
   const { category, id } = useParams();
-  // console.log('asdasdasd', category, id);
   return id ? (
     <Outlet />
   ) : (
