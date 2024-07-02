@@ -230,14 +230,14 @@ const BasketForm = () => {
                             alt={product.name.en}
                             className="h-32 w-32 rounded-md object-cover object-center sm:h-48 sm:w-48"
                           />
+                          {product.variant?.attributes?.find((item) => item.name === 'Danger') ? (
+                            <div className="absolute inset-0 z-10 overflow-hidden flex items-end">
+                              <p className="flex-1 bg-red-600 text-base text-white text-center rounded-b-md">
+                                Attention!
+                              </p>
+                            </div>
+                          ) : null}
                         </Link>
-                        {product.variant?.attributes?.find((item) => item.name === 'Danger') ? (
-                          <div className="absolute inset-0 z-10 overflow-hidden flex items-end">
-                            <p className="flex-1 bg-red-600 text-base text-white text-center rounded-b-md">
-                              Attention!
-                            </p>
-                          </div>
-                        ) : null}
                       </div>
 
                       <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
