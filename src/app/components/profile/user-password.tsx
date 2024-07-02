@@ -6,7 +6,7 @@ import { Controller, useForm } from 'react-hook-form';
 import CustomerController from '../../api/CustomerController';
 import ButtonEditUpdate from './button-edit-update';
 import { useStateContext } from '../../state/state-context';
-import { LocalStorageKeysEnum, storageSet } from '../../api/helpers';
+import { SessionStorageKeysEnum, storageSet } from '../../api/helpers';
 import TokenService from '../../api/TokenService';
 import PasswordInput from './password-input';
 import { validationRules } from '../signup/regExp';
@@ -69,7 +69,7 @@ const UserPassword: FC<IProps> = ({ email }) => {
 
       const tokenService = new TokenService();
       tokenService.removeToken();
-      storageSet(LocalStorageKeysEnum.IS_AUTH, false);
+      storageSet(SessionStorageKeysEnum.IS_AUTH, false);
       await customerController.createAnonymousCustomer().then(() => {
         customerController
           .loginCustomer({
@@ -78,7 +78,7 @@ const UserPassword: FC<IProps> = ({ email }) => {
           })
           .then((response) => {
             if (response.apiResult.statusCode === 200 && response.token) {
-              storageSet(LocalStorageKeysEnum.IS_AUTH, true);
+              storageSet(SessionStorageKeysEnum.IS_AUTH, true);
               setIsAuth(true);
               setAuthData(response.token);
             } else {

@@ -6,7 +6,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import CustomerController from '../../api/CustomerController';
 import { useStateContext } from '../../state/state-context';
-import { LocalStorageKeysEnum, storageSet, UserCredentialData } from '../../api/helpers';
+import { SessionStorageKeysEnum, storageSet, UserCredentialData } from '../../api/helpers';
 import { validationRules } from '../../components/signup/regExp';
 
 const LoginForm = () => {
@@ -33,7 +33,7 @@ const LoginForm = () => {
       })
       .then((response) => {
         if (response.apiResult.statusCode === 200 && response.token) {
-          storageSet(LocalStorageKeysEnum.IS_AUTH, true);
+          storageSet(SessionStorageKeysEnum.IS_AUTH, true);
           setIsAuth(true);
           setAuthData(response.token);
 
