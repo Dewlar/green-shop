@@ -25,21 +25,13 @@ const initialPasswords: IPassword = {
 
 const UserPassword: FC<IProps> = ({ email }) => {
   const [isEdit, setIsEdit] = useState(true);
-  // const [passwords, setPasswords] = useState(initialPasswords);
   const { setIsAuth, setAuthData } = useStateContext();
   const [showPassword, setShowPassword] = useState(false);
 
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-  //   setPasswords((prev) => ({
-  //     ...prev,
-  //     [name]: value,
-  //   }));
-  // };
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
     reset,
   } = useForm<IPassword>({
     mode: 'onChange',
@@ -47,9 +39,6 @@ const UserPassword: FC<IProps> = ({ email }) => {
   });
 
   const onSubmit = (data: IPassword) => {
-    // e.preventDefault();
-    console.log('is form valide? -> ', isValid);
-
     let currentVersion;
 
     const changePass = async (): Promise<void> => {
@@ -94,13 +83,11 @@ const UserPassword: FC<IProps> = ({ email }) => {
 
     changePass()
       .then(() => {
-        // setPasswords(initialPasswords);
         reset();
         setShowPassword(false);
         toast.success('Password changed successfully');
       })
       .catch((err: HttpErrorType) => {
-        // setPasswords(initialPasswords);
         reset();
         setShowPassword(false);
         toast.error(`Can't change password. Reason: ${err.message}`);

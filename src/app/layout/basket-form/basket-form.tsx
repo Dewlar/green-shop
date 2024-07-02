@@ -19,7 +19,6 @@ const BasketForm = () => {
   const [version, setVersion] = useState<number>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
-  console.log('lineItems', lineItems);
   const [totalPrice, setTotalPrice] = useState<number>();
   const [discountOnTotalPrice, setDiscountOnTotalPrice] = useState<number>(0);
   const [quantityProduct, setQuantityProduct] = useState(1);
@@ -71,7 +70,6 @@ const BasketForm = () => {
         setLineItems((response as ClientResponse<Cart>).body?.lineItems ?? []);
         setIsModalOpen(false);
         setTotalLineItemQuantity(0);
-        // setDiscountCodes([]);
       }
     } catch (error) {
       toast.error('Error removing product from cart.');

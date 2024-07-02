@@ -1,5 +1,4 @@
 import React, { createContext, useState, useContext, ReactNode, FC, useEffect } from 'react';
-// import { useLocation, useNavigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { Customer, ClientResponse, DiscountCodeInfo } from '@commercetools/platform-sdk';
 import CustomerController from '../api/CustomerController';
@@ -78,7 +77,6 @@ export const StateProvider: FC<Props> = ({ children }) => {
   const savedToken = new TokenService();
   const customerController = new CustomerController();
   const navigate = useNavigate();
-  // const location = useLocation();
 
   useEffect(() => {
     if (savedToken.get().token !== '') {

@@ -97,7 +97,6 @@ export const validationRules = {
     },
   },
   country: {
-    // Д О Д Е Л А Т Ь
     required: 'Is required',
     validate: {
       pattern1: (value: string | undefined) => validationTemplate.country.test(value || '') || 'Invalid format',
