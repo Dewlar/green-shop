@@ -18,6 +18,8 @@ const validationTemplate = {
   email:
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
   password: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*[@$!%*?&])[^\s]{8,}$/,
+  mailRegex: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+  latinCharsRegex: /^[a-zA-Z0-9._%+-@]+$/,
 };
 const getPostalCodePattern = (country: string) => {
   switch (country) {
@@ -38,10 +40,30 @@ export const validationRules = {
       pattern1: (value: string) => validationTemplate.name.test(value) || 'Letter required',
     },
   },
+  email2: {
+    required: 'Email is required',
+    validate: {
+      pattern1: (value: string) => validationTemplate.email.test(value) || 'Invalid email address format.',
+    },
+  },
   email: {
     required: 'Email is required',
     validate: {
-      pattern1: (value: string) => validationTemplate.email.test(value) || 'Invalid format',
+      atSymbolInclude: (value: string) => value.includes('@') || 'The "@" symbol is missing.',
+      trailingSpaces: (value: string) => value.trim() === value || 'Must not start or end with a space.',
+      domainPart: (value: string) => {
+        const [, domainPart] = value.split('@');
+        if (!domainPart) {
+          return 'Must contain a domain name (e.g., example.com).';
+        }
+        if (domainPart && !domainPart.includes('.')) {
+          return 'Email domain must contain a dot (e.g., example.com).';
+        }
+        return true;
+      },
+      correctFormat1: (value: string) => validationTemplate.mailRegex.test(value) || 'Invalid email address format.',
+      correctFormat2: (value: string) =>
+        validationTemplate.latinCharsRegex.test(value) || 'Invalid email address format.',
     },
   },
   surname: {

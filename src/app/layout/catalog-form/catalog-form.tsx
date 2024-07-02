@@ -10,7 +10,7 @@ import {
   Transition,
   TransitionChild,
 } from '@headlessui/react';
-import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, XMarkIcon, ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon, FunnelIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
 import { toast } from 'react-toastify';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
@@ -28,6 +28,7 @@ import CatalogPagination from './catalog-pagination';
 import SalesImage from '../../../assets/budding-pop-pictures/sales.jpg';
 import OutOfStoreImage from '../../../assets/budding-pop-pictures/cry.gif';
 import { getProductsAll } from '../../api/catalog/getProductsAll';
+import MultiCarousel from './multi-carousel';
 
 const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory }) => {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -316,6 +317,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
 
   return (
     <div className="bg-white">
+      <MultiCarousel></MultiCarousel>
       <div>
         <Transition show={mobileFiltersOpen}>
           <Dialog className="relative z-40 lg:hidden" onClose={setMobileFiltersOpen}>
@@ -723,21 +725,20 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                               )}
                             >
                               {product.variant?.images?.[0]?.url ? (
-                                <div>
-                                  {' '}
+                                <>
                                   <img
                                     src={product.variant.images[0].url}
                                     alt={product.name}
-                                    className="h-full w-full object-cover object-center transition-transform duration-300 ease-in-out transform group-hover:scale-105"
+                                    className="object-cover object-center transition-transform duration-300 ease-in-out transform group-hover:scale-105"
                                   />
                                   {product.variant?.attributes?.find((item) => item.name === 'Danger') ? (
-                                    <div className="absolute right-[-15px] top-[-15px] z-[1] overflow-hidden w-[260px] h-[200px] text-right">
-                                      <div className="absolute top-[35px] right-[-75px] bg-red-500 shadow-lg shadow-red-600 text-base font-normal font-tahoma text-white text-center transform rotate-45 p-2.5 h-10 w-full">
-                                        Danger plant!
+                                    <div className="absolute inset-0 z-10 overflow-hidden flex items-end">
+                                      <div className="absolute top-10 left-10 bg-red-600 text-base text-white text-center transform -rotate-45 -translate-x-1/2 -translate-y-1/2 py-2 w-full">
+                                        Attention!
                                       </div>
                                     </div>
                                   ) : null}
-                                </div>
+                                </>
                               ) : (
                                 <div className="h-full w-full flex items-center justify-center bg-gray-100">
                                   <span className="text-gray-500">No image available</span>
@@ -780,20 +781,7 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                                 }
                                 className={`cursor-pointer ${lineItems.find((item) => item.productId === product.id) ? 'text-red-400' : 'text-green-600'}`}
                               >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  strokeWidth="1.5"
-                                  stroke="currentColor"
-                                  className="w-6 h-6"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
-                                  />
-                                </svg>
+                                <ShoppingCartIcon className="w-6 h-6"></ShoppingCartIcon>
                               </button>
                             </div>
                           </Link>

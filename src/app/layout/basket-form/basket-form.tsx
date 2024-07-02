@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { XMarkIcon as XMarkIconMini } from '@heroicons/react/20/solid';
 import { Cart, LineItem, DiscountCodeInfo } from '@commercetools/platform-sdk';
 import { toast } from 'react-toastify';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
+import { TrashIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 import {
   addDiscountCode,
@@ -213,39 +213,44 @@ const BasketForm = () => {
                 <ul role="list" className="divide-y divide-gray-200 border-b border-t border-gray-200">
                   {lineItems.map((product, productIdx) => (
                     <li key={product.id} className="flex py-6 sm:py-10 relative">
-                      <div className="absolute right-3 top-3">
+                      <div className="absolute right-4 top-6 sm:right-8  sm:top-8">
                         <button
                           type="button"
                           className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
                           onClick={() => handleRemoveProductClick(product.id, product.quantity)}
                         >
                           <span className="sr-only">Remove</span>
-                          <XMarkIconMini className="h-5 w-5" aria-hidden="true" />
+                          <TrashIcon className="h-5 w-5" aria-hidden="true" />
                         </button>
                       </div>
-                      <div className="flex-shrink-0">
+                      <div className="relative flex-shrink-0">
                         <Link to={`/product/${product.productId}`}>
                           <img
                             src={product.variant?.images?.[0]?.url || ''}
                             alt={product.name.en}
-                            className="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48"
+                            className="h-32 w-32 rounded-md object-cover object-center sm:h-48 sm:w-48"
                           />
                         </Link>
+                        {product.variant?.attributes?.find((item) => item.name === 'Danger') ? (
+                          <div className="absolute inset-0 z-10 overflow-hidden flex items-end">
+                            <p className="flex-1 bg-red-600 text-base text-white text-center rounded-b-md">
+                              Attention!
+                            </p>
+                          </div>
+                        ) : null}
                       </div>
 
                       <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
-                        <div className="relative pr-9 grid grid-cols-2 gap-x-6 sm:pr-0">
-                          <div className="space-y-4">
-                            <div className="flex justify-between">
-                              <h3 className="text-sm">
-                                <Link
-                                  to={`/product/${product.productId}`}
-                                  className="font-medium text-gray-700 hover:text-gray-800"
-                                >
-                                  {product.name.en}
-                                </Link>
-                              </h3>
-                            </div>
+                        <h3 className="text-sm pr-9">
+                          <Link
+                            to={`/product/${product.productId}`}
+                            className="font-medium text-gray-700 hover:text-gray-800"
+                          >
+                            {product.name.en}
+                          </Link>
+                        </h3>
+                        <div className="relative flex pr-4 justify-between sm:pr-0">
+                          <div className="flex flex-col space-y-4">
                             <div className="mt-1 flex text-sm">
                               {(product.variant?.attributes?.find((attr) => attr.name === 'Size')?.value[0] || '') && (
                                 <p className="ml-4 border-l border-gray-200 pl-4 text-gray-500">
@@ -253,37 +258,13 @@ const BasketForm = () => {
                                 </p>
                               )}
                             </div>
-                            {product.variant?.prices?.[0]?.discounted?.discount ? (
-                              <>
-                                <p className="text-lg font-medium text-red-600">
-                                  {formatPriceInEuro(
-                                    product.variant.prices[0].discounted.value.centAmount * product.quantity
-                                  )}
-                                </p>
-                                <p
-                                  className="text-lg font-medium text-green-600"
-                                  style={{ textDecoration: 'line-through' }}
-                                >
-                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount * product.quantity)}
-                                </p>
-                              </>
-                            ) : (
-                              product.variant?.prices?.[0]?.value?.centAmount && (
-                                <p className="text-lg font-medium text-green-600">
-                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount * product.quantity)}
-                                </p>
-                              )
-                            )}
-                          </div>
-
-                          <div className="mt-4 sm:mt-0 sm:pr-9">
                             <label htmlFor={`quantity-${productIdx}`} className="sr-only">
                               Quantity, {product.name.en}
                             </label>
-                            <div className="flex items-center">
+                            <div className="relative flex items-center ring-1 ring-gray-300 rounded-md">
                               <button
                                 type="button"
-                                className="px-3 py-1 border border-gray-300 rounded-l-md hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-l-md hover:bg-gray-50 ring-1 ring-gray-300 focus:ring-1 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
                                 onClick={() => handleQuantityChange(product.id, product.quantity, 'decrement')}
                                 disabled={product.quantity === 1}
                               >
@@ -296,16 +277,40 @@ const BasketForm = () => {
                                 type="text"
                                 value={product.quantity}
                                 readOnly
-                                className="px-3 py-1 border-t border-b border-gray-300 w-12 text-center text-base font-medium text-gray-700"
+                                className="relative z-10 px-2 py-0.5 sm:px-3 sm:py-1 mx-[1px] max-w-8 sm:max-w-12 text-center text-base font-medium text-gray-700 border-none focus:ring-1 focus:ring-green-500"
                               />
                               <button
                                 type="button"
-                                className="px-3 py-1 border border-gray-300 rounded-r-md hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-green-500"
+                                className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-r-md hover:bg-gray-50 ring-1 ring-gray-300 focus:ring-1 focus:ring-green-500"
                                 onClick={() => handleQuantityChange(product.id, product.quantity, 'increment')}
                               >
                                 +
                               </button>
                             </div>
+                          </div>
+
+                          <div className="mt-auto sm:pr-9">
+                            {product.variant?.prices?.[0]?.discounted?.discount ? (
+                              <>
+                                <p className="mt-2 text-base sm:text-lg font-medium text-red-600">
+                                  {formatPriceInEuro(
+                                    product.variant.prices[0].discounted.value.centAmount * product.quantity
+                                  )}
+                                </p>
+                                <p
+                                  className="mt-2 text-base sm:text-lg font-medium text-green-600"
+                                  style={{ textDecoration: 'line-through' }}
+                                >
+                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount * product.quantity)}
+                                </p>
+                              </>
+                            ) : (
+                              product.variant?.prices?.[0]?.value?.centAmount && (
+                                <p className="mt-2 text-base sm:text-lg font-medium text-green-600">
+                                  {formatPriceInEuro(product.variant.prices[0].value.centAmount * product.quantity)}
+                                </p>
+                              )
+                            )}
                           </div>
                         </div>
                       </div>
