@@ -213,7 +213,7 @@ const BasketForm = () => {
                 <ul role="list" className="divide-y divide-gray-200 border-b border-t border-gray-200">
                   {lineItems.map((product, productIdx) => (
                     <li key={product.id} className="flex py-6 sm:py-10 relative">
-                      <div className="absolute right-8 top-8">
+                      <div className="absolute right-4 top-6 sm:right-8  sm:top-8">
                         <button
                           type="button"
                           className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
@@ -241,7 +241,7 @@ const BasketForm = () => {
                       </div>
 
                       <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
-                        <h3 className="text-sm">
+                        <h3 className="text-sm pr-9">
                           <Link
                             to={`/product/${product.productId}`}
                             className="font-medium text-gray-700 hover:text-gray-800"
@@ -249,7 +249,7 @@ const BasketForm = () => {
                             {product.name.en}
                           </Link>
                         </h3>
-                        <div className="relative flex pr-9 justify-between sm:pr-0">
+                        <div className="relative flex pr-4 justify-between sm:pr-0">
                           <div className="flex flex-col space-y-4">
                             <div className="mt-1 flex text-sm">
                               {(product.variant?.attributes?.find((attr) => attr.name === 'Size')?.value[0] || '') && (
@@ -261,10 +261,10 @@ const BasketForm = () => {
                             <label htmlFor={`quantity-${productIdx}`} className="sr-only">
                               Quantity, {product.name.en}
                             </label>
-                            <div className="flex items-center">
+                            <div className="relative flex items-center ring-1 ring-gray-300 rounded-md">
                               <button
                                 type="button"
-                                className="px-3 py-1 border border-gray-300 rounded-l-md hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-l-md hover:bg-gray-50 ring-1 ring-gray-300 focus:ring-1 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
                                 onClick={() => handleQuantityChange(product.id, product.quantity, 'decrement')}
                                 disabled={product.quantity === 1}
                               >
@@ -277,11 +277,11 @@ const BasketForm = () => {
                                 type="text"
                                 value={product.quantity}
                                 readOnly
-                                className="px-3 py-1 border-t border-b border-gray-300 w-12 text-center text-base font-medium text-gray-700"
+                                className="relative z-10 px-2 py-0.5 sm:px-3 sm:py-1 mx-[1px] max-w-8 sm:max-w-12 text-center text-base font-medium text-gray-700 border-none focus:ring-1 focus:ring-green-500"
                               />
                               <button
                                 type="button"
-                                className="px-3 py-1 border border-gray-300 rounded-r-md hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-green-500"
+                                className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-r-md hover:bg-gray-50 ring-1 ring-gray-300 focus:ring-1 focus:ring-green-500"
                                 onClick={() => handleQuantityChange(product.id, product.quantity, 'increment')}
                               >
                                 +
@@ -289,16 +289,16 @@ const BasketForm = () => {
                             </div>
                           </div>
 
-                          <div className="mt-4 mt-auto sm:pr-9">
+                          <div className="mt-auto sm:pr-9">
                             {product.variant?.prices?.[0]?.discounted?.discount ? (
                               <>
-                                <p className="mt-2 text-lg font-medium text-red-600">
+                                <p className="mt-2 text-base sm:text-lg font-medium text-red-600">
                                   {formatPriceInEuro(
                                     product.variant.prices[0].discounted.value.centAmount * product.quantity
                                   )}
                                 </p>
                                 <p
-                                  className="mt-2 text-lg font-medium text-green-600"
+                                  className="mt-2 text-base sm:text-lg font-medium text-green-600"
                                   style={{ textDecoration: 'line-through' }}
                                 >
                                   {formatPriceInEuro(product.variant.prices[0].value.centAmount * product.quantity)}
@@ -306,7 +306,7 @@ const BasketForm = () => {
                               </>
                             ) : (
                               product.variant?.prices?.[0]?.value?.centAmount && (
-                                <p className="mt-2 text-lg font-medium text-green-600">
+                                <p className="mt-2 text-base sm:text-lg font-medium text-green-600">
                                   {formatPriceInEuro(product.variant.prices[0].value.centAmount * product.quantity)}
                                 </p>
                               )
