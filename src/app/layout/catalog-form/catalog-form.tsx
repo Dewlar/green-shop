@@ -729,13 +729,13 @@ const CatalogForm: FC<{ movedCategory: string | undefined }> = ({ movedCategory 
                                   <img
                                     src={product.variant.images[0].url}
                                     alt={product.name}
-                                    className="h-full w-full object-cover object-center transition-transform duration-300 ease-in-out transform group-hover:scale-105"
+                                    className="object-cover object-center transition-transform duration-300 ease-in-out transform group-hover:scale-105"
                                   />
                                   {product.variant?.attributes?.find((item) => item.name === 'Danger') ? (
-                                    <div className="absolute right-0 top-0 z-[1] overflow-hidden w-full h-full text-right">
-                                      <div className="absolute top-[15%] left-[-25%] bg-red-600 s text-base font-normal font-tahoma text-white text-center transform -rotate-45 p-2.5 h-10 w-full">
+                                    <div className="absolute inset-0 z-10 overflow-hidden flex items-end">
+                                      <p className="absolute top-[15%] left-[-25%] bg-red-600 s text-base text-white text-center transform -rotate-45 p-2.5 h-10 w-full">
                                         Attention!
-                                      </div>
+                                      </p>
                                     </div>
                                   ) : null}
                                 </>
