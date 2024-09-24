@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import './app/layout/signup-form/signUp.scss';
+
+:root {
+  --text-primary: #3d3d3d;
+  --text-secondary: #fff;
+  --text-accent: #46a358;
+  --text-light: #cbcbcb;
+  --text-paragraph: #727272;
+  --text-placeholder: #acacac;
+  --text-tags: #a5a5a5;
+
+  --review-star-primary: #c4c4c4;
+  --review-star-accent: #ffac0c;
+
+  --border-light: #eaeaea;
+
+  --bg-modal: rgba(10, 13, 18, 0.25);
+  --bg-ligt: #fbfbfb;
+  --bg-accent: #46a358;
+  --bg-accent6: rgba(70, 163, 88, 0.6);
+  --bg-accent10: rgba(70, 163, 88, 0.1);
+  --bg-accent20: rgba(70, 163, 88, 0.2);
+  --bg-accent30: rgba(70, 163, 88, 0.3);
+  --bg-accent50: rgba(70, 163, 88, 0.5);
+  --bg-accent60: rgba(70, 163, 88, 0.6);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+}
+
+body {
+}
+
+.Toastify {
+  user-select: none;
+
+  .Toastify__toast {
+    cursor: pointer;
+  }
+}
+
+.threeLineTextClamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+}
+
+button {
+  user-select: none;
+}

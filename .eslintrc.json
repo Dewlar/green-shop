@@ -1,0 +1,35 @@
+{
+    "plugins": ["prettier", "import", "@typescript-eslint", "react"],
+    "extends": [
+        "eslint:recommended",
+        "airbnb-base",
+        "airbnb-typescript/base",
+        "plugin:prettier/recommended",
+        "prettier",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 2020,
+        "sourceType": "module",
+        "project": "./tsconfig.json"
+    },
+    "env": {
+        "es6": true,
+        "browser": true,
+        "node": true
+    },
+    "rules": {
+        "no-debugger": "off",
+        "no-console": 0,
+        "class-methods-use-this": "off",
+        "import/extensions": "off",
+        "@typescript-eslint/no-explicit-any": 2
+    },
+  "settings": {
+    "react": {
+      "version": "detect" // Tell eslint-plugin-react to automatically detect the latest version of react.
+    }
+  },
+  "parser": "@typescript-eslint/parser"
+}
