@@ -43,11 +43,11 @@ export const getAuthURL = (): string => {
 };
 
 export const getClientSecret = (): string => {
-  return process.env.CTP_CLIENT_SECRET || 'j1bQh_m0Zf5qghWvR33dHU8-ppV0V-nM';
+  return process.env.CTP_CLIENT_SECRET || '8hDXIrOTHFr99iIM960bzXU0O88NxO-O';
 };
 
 export const getClientId = (): string => {
-  return process.env.CTP_CLIENT_ID || 'BjulIMqQimld85zecTQdzXWu';
+  return process.env.CTP_CLIENT_ID || 'nZTC1yUGGybwpVRjplm_b4My';
 };
 
 export const getScopes = (): string[] => {
