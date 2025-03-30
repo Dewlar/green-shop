@@ -18,6 +18,9 @@ We use `webpack` to build the project.<br>
 We also use `Eslint` and `prettier` for a unified code style.<br>
 `Github` to store the code base, and we also use `husky` hooks to prevent bad code from getting into the repository.
 
+### CI/CD
+Implemented `Netlify CI/CD`.
+
 ### Scripts:
 
     `npm run start`       - run dev server
